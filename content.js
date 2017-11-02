@@ -72,7 +72,7 @@
  */
 var browser = browser || chrome;
 
-(function decodexInfobulle(){
+(function possedexInfobulle(){
     'use strict';
 
     var infobulle;

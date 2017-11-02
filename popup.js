@@ -132,11 +132,11 @@ function main() {
         document.querySelector("#our-opinion").innerText = background.message;
 
 
-        if(background.decodex_note) {
+        if(background.possedex_note) {
             document.querySelector("#les-decodeurs #comment").innerText = "Les Décodeurs du Monde jugent eux ce site comme ";
-            document.querySelector("#les-decodeurs #description").style["color"] = background.decodex_color;
+            document.querySelector("#les-decodeurs #description").style["color"] = background.possedex_color;
             document.querySelector("#les-decodeurs #description").style["font-weight"] = "bold";
-            document.querySelector("#les-decodeurs #description").innerText = background.decodex_desc;
+            document.querySelector("#les-decodeurs #description").innerText = background.possedex_desc;
         }
         else {
             document.querySelector("#les-decodeurs").innerText = "Les Décodeurs du Monde n'ont pas noté ce site. Ils le considèrent (peut être) comme fiable ou ne le connaissent pas.";
@@ -197,16 +197,16 @@ function main() {
         //});
 
 
-        document.querySelector("#decodex-insoumis-window").style.display = "block";
+        document.querySelector("#possedex-window").style.display = "block";
         document.querySelector("#verif-insoumis").classList.remove("active");
-        document.querySelector("#decodex-insoumis-window").classList.add('active');
+        document.querySelector("#possedex-window").classList.add('active');
         //document.querySelector("#more-info-insoumis").href = "https://laec.fr/section/8/la-revolution-citoyenne-dans-les-medias";
     }
     else {
         document.querySelector("#verif-insoumis").style.display = "block";
-        document.querySelector("#decodex-insoumis-window").classList.remove('active');
+        document.querySelector("#possedex-window").classList.remove('active');
         document.querySelector("#verif-insoumis").classList.add("active");
-        document.querySelector("#decodex-insoumis-window").style.display = "none";
+        document.querySelector("#possedex-window").style.display = "none";
 
     }
 

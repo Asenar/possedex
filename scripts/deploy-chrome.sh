@@ -160,7 +160,7 @@ fi
 
 
 release_path=build/
-file_prefix=decodex_insoumis
+file_prefix=possedex
 platform_name=$(basename $0|sed "s/deploy-\(.*\).sh/\1/");
 if [[ "$platform_name" == "chrome" ]];then
     extension='zip'
@@ -200,7 +200,7 @@ sed -i "s/{VERSION}/${version}/" manifest.json
 
 if $opt_local;then
     einfo "create background-local.js and set database url to localhost"
-    sed "s#http://decodex.insoumis.online#localhost#" background.js > background-local.js
+    sed "s#http://possedex.info#localhost#" background.js > background-local.js
     einfo "set _debug=5"
     sed -i "s#var _debug = .*;#var _debug = 5;#" background-local.js
     einfo "update manifest.json to use background-local.js"

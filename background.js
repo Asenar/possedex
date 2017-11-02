@@ -78,7 +78,7 @@ if (_debug) {
     console && console.info("DEBUG LEVEL", _debug);
 }
 
-let col_note_decodex  = 0;
+let col_note_possedex  = 0;
 let col_desc          = 1;
 let col_nom           = 2;
 let col_slug          = 3;
@@ -162,14 +162,14 @@ var colors = [
     "#468847", // vert
     "#468847"  // INSOUMIS AUSSI :D
 ];
-let decodex_colors = [
+let possedex_colors = [
     "#A2A9AE", "#129AF0", "#D50303", "#F5A725", "#468847"
 ];
-let decodex_descs = [
+let possedex_descs = [
     "inclassable", "parodique", "pas fiable du tout", "peu fiable", "fiable"
 ];
 
-var base_url = "http://decodex.insoumis.online/database.json";
+var base_url = "http://possedex.info/database.json";
 var always_refresh = false;
 var urls = "";
 var note = null;
@@ -193,10 +193,10 @@ var publicite     = '';
 var sources       = [];
 
 var note          = '';
-var decodex_note  = '';
+var possedex_note  = '';
 var color         = '';
-var decodex_color = '';
-var decodex_desc  = '';
+var possedex_color = '';
+var possedex_desc  = '';
 var message       = '';
 var bandeau_msg   = '';
 var icone         = '';
@@ -351,7 +351,7 @@ function debunkSite(u, t, d){
                     }
                     try {
                         site_actif     = sites[site_id][col_nom];                    // nom du site
-                        decodex_note   = parseInt(sites[site_id][col_note_decodex]); // note decodex
+                        possedex_note   = parseInt(sites[site_id][col_note_possedex]); // note possedex
                         insoumis_note     = parseInt(sites[site_id][col_note_insoumis]);   // note insoumis
                         notule         = sites[site_id][col_desc];                   // description originale
                         slug           = sites[site_id][col_slug];                   // nom normalisé
@@ -418,15 +418,15 @@ function debunkSite(u, t, d){
                         note          = insoumis_note;
                         color         = colors[insoumis_note];
                         message       = messages[insoumis_note];
-                        decodex_color = decodex_colors[decodex_note];
-                        decodex_desc  = decodex_descs[decodex_note];
+                        possedex_color = possedex_colors[possedex_note];
+                        possedex_desc  = possedex_descs[possedex_note];
                         bandeau_msg   = bandeau_msgs[insoumis_note];
                         icone         = icones[insoumis_note];
 
                         if (2 <= _debug) {
                             console && console.group("tout s'est bien passé");
                             console && console.log('site_actif     =',site_actif     );
-                            console && console.log('decodex_note   =',decodex_note   );
+                            console && console.log('possedex_note   =',possedex_note   );
                             console && console.log('insoumis_note  =',insoumis_note );
                             console && console.log('notule         =',notule         );
                             console && console.log('slug           =',slug           );
