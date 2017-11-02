@@ -1,11 +1,11 @@
 {
   "manifest_version": 2,
-  "name": "Decodex Insoumis",
+  "name": "Possedex",
   "version": "{VERSION}",
   "description": "Avec le Décodex Insoumis, apprenez en un clin d'oeil qui se trouve derrière le média que vous êtes en train de lire !",
   "applications": {
       "gecko": {
-          "id": "decodex-insoumis@insoumis.online"
+          "id": "possedex@possedex.info"
       }
   },
   "background": {
@@ -34,6 +34,6 @@
     "activeTab",
     "webRequest",
 
-    "http://decodex.insoumis.online/database.json"
+    "http://possedex.info/database.json"
   ]
 }

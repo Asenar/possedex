@@ -1,7 +1,7 @@
 # Extension
 
 (Work In Progress)
-[![Build Status](https://travis-ci.org/Insoumis/decodex-insoumis-firefox.svg?branch=master)](https://travis-ci.org/Insoumis/decodex-insoumis-firefox)
+[![Build Status](https://travis-ci.org/Asenar/possedex.svg?branch=master)](https://travis-ci.org/Asenar/possedex)
 
 Cette extension est idéale pour compléter l'extension très pratique «décodex» des décodeurs du monde.
 
@@ -46,7 +46,7 @@ web-ext run
 
 ## Alternative
 
-1) git clone https://github.com/Insoumis/decodex-firefox (ou télécharger la
+1) git clone https://github.com/Asenar/possedex (ou télécharger la
 derniere version et la décompresser)
 2) aller sur about:debugging
 3) charger l'extension temporairement (le fichier manifest.json)
