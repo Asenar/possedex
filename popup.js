@@ -95,6 +95,7 @@ function bulleStore(e){
 }
 
 function refreshDatabase(e){
+    console && console.log("REFRESH REQUIRED");
     browser.storage.local.set({
         'last_update': ((new Date().getTime()) - 24*60*60*1000)
     });
@@ -128,19 +129,20 @@ function main() {
         // TODO afficher les infos manquantes avec popup.js et popup.html
         document.querySelector(".content #site-name").innerText = background.site_actif;
         document.querySelector("#notule").innerText = background.notule;
-        document.querySelector("#our-opinion").style["color"] = background.color;
-        document.querySelector("#our-opinion").innerText = background.message;
+        document.querySelector("#last-update").style["color"] = background.color;
+        document.querySelector("#last-update").style["color"] = background.color;
+        document.querySelector("#last-update-date").innerText = background.updated_human;
 
 
-        if(background.possedex_note) {
-            document.querySelector("#les-decodeurs #comment").innerText = "Les Décodeurs du Monde jugent eux ce site comme ";
-            document.querySelector("#les-decodeurs #description").style["color"] = background.possedex_color;
-            document.querySelector("#les-decodeurs #description").style["font-weight"] = "bold";
-            document.querySelector("#les-decodeurs #description").innerText = background.possedex_desc;
-        }
-        else {
-            document.querySelector("#les-decodeurs").innerText = "Les Décodeurs du Monde n'ont pas noté ce site. Ils le considèrent (peut être) comme fiable ou ne le connaissent pas.";
-        }
+        //if(background.decodex_note) {
+        //    document.querySelector("#les-decodeurs #comment").innerText = "Les Décodeurs du Monde jugent eux ce site comme ";
+        //    document.querySelector("#les-decodeurs #description").style["color"] = background.possedex_color;
+        //    document.querySelector("#les-decodeurs #description").style["font-weight"] = "bold";
+        //    document.querySelector("#les-decodeurs #description").innerText = background.possedex_desc;
+        //}
+        //else {
+        //    document.querySelector("#les-decodeurs").innerText = "Les Décodeurs du Monde n'ont pas noté ce site. Ils le considèrent (peut être) comme fiable ou ne le connaissent pas.";
+        //}
 
         document.querySelector("#owner-msg").innerText = background.owner_msg;
         //document.querySelector("#proprietaires span.content").innerText = background.proprietaires.join(",");
@@ -200,7 +202,8 @@ function main() {
         document.querySelector("#possedex-window").style.display = "block";
         document.querySelector("#verif-insoumis").classList.remove("active");
         document.querySelector("#possedex-window").classList.add('active');
-        //document.querySelector("#more-info-insoumis").href = "https://laec.fr/section/8/la-revolution-citoyenne-dans-les-medias";
+        var site_slug = background.site_actif.replace(/ /,'-');
+        document.querySelector("#more-info").href = "http://www.acrimed.org/+-"+site_slug+"-+";
     }
     else {
         document.querySelector("#verif-insoumis").style.display = "block";
@@ -241,27 +244,37 @@ function main() {
 	//linkInNewTab(document.querySelector(".propos-par a"));
 	//linkInNewTab(document.querySelector("#more-info-insoumis"));
 	
-    for(var i=0;i<max_notes;i++){
-        if (background.colors[i]) {
-            var thisalert = document.querySelector("#alert"+i);
-            if (thisalert) {
-                thisalert.style.color = background.colors[i];
-            }
-        } else {
-            //console && console.log("oups");
-        }
 
-    }
+
+classements = [ 'inconnu', 'capital', 'etat', 'independant' ];
+    classements.forEach(function(classement){
+        if (background.colors[classement]) {
+            {
+                var thisalert = document.querySelector("#alert-"+classement);
+                if (thisalert) {
+                    thisalert.style.color = background.colors[classement];
+                }
+            }
+        }
+    });
 }
 
 document.addEventListener('DOMContentLoaded', function () {
     main();
-    for(var i=0;i<max_notes;i++){
-            var thisCheckbox = document.querySelector("#check-alert"+i);
+    classements = [ 'inconnu', 'capital', 'etat', 'independant' ];
+    classements.forEach(function(classement){
+            var thisCheckbox = document.querySelector("#check-alert-"+classement);
             if (thisCheckbox) {
                 thisCheckbox.addEventListener('click', bulleStore);
             }
-    }
+    });
     document.querySelector('#do-refresh-database').addEventListener('click', refreshDatabase);
 });
 
+function getObjectKeys(obj) {
+    var keys = [];
+    for(var key in obj){
+        keys.push(key);
+    }
+    return keys;
+}

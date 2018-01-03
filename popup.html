@@ -15,11 +15,6 @@
             <h2 id="site-name"></h2>
             <p id="notule"></p>
             <table class="table-popup-insoumis">
-                <tr class="les-decodeurs"><td colspan="2">
-                        <p id="les-decodeurs">
-                            <span id="comment"></span>:
-                            <span id="description"></span></p>
-                </td></tr>
                 <tr class="ligne-owner-msg"><td colspan="2">
                         <p id="owner-msg"></p>
                 </td></tr>
@@ -27,7 +22,9 @@
                 <tr id="proprietaire1" class="ligne-proprietaire"> <th class="nom"></th> <td class="detail"></td> </tr>
                 <tr id="proprietaire2" class="ligne-proprietaire"> <th class="nom"></th> <td class="detail"></td> </tr>
             </table>
-            <p id="our-opinion" class="our-opinion"></p>
+            <p id="last-update" class="last-update">Informations saisies le :
+                <span id="last-update-date"></span>
+            </p>
             <!-- @TODO: le design. Faire plus tableau ? -->
             <!-- <div id="fortunes"><span class="label">Fortunes : </span><span class="content"></span></div>          -->
             <!-- <div id="proprietaires"><span class="label">Propriétaires : </span><span class="content"></span></div>-->
@@ -41,56 +38,65 @@
                 <span class="label">Nos sources : </span>
                 <span class="content"></span>
             </div>
-            <a id="more-info-insoumis" target="_blank" class="button more" href="https://laec.fr/section/8/la-revolution-citoyenne-dans-les-medias" >En savoir plus</a>
+            <a id="more-info" target="_blank" class="button more" 
+                href="http://www.acrimed.org/+-Le-Monde-+" >Chercher sur ACRIMED (expérimental)</a>
         </div>
 
+
+
+
+
+
+        <!--  page configuration -->
         <div class="content" id="parameters">
             <!-- a supprimer plus tard ?-->
+
+            <h2 class="title-params">Affichage des infobulles</h2>
+                <br>
+                <p>Affichage de l'infobulle: adaptez vos préférences selon les catégories de sites</p>
+                <div id="alert-inconnu" class="option-bulle">
+                    <input id="check-alert-inconnu" type="checkbox">
+                    <label for="check-alert-inconnu">Inconnu</label><br>
+                </div>
+                <div id="alert-capital" class="option-bulle">
+                    <input id="check-alert-capital" type="checkbox">
+                    <label for="check-alert-capital">Liens capitalistiques fort</label><br>
+                </div>
+                <div id="alert-etat" class="option-bulle">
+                    <input id="check-alert-etat" type="checkbox">
+                    <label for="check-alert-etat">Liens étatiques forts</label><br>
+                </div>
+                <div id="alert-independant" class="option-bulle">
+                    <input id="check-alert-independant" type="checkbox">
+                    <label for="check-alert-independant">Média indépendant: Bravo !</label>
+                </div>
+
+
             <h2 class="title-params">Mise à jour de la base de données</h2>
-            <p>Les informations utilisées sont mise à jour, compilées et stockées sur
-                <a href="http://insoumis.online/">le site des insoumis
-                    numériques</a>. Cette extension ne vérifie qu'une fois par
-                jour les informations et les stoke dans la mémoire du
-                navigateur.</p>
+            <p>Les informations affichée par cette extension sont issues de 
+                <a href="https://docs.google.com/spreadsheets/d/1po3WjKX15T766GYOYV8fHtve4RdlyLF6XEXBlUICib0/edit#gid=0">
+                    ce tableau en ligne
+            </a>.</p>
+            <p>Un script automatique actualise une fois par jour le
+                fichier <a href="http://possedex.info/database.json"
+                    target="_blank">http://possedex.info/database.json</a>
+                à partir de ce fichier, et l'extension stocke sur votre
+                ordinateur une version de cette base afin d'afficher les
+                informations plus rapidement, dans un fichier texte au format
+                <code>json</code>.</p>
+
             <div id="refresh-database" class="option-refresh">
                 <button id="do-refresh-database" type="button" class="refresh-db" >
                     Rafraichir la base de données
                 </button>
             </div>
 
-            <h2 class="title-params">Paramètres</h2>
-                <br>
-                <p>Affichage de l'infobulle: adaptez vos préférences selon les catégories de sites</p>
-                <div id="alert0" class="option-bulle">
-                    <input id="check-alert0" type="checkbox">
-                    <label for="check-alert0">Inconnu</label><br>
-                </div>
-                <div id="alert1" class="option-bulle">
-                    <input id="check-alert1" type="checkbox">
-                    <label for="check-alert1">Liens capitalistiques fort</label><br>
-                </div>
-                <div id="alert2" class="option-bulle">
-                    <input id="check-alert2" type="checkbox">
-                    <label for="check-alert2">Liens étatiques forts</label><br>
-                </div>
-                <!--
-                <div id="alert3" class="option-bulle">
-                    <input id="check-alert3" type="checkbox">
-                    <label for="check-alert3">Média plutôt insoumis</label><br>
-                </div>
-                -->
-                <div id="alert4" class="option-bulle">
-                    <input id="check-alert4" type="checkbox">
-                    <label for="check-alert4">Média indépendant: Bravo !</label>
-                </div>
-                <div id="alert5" class="option-bulle">
-                    <input id="check-alert5" type="checkbox">
-                    <label for="check-alert5">France Insoumise (pas d'ambiguité !)</label>
-                </div>
+
         </div>
         <div class="content" id="verif-insoumis">
-            <p class="our-opinion">
+            <p class="last-update">
                 Nous n’avons pas encore saisi les données de ce média.
+                <span id="last-update-date"></span>
             </p>
         </div>
     </div>
