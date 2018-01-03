@@ -2,19 +2,21 @@
   "manifest_version": 2,
   "name": "Possedex",
   "version": "0.0.0.0",
-  "description": "Avec le Décodex Insoumis, apprenez en un clin d'oeil qui se trouve derrière le média que vous êtes en train de lire !",
+  "description": "Avec le Possedex, apprenez en un clin d'oeil qui se trouve derrière le média que vous êtes en train de lire !",
   "background": {
     "scripts": ["background.js", "content.js", "install.js"],
     "persistent": false
   },
   "homepage_url": "http://possedex.info/",
   "icons": {
-    "16": "icone.png"
+    "16": "icon-16.png",
+    "32": "icon-32.png",
+    "48": "icon-48.png"
   },
   "browser_action" :
   {
-    "default_icon" : "icone.png",
-    "default_title" : "Décodex Insoumis",
+    "default_icon" : "icon-48.png",
+    "default_title" : "Possedex",
     "default_popup": "popup.html"
   },
     "content_scripts": [
