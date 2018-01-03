@@ -33,7 +33,7 @@ h1{
 	text-transform: uppercase;
 	letter-spacing: .2em;
 	line-height: 60px;
-	background-image: url('../img/marqueur@2x-min.png');
+	background-image: url('../img/marqueur-possedex@2x-min.png');
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: 100%;
@@ -71,16 +71,17 @@ h4{
 
 header{
 	color: #fff;
-	background: #1F0D67 url('../img/background-xs@2x-min.png') no-repeat center;
+	background: #1F0D67 url('../img/background-possedex-xs@2x-min.png') no-repeat center;
 	background-size: 100%;
 	background-size: cover;
 	padding: 38px 30px 15px;
 	overflow: hidden;
 }
 
-.logo{
+header .logo{
 	text-align: center;
 	font-size: 0.875em;
+
 }
 
 .insoumis{
@@ -231,7 +232,7 @@ label{
 
 	header{
 		padding: 20px 0 27px 0;
-		background-image: url('../img/background@2x-min.png');
+		background-image: url('../img/background-possedex@2x-min.png');
 	}
 
 	header .center{
@@ -245,9 +246,13 @@ label{
 		margin: 0;
 	}
 
-	.logo{
+	header .logo{
 		padding-top: 28px;
 		float: right;
+		background-image: url('../img/possedex-logo-install.png');
+        background-size : 100%;
+        width : 64px;
+        height : 64px;
 	}
 
 	.insoumis{
