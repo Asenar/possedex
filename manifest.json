@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Possedex",
-  "version": "0.0.0.0",
+  "version": "0.1",
   "description": "Avec le Possedex, apprenez en un clin d'oeil qui se trouve derrière le média que vous êtes en train de lire !",
   "background": {
     "scripts": ["background.js", "content.js", "install.js"],

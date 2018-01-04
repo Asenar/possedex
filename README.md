@@ -11,7 +11,7 @@ passé ou le présent) indiqué de fausses informations, plus celui ci aura une
 mauvaise note invitant le visiteur à vérifier les informations sur d'autres
 source.
 
-Nous fournissons son complément essentiel : le décodex insoumis, afin de
+Nous fournissons son complément essentiel : le Possédex, afin de
 mettre en avant les puissances financières ou politique derrière un site que
 vous visitez. Cela ne veut pas dire que les informations que vous y lirez sont
 fausses ou incorrecte, mais peuvent influencer la ligne éditoriale générale du
@@ -66,7 +66,7 @@ valeur à <code>true</code>
 
 Les 3 premiers chiffres correspondent au numéro de version du decodex original
 des décodeurs. Le 4eme chiffre sera incrémenté à chaque nouvelle version du
-décodex insoumis.
+possédex.
 
 
 ### Remerciements
