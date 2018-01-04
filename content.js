@@ -160,13 +160,13 @@ var browser = browser || chrome;
 
             // Création de la structure du popup
             infobulle = createChild(body, 'div');
-                var header = createChild(infobulle, 'header');
-                    var title = createChild(header, 'h1');
-                        var picto = createChild(title, 'span');
-                    var close = createChild(header, 'div');
-                var content = createChild(infobulle, 'div');
-                    var text = createChild(content, 'div');
-                    var more = createChild(content, 'p');
+            var header = createChild(infobulle, 'header');
+            var title = createChild(header, 'h1');
+            var picto = createChild(title, 'span');
+            var close = createChild(header, 'div');
+            var content = createChild(infobulle, 'div');
+            var text = createChild(content, 'div');
+            var more = createChild(content, 'p');
 
             // Ajout du style
             var forceImportant = true;
@@ -286,7 +286,7 @@ var browser = browser || chrome;
             // Ajout du contenu
             appendText(title, request.bandeau_msg); // note
             // le picto= un carré avec border-radius + un caractere
-            appendText(picto, '!');
+            appendText(picto, 'i');
             appendText(close, 'Fermer');
             text.innerText = request.message; // no html
             var icone = new Image();
