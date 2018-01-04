@@ -82,7 +82,7 @@ a.more:after, .button.more:after{
     text-decoration: none;
 }
 
-.our-opinion{
+.last-update{
 	font-weight: bold;
 	color: #5d666d;
 	line-height: 1.43;
@@ -118,7 +118,7 @@ a.more:after, .button.more:after{
 .possedex header{
 	padding: 8px 17px 8px 20px;
 	overflow: hidden; /* clearfix */
-	background-image: url('../img/background.png');
+	background-image: url('../img/background-possedex.png');
 }
 
 .possedex h1{
@@ -128,7 +128,7 @@ a.more:after, .button.more:after{
 	text-transform: uppercase;
 	letter-spacing: .2em;
 	line-height: 36px;
-	background-image: url('../img/marqueur.png');
+	background-image: url('../img/marqueur-possedex.png');
 	background-repeat: no-repeat;
 	width: 217px;
 	height: 36px;
@@ -179,7 +179,13 @@ a.more:after, .button.more:after{
     margin-bottom:6px;
 }
 .refresh-db {
-border: 2px outset gray;background-color:#eee;
+border-left   : 1px outset lightgray;
+border-top    : 1px outset lightgray;
+border-right  : 1px inset lightgray;
+border-bottom : 1px inset lightgray;
+background-color:#eee;
+border-radius : 4px;
+padding : 4px;
 }
 .refresh-db:focus {
 border: 2px inset gray;background-color:#d8d8d8;
