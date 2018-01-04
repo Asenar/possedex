@@ -357,8 +357,8 @@ function debunkSite(url, t, d){
                     }
                     try {
                         site_actif     = sites[site_id][col_nom];                    // nom du site
-                        updated        = new Date(sites[site_id][col_updated]);      // note possedex
-                        classement     = sites[site_id][col_classement_possedex];   // note insoumis
+                        updated        = new Date(sites[site_id][col_updated]);      // last maj
+                        classement     = sites[site_id][col_classement_possedex];   // classement possedex
                         notule         = sites[site_id][col_desc];                   // description originale
                         slug           = sites[site_id][col_slug];                   // nom normalisé
 
