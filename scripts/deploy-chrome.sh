@@ -317,6 +317,7 @@ webstore upload --source $filename_release_path --extension-id $GOOGLE_APP_ID \
 error=$?
 if [[ $error -ne 0 ]]; then
     eerror "une erreur est survenue (error: $error)"
+    git checkout .
     if [[ $error -eq 1 ]]; then
         exit 0
     fi

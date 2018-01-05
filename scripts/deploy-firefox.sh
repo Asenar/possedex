@@ -318,7 +318,7 @@ eok "publication de l'extension sur $platform_name"
 # {{{ platform specific
 # see npm web-ext
 
-web-ext sign --api-key ${API_KEY} --api-secret ${API_SECRET} \
+web-ext sign --api-key ${WEBEXT_API_KEY} --api-secret ${WEBEXT_API_SECRET} \
     --ignore-files manifest-firefox.json manifest-chrome.json "scripts/*" scripts/deploy-firefox-sh scripts/deploy-chrome.sh
 
 
