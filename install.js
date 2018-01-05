@@ -69,21 +69,22 @@
                              ######
                              .####+
                                ,:`
- */
+
+*/
 var browser = browser || chrome;
 
 function bulleStore(e){
     var infobulles;
     var infobulles_once;
-    var id = parseInt(this.id.replace("check-alert", ""));
+    var classement = this.id.replace("check-alert-", "");
     var checked = this.checked;
     browser.storage.local.get('infobulles', function(results){
         infobulles = results.infobulles;
         if(checked) {
-            infobulles[id] = true;
+            infobulles[classement] = true;
         }
         else {
-            infobulles[id] = false;
+            infobulles[classement] = false;
         }
         browser.storage.local.set({
             'infobulles': infobulles
@@ -105,19 +106,20 @@ function main(){
     browser.storage.local.get('infobulles', function(results){
 
     try {
-        for(var i=0;i<6;i++){
-            var selector = document.getElementById('check-alert' + i);
+        classements = [ 'inconnu', 'capital', 'etat', 'independant' ];
+        classements.forEach(function(classement){
+            var selector = document.getElementById('check-alert-' + classement);
             if (selector) {
-                if(results.infobulles[i] == true){
+                if(results.infobulles[classement] == true){
                     selector.checked = true;
                 }
                 else {
-                    selector.checked = true;
+                    selector.checked = false;
                 }
             }
-        }
+        });
     } catch(e) {
-        console && console.log("error in install.js for infobulles, check-alert"+i);
+        console && console.log("error in install.js for infobulles, check-alert"+classement);
         console && console.error(e);
     }
 
@@ -125,14 +127,15 @@ function main(){
 }
 document.addEventListener('DOMContentLoaded', function () {
     try {
-        for(var i=0;i<6;i++){
-            var selector = document.getElementById('check-alert' + i);
+        classements = [ 'inconnu', 'capital', 'etat', 'independant' ];
+        classements.forEach(function(classement){
+            var selector = document.getElementById('check-alert-' + classement);
             if (selector) {
                 selector.addEventListener('click', bulleStore);
             }
-        }
+        });
     } catch(e) {
-        console && console.info("error in install.js for check-alert"+i);
+        console && console.info("error in install.js for check-alert-"+classement);
         console && console.error(e);
     }
     main();

@@ -215,7 +215,12 @@ function onInstall() {
     var last_update = new Date();
     browser.storage.local.set(
             {
-                'infobulles': [false, true, true, true, true, true],
+                'infobulles': {
+                 'inconnu'     : false,
+                 'capital'     : true,
+                 'etat'        : true,
+                 'independant' : true
+                },
                 "installed" : true,
                 'last_update': last_update.getTime(),
             }

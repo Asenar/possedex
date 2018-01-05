@@ -77,15 +77,15 @@ var max_notes = 6;  // (de 0 à 5 = 6 notes)
 
 function bulleStore(e){
     var infobulles;
-    var id = parseInt(this.id.replace("check-alert", ""));
+    var classement = this.id.replace("check-alert-", "");
     var checked = this.checked;
     browser.storage.local.get('infobulles', function(results){
         infobulles = results.infobulles;
         if(checked) {
-            infobulles[id] = true;
+            infobulles[classement] = true;
         }
         else {
-            infobulles[id] = false;
+            infobulles[classement] = false;
         }
         browser.storage.local.set({
             'infobulles': infobulles
@@ -228,17 +228,18 @@ function main() {
         }
     });
     browser.storage.local.get('infobulles', function(results){
-        for(var i=0;i<max_notes;i++){
-            var thisCheckbox = document.getElementById("check-alert"+i);
+        classements = [ 'inconnu', 'capital', 'etat', 'independant' ];
+        classements.forEach(function(classement){
+            var thisCheckbox = document.getElementById('check-alert-' + classement);
             if (thisCheckbox) {
-                if(results.infobulles[i] == true){
+                if(results.infobulles[classement] == true){
                     thisCheckbox.checked = true;
                 }
                 else {
                     thisCheckbox.checked = false;
                 }
             }
-        }
+        });
     });
 	
 	//linkInNewTab(document.querySelector(".propos-par a"));
@@ -250,9 +251,9 @@ classements = [ 'inconnu', 'capital', 'etat', 'independant' ];
     classements.forEach(function(classement){
         if (background.colors[classement]) {
             {
-                var thisalert = document.querySelector("#alert-"+classement);
-                if (thisalert) {
-                    thisalert.style.color = background.colors[classement];
+                var thisCheckbox = document.getElementById('check-alert-' + classement);
+                if (thisCheckbox) {
+                    thisCheckbox.style.color = background.colors[classement];
                 }
             }
         }
@@ -263,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function () {
     main();
     classements = [ 'inconnu', 'capital', 'etat', 'independant' ];
     classements.forEach(function(classement){
-            var thisCheckbox = document.querySelector("#check-alert-"+classement);
+            var thisCheckbox = document.getElementById('check-alert-' + classement);
             if (thisCheckbox) {
                 thisCheckbox.addEventListener('click', bulleStore);
             }
