@@ -163,10 +163,22 @@ function main() {
             if (!background.fortunes[i]) {
                 document.querySelector("#proprietaire"+i+" td.detail").style = "display:none";
             } else {
-                document.querySelector("#proprietaire"+i+" td.detail").innerText =
-                    background.fortunes[i]
-                    + background.marques[i]
-                    + background.influences[i];
+                if (background.fortunes[i].length) {
+                    document.querySelector("#proprietaire"+i+" td.detail .d1").innerText = background.fortunes[i]
+                } else {
+                    document.querySelector("#proprietaire"+i+" td.detail .d1").style = "display:none";
+                }
+                if (background.marques[i].length) {
+                    document.querySelector("#proprietaire"+i+" td.detail .d2").innerText = "[marque] "  + background.marques[i]
+                } else {
+                    document.querySelector("#proprietaire"+i+" td.detail .d2").style = "display:none";
+                }
+                if (background.influences[i].length) {
+                    document.querySelector("#proprietaire"+i+" td.detail .d3").innerText = "[secteur] " + background.influences[i]
+                } else {
+                    document.querySelector("#proprietaire"+i+" td.detail .d3").style = "display:none";
+                }
+
                 document.querySelector("#proprietaire"+i+" td.detail").style = "";
             }
 
