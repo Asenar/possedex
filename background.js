@@ -421,11 +421,11 @@ function debunkSite(url, t, d){
                         }
                     }
 
-                    browser.browserAction.setIcon({
+                    //browser.browserAction.setIcon({
 
-                        path: "img/icones/icon-" + classement + ".png", // note
-                        tabId: t
-                    });
+                    //    path: "img/icones/icon-" + classement + ".png", // note
+                    //    tabId: t
+                    //});
 
                     if(results.infobulles[classement] == true && d == true){  // note
                         browser.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -449,10 +449,10 @@ function debunkSite(url, t, d){
                         console && console.log("dans la base :");
                         console && console.log(urls);
                     }
-                    browser.browserAction.setIcon({
-                        path: "icone.png",
-                        tabId: t
-                    });
+                    //browser.browserAction.setIcon({
+                    //    path: "icone.png",
+                    //    tabId: t
+                    //});
                     // Optional : add a badge text and badge bg with the icon
                     //browser.browserAction.setBadgeText({"text" : "Soumis :p"});
                     //browser.browserAction.setBadgeBackgroundColor({'color' : "#D50303"});
@@ -463,10 +463,10 @@ function debunkSite(url, t, d){
                     if (null == classement)
                         classement  = '';                             // propriétaires
 
-                    browser.browserAction.setIcon({
-                        path: "img/icones/icon-" + (classement) + ".png", // note
-                        tabId: t
-                    });
+                    //browser.browserAction.setIcon({
+                    //    path: "img/icones/icon-" + (classement) + ".png", // note
+                    //    tabId: t
+                    //});
 
                     if ("" == proprietaires)
                         proprietaires  = "Youtube est une propriété de la Holding Alphabet (Google)";                             // propriétaires
