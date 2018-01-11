@@ -60,31 +60,36 @@ var browser = browser || chrome;
 
 var max_notes = 6;  // (de 0 à 5 = 6 notes)
 
-function bulleStore(e){
+var options_infobulles = ['inconnu', 'capital', 'etat', 'independant' ];
+var checkbox_options = ['persistant', 'inconnu', 'capital', 'etat', 'independant' ];
+var options_others     = ['persistant' ];
+
+function optionStore(e){
     var infobulles;
-    var classement = this.id.replace("check-alert-", "");
+    var classement = this.id.replace("check-", "");
     var checked = this.checked;
-    browser.storage.local.get('infobulles', function(results){
-        infobulles = results.infobulles;
-        if(checked) {
-            infobulles[classement] = true;
-        }
-        else {
-            infobulles[classement] = false;
-        }
+
+    if (classement == 'persistant') {
         browser.storage.local.set({
-            'infobulles': infobulles
-            }
-        );
-    });
+            'persistant': checked
+        });
+    } else {
+        browser.storage.local.get('infobulles', function(results){
+            infobulles = results.infobulles;
+            infobulles[classement] = checked;
+            browser.storage.local.set({
+                'infobulles': infobulles
+            });
+        });
+    }
 }
 
 function refreshDatabase(e){
-    console && console.log("REFRESH REQUIRED");
     browser.storage.local.set({
         'last_update': ((new Date().getTime()) - 24*60*60*1000)
     });
-    this.blur();
+    // @FIXME popup scroll
+    return false;
 }
 
 function linkInNewTab(a) {
@@ -108,6 +113,7 @@ function createLink(toDOM,url,title) {
 }
 
 function main() {
+    // retrieve all datas from background.js
     var background = browser.extension.getBackgroundPage();
 
     if(background.has_info == true) {
@@ -132,10 +138,7 @@ function main() {
         document.querySelector("#owner-msg").innerText = background.owner_msg;
         //document.querySelector("#proprietaires span.content").innerText = background.proprietaires.join(",");
 
-            console && console.group("la boucle proprietaire : ");
-            console && console.log(background.proprietaires);
         for(var i in background.proprietaires) {
-            console && console.log("proprietaire "+i);
             if (!background.proprietaires[i]) {
                 document.querySelector("#proprietaire"+i).style = "display:none";
             } else {
@@ -166,7 +169,6 @@ function main() {
             }
 
         }
-            console && console.groupEnd();
 
         //document.querySelector("#fortunes span.content").innerText = background.fortunes.join(",");
         //document.querySelector("#brands span.content").innerText = background.marques.join(",");
@@ -210,6 +212,7 @@ function main() {
 
     }
 
+    // {{{ set the cog button
     var params = document.querySelector("#params");
     params.addEventListener("click", function(){
         var parameters = document.querySelector("#parameters");
@@ -224,12 +227,15 @@ function main() {
             parameters.style.display = "block";
         }
     });
-    browser.storage.local.get('infobulles', function(results){
-        classements = [ 'inconnu', 'capital', 'etat', 'independant' ];
-        classements.forEach(function(classement){
-            var thisCheckbox = document.getElementById('check-alert-' + classement);
+    // }}} set the cog button
+
+    // {{{ get config info to display in view
+    browser.storage.local.get(['infobulles', 'persistant'], function(results){
+        var infobulles = results.infobulles;
+        checkbox_options.forEach(function(classement){
+            var thisCheckbox = document.getElementById('check-' + classement);
             if (thisCheckbox) {
-                if(results.infobulles[classement] == true){
+                if(infobulles[classement] == true){
                     thisCheckbox.checked = true;
                 }
                 else {
@@ -237,34 +243,24 @@ function main() {
                 }
             }
         });
-    });
-	
-	//linkInNewTab(document.querySelector(".propos-par a"));
-	//linkInNewTab(document.querySelector("#more-info-insoumis"));
-	
-
-
-classements = [ 'inconnu', 'capital', 'etat', 'independant' ];
-    classements.forEach(function(classement){
-        if (background.colors[classement]) {
-            {
-                var thisCheckbox = document.getElementById('check-alert-' + classement);
-                if (thisCheckbox) {
-                    thisCheckbox.style.color = background.colors[classement];
-                }
-            }
+        var persistant = document.getElementById('check-persistant');
+        if(results.persistant == true){
+            persistant.checked = true;
+        } else {
+            persistant.checked = false;
         }
     });
-}
+
+    // }}} get config info to display in view
+
+} // end of main function
 
 document.addEventListener('DOMContentLoaded', function () {
     main();
-    classements = [ 'inconnu', 'capital', 'etat', 'independant' ];
-    classements.forEach(function(classement){
-            var thisCheckbox = document.getElementById('check-alert-' + classement);
-            if (thisCheckbox) {
-                thisCheckbox.addEventListener('click', bulleStore);
-            }
+    checkbox_options.forEach(function(element_id) {
+        var element = document.getElementById('check-' + element_id);
+
+        element.addEventListener('click', optionStore);
     });
     document.querySelector('#do-refresh-database').addEventListener('click', refreshDatabase);
 });

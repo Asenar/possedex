@@ -62,7 +62,7 @@ var browser = browser || chrome;
 
     var infobulle;
     var removeTimeout;
-    var removeAfter = 20000; // En milliseconde (avant : 10 secondes)
+    var removeAfter = 10000; // En milliseconde
 
     var heights = [213, 180, 212, 203, 213];
 
@@ -126,8 +126,7 @@ var browser = browser || chrome;
     }
 
 
-    browser.runtime.onMessage.addListener(
-      function(request, sender, sendResponse) {
+    browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         // Supprimer infobulle si existant
         clearRemoveTimeout();
         removeElement(infobulle);
@@ -201,11 +200,12 @@ var browser = browser || chrome;
                 'world-spacing': '0'
             };
 
+            // @TODO: add option to fix on bottom, or on right
             css(infobulle, [reset, {
-                'top': '60px', // changement insoumis
+                'top': '60px',
                 'right': '20px',
                 'position': 'fixed',
-                'width': '255px',  // changement insoumis
+                'width': '255px',
                 //'width': '215px',
                 'border-radius': '2px',
                 'background-color': '#fafbfc',
@@ -285,9 +285,14 @@ var browser = browser || chrome;
             // Bind des event au clique
 
             close.addEventListener('click', closeInfoBulle);
-            infobulle.addEventListener('mouseenter', clearRemoveTimeout);
-            infobulle.addEventListener('mouseleave', removeAterTime);
-            removeAterTime();
+            if (!request.persistant) {
+                // note : theses log are displayed in the classic console
+                infobulle.addEventListener('mouseenter', clearRemoveTimeout);
+                infobulle.addEventListener('mouseleave', removeAterTime);
+                removeAterTime();
+            } else {
+                //console && console.log("persistant is enabled");
+            }
         }
         else {
             if (request.text == 'report_back') {
