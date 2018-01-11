@@ -107,11 +107,11 @@ figure{
 	width: 100%;
 }
 
-ul{
+.paragraph-wrapper{
 	padding-left: 20px;
 }
 
-ul img{
+.paragraph-wrapper img{
 	margin-left: -20px;
 	margin-top: 1em;
 	margin-bottom: 1em;
@@ -297,7 +297,7 @@ label{
 		transform: translateY(-50%);
 	}
 
-	li{
+	.paragraph{
 		position: relative;
 		margin-bottom: 20px;
 	}
