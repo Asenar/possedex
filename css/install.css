@@ -250,9 +250,11 @@ label{
 		padding-top: 28px;
 		float: right;
 		background-image: url('../img/possedex-logo-install.png');
-        background-size : 100%;
+        background-repeat : no-repeat;
+        background-position : center center;
         width : 64px;
         height : 64px;
+        display : inline-block;
 	}
 
 	.insoumis{
