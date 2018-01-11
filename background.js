@@ -136,8 +136,8 @@ var colors = {
 // let possedex_colors = [ "#A2A9AE", "#129AF0", "#D50303", "#F5A725", "#468847" ];
 // let possedex_descs = [ "inclassable", "parodique", "pas fiable du tout", "peu fiable", "fiable" ];
 
-var CURRENT_VERSION = '0.0.2';
 var base_url = "http://possedex.info/database.json";
+var CURRENT_VERSION = '0.0.3';
 var always_refresh = false;
 var urls = "";
 var note = null;
