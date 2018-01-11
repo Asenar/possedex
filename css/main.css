@@ -169,7 +169,7 @@ a.more:after, .button.more:after{
 }
 
 .option-bulle {
-    width: 50%;
+    width: auto;
     left:3px;
     margin-bottom:2px;
 }

@@ -55,22 +55,35 @@
 
             <h2 class="title-params">Affichage des infobulles</h2>
                 <br>
-                <p>Affichage de l'infobulle: adaptez vos préférences selon les catégories de sites</p>
-                <div id="alert-inconnu" class="option-bulle">
-                    <input id="check-alert-inconnu" type="checkbox">
-                    <label for="check-alert-inconnu">Inconnu</label><br>
+                <div id="affichage-persistant" class="option-bulle">
+                    <label for="check-persistant">
+                        <input id="check-persistant" type="checkbox" class="option-checkbox"/>
+                        Affichage persistant</label><br>
+                    <div><small>Par défault, les infobulles disparaissent après 10 secondes. Cochez cette case pour les rendre persistante (le bouton fermer sera toujours disponible)</small></div>
                 </div>
+                    <hr>
+
+                <p>Type d'info bulles à afficher</p>
+
+                <div id="alert-inconnu" class="option-bulle">
+                    <label for="check-inconnu">
+                        <input id="check-inconnu" type="checkbox" class="option-checkbox"/>
+                        Inconnu</label>
+                </div>
+
                 <div id="alert-capital" class="option-bulle">
-                    <input id="check-alert-capital" type="checkbox">
-                    <label for="check-alert-capital">Liens capitalistiques fort</label><br>
+                    <label for="check-capital">
+                        <input id="check-capital" type="checkbox" class="option-checkbox"/>
+                        Liens capitalistiques</label>
                 </div>
                 <div id="alert-etat" class="option-bulle">
-                    <input id="check-alert-etat" type="checkbox">
-                    <label for="check-alert-etat">Liens étatiques forts</label><br>
+                    <label for="check-etat">
+                        <input id="check-etat" type="checkbox" class="option-checkbox"/>
+                        Liens étatiques</label>
                 </div>
                 <div id="alert-independant" class="option-bulle">
-                    <input id="check-alert-independant" type="checkbox">
-                    <label for="check-alert-independant">Média indépendant: Bravo !</label>
+                    <input id="check-independant" type="checkbox" class="option-checkbox"/>
+                    <label for="check-independant">Média indépendant: Bravo !</label>
                 </div>
 
 

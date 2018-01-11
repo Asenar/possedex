@@ -174,18 +174,18 @@ function onInstall() {
         console && console.log("Le Possedex est installé");
     loadData();
     var last_update = new Date();
-    browser.storage.local.set(
-            {
+    browser.storage.local.set({
                 'infobulles': {
-                 'inconnu'     : false,
-                 'capital'     : true,
-                 'etat'        : true,
-                 'independant' : true
+                    'inconnu'     : false,
+                    'capital'     : true,
+                    'etat'        : true,
+                    'independant' : true
                 },
+                'persistant'  : false,
+
                 "installed" : CURRENT_VERSION,
-                'last_update': last_update.getTime(),
-            }
-            );
+                'last_update': last_update.getTime()
+    });
     browser.tabs.create({url: "install.html"});
 }
 
@@ -296,12 +296,12 @@ function youtubeChannel(url){
 }
 
 
-function debunkSite(url, t, d){
+function debunkSite(url, tab_id, display){
     if (3 <= _debug) {
         console && console.group('STARRT debunk site '+url);
     }
 
-    browser.storage.local.get(['urls', "sites", "already_visited", "infobulles", "last_update"], function(results){
+    browser.storage.local.get(['urls', "sites", "already_visited", "infobulles", "persistant", "last_update"], function(results){
         if (3 <= _debug) {
             console && console.info("debunkSite : var results");
             console && console.log(results);
@@ -421,12 +421,11 @@ function debunkSite(url, t, d){
                     }
 
                     //browser.browserAction.setIcon({
-
                     //    path: "img/icones/icon-" + classement + ".png", // note
                     //    tabId: t
                     //});
 
-                    if(results.infobulles[classement] == true && d == true){  // note
+                    if(results.infobulles[classement] == true && display == true){  // note
                         browser.tabs.query({active: true, currentWindow: true}, function(tabs) {
                             // sendMessage to the content.js listener
                             browser.tabs.sendMessage(tabs[0].id, {
@@ -436,6 +435,7 @@ function debunkSite(url, t, d){
                                 message     : messages[classement],
                                 bandeau_msg : bandeau_msgs[classement],
                                 icone       : icones[classement],
+                                persistant  : results.persistant
                             }, function(response) { // note
                             });
                         });
@@ -484,7 +484,7 @@ function debunkSite(url, t, d){
         }
 
         var today = new Date();
-last_update = results.last_update;
+        last_update = results.last_update;
         if(always_refresh || (today.getTime() - last_update)/1000/60/60 >= 24) {
 
             if (1 <= _debug) {
