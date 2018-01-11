@@ -92,6 +92,12 @@ function refreshDatabase(e){
     return false;
 }
 
+function changeDbSource(e){
+    browser.storage.local.set({
+        'custom_db': document.getElementById('db-source').value,
+        'last_update': ((new Date().getTime()) - 24*60*60*1000)
+    });
+    return false;
 }
 
 function linkInNewTab(a) {
@@ -253,6 +259,9 @@ function main() {
         }
     });
 
+    browser.storage.local.get('custom_db', function(results){
+        document.getElementById('db-source').value = results.custom_db;
+    });
     // }}} get config info to display in view
 
 } // end of main function
@@ -265,6 +274,7 @@ document.addEventListener('DOMContentLoaded', function () {
         element.addEventListener('click', optionStore);
     });
     document.querySelector('#do-refresh-database').addEventListener('click', refreshDatabase);
+    document.querySelector('#btn-db-source').addEventListener('click', changeDbSource);
 });
 
 function getObjectKeys(obj) {

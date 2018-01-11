@@ -136,8 +136,8 @@ var colors = {
 // let possedex_colors = [ "#A2A9AE", "#129AF0", "#D50303", "#F5A725", "#468847" ];
 // let possedex_descs = [ "inclassable", "parodique", "pas fiable du tout", "peu fiable", "fiable" ];
 
-var base_url = "http://possedex.info/database.json";
 var CURRENT_VERSION = '0.0.3';
+var default_base_url = "http://possedex.info/database.json";
 var always_refresh = false;
 var urls = "";
 var note = null;
@@ -183,11 +183,25 @@ function onInstall() {
                 },
                 'persistant'  : false,
 
+                'custom_db' : default_base_url,
+
                 "installed" : CURRENT_VERSION,
                 'last_update': last_update.getTime()
     });
     browser.tabs.create({url: "install.html"});
 }
+
+var base_url = default_base_url;
+
+browser.storage.local.get(['custom_db'], function(results){
+    var custom_db = results.custom_db;
+    if (custom_db.length > 0 && custom_db.match(/https?:\/\/.*/ )) {
+        if (1 <= _debug) {
+            console && console.log("using custom db : "+custom_db);
+        }
+        base_url = custom_db;
+    }
+});
 
 
 browser.storage.local.get(['installed'], function(results){
@@ -229,10 +243,17 @@ function loadData(){
         console && console.info('start loadData()');
         //console && console.info('NO DEBUG');
     }
-    browser.storage.local.get('last_update', function(results){
+    browser.storage.local.get(['custom_db', 'last_update'], function(results){
         var new_update = new Date();
+        var last_update = results.last_update;
+        var custom_db   = results.custom_db;
+        if (custom_db.length > 0 && custom_db.match(/https?:\/\/.*/ )) {
+            base_url = custom_db;
+        }
+
         if (2 <= _debug) {
-            console && console.log("found last update : ", results, "base url=", base_url+"?"+new_update.getTime());
+            console && console.log("found last update : ", last_update);
+            console && console.log("base url=", base_url+"?"+new_update.getTime());
         }
         loadJSON(base_url+"?"+new_update.getTime(),
                 function(data) {
