@@ -57,7 +57,8 @@
 */
 var browser = browser || chrome;
 
-function bulleStore(e){
+// @FIXME use same function and element id as popup.js
+function optionStore(e){
     var infobulles;
     var infobulles_once;
     var classement = this.id.replace("check-alert-", "");
@@ -115,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function () {
         classements.forEach(function(classement){
             var selector = document.getElementById('check-alert-' + classement);
             if (selector) {
-                selector.addEventListener('click', bulleStore);
+                selector.addEventListener('click', optionStore);
             }
         });
     } catch(e) {
