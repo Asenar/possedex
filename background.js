@@ -1,76 +1,58 @@
-/*          DECODEX INSOUMIS
-            LES INSOUMIS NUMERIQUES
+/*          POSSEDEX
             VERSION 1 / MARS 2017
             VERSION 2 / JANVIER 2018
             REMERCIEMENT A L'EQUIPE LES DECODEURS DU MONDE
             REMERCIEMENT AUX INSOUMIS QUI SE RECONNAITRONT
-
-
-
-
-
-
-
-
-                                          .,,.
-                                          +++######:
-                                        #++######'+##
-                                      '##++######++###
-                                     ####+++####++#####
-                                    ###########++++#####
-                                   ######++;###+#''+####'
-                                  ;+##++++++,   +++######
-                                 +++++++''      `##+#####
-                                ++++++++;        ,##+##++
-                                ++++++++          ##++#++;
-                               ########            #++++##
-                               ##+++++;            ##+#+#+
-                              ,##::###             ;#+#++#
-                              ###:;##'              ######;
-                              ###+###               ###+###
-                             .#######               #######
-                             ####'##:               ###'###
-                             +######                #######
-                             +###++#                ###+###
-                            ,+###+++                +######
-                            #####:;`                +##;###
-                            #'+##::                ,#+#+##;
-                            #+###+#                ##+#'##
-                            #######                ##+#;##
-                           .#+###+'                ##+#:##
-                           +#+####.               #++##+#'
-                           ##+####                #+#+#;#
-                           #######               +#######
-                           ##+####              ;#####+:`
-                           ##+###+              ++####++
-                           #######             #++##+++
-                           ##+####            ####+++++
-                           ##+###+          ,###++####
-                           ##+###;         #####'+###
-                           ######:       ';####++###.
-                           ##+###,    ,#########++#,
-                           ##+###::#####+#####+#++.
-                           ######';#####+++#####+
-                           ##+###++#####++######
-                           +#'###+'+#+++++;++#,
-                           ##+###:;####++++#;
-                           #####++'####+++
-                           ##+###+++##;
-                           ##+###'
-                           #######
-                           ##+####
-                           ##+++##
-                           ##++###
-                           +#+####.
-                           .++####'
-                            #+#####
-                            +####+#
-                            #+#####
-                            '+####+
-                             +#####
-                             ######
-                             .####+
-                               ,:`
+                             .y.
+                            -dMm.
+                           .mMMMd.
+                          .dMMMMMd.     .:+oyyso-
+                         `hMMMMMMMd` -odNMMMMMMMNy`             `..
+                         sMMMm:dMMMddNMMMMmyoomMMMh    `.-/+oydmmN:
+                        :NMMN/ .mMMMMMNd+-`   -NMMMyydmNNNMMMMMMMd.
+                        hMMMy   -mMMMN:        sMMMMMMMMNNmhhNMMMo
+                       -mMMM-    -mMMMy`       -NMMMy+/-.`` /NMMN.
+                       /NMMM`     -mMMMy`      `hMMM+       sMMMh
+                       -mMMMo`     :mMMMs`      sMMMd      .NMMN/
+                        +NMMNy`     :NMMNs      /MMMm`     +MMMd.
+                         :dMMMd:     :NMMMo`    `NMMN-    `dMMMo
+                          .yMMMN+     :NMMNo     NMMN/    /NMMM.
+                           `oNMMNy.    /NMMN+    dMMMo    yMMMh
+                             :mMMMd-    /NMMN+   yMMMs   `NMMN/
+                         `-://ohhhhy+////ymNMN/.-shhds:--+mmmd.
+                       `/osoo+++++++++++oosshdsssoooooooooosss+/-`
+                      `+so/:::::::::::::::/osss+:::::::::::://+os+-`
+                      -ss/:----------------/ss+:--------------::+ss+-.```
+                      .ss+:::::::--::::::::+sso::---------------::+osoooo-
+                      `+sso+++///::::///+++oosso+//:::::::--------:::/+ss-
+                     `/ss+/::::::::::::::::::+ssssoooooo+:------------/ss-
+                     .os+:-------------------:oso-....os+-------------/ss-
+                     `+so::----------:::::://+ss+`    +so:------------/ss-
+                      .+so+////////:::::////+++os+.   -ss/------------/ss-
+                       `-oso//:::::------------:os+   `/so/:----------/ss-
+                        `oso:-----------------::oso    `+so/:---------/ss-
+                         :ss+:::::::::::::::://+oss/.  ``/so+:--------/ss-
+                          -+osoooooo++///::::::::/+so- -.`:oso/::-----/ss-
+                            .-:::oso:-------------:os+` o+ `:oso+/::::/ss-
+                                 /so/:------------:os+` /Ms. `-+ysssoooss-
+                                 `+so+/:::::::::/+oso.  +MMd-  .hNmmh----`
+                                  `:+oooossssooooo+:`   yMMMy`  -MMMN/
+                                     `..:dmmm/...`      :NMMM:   sMMMm`
+                                        :MMMm.           yMMMh   .dMMMs
+                                        yMMMy       ``.:+yMMMN:   :NMMN:
+                                       `mMMM/  ``-+shmMMMMMMNNy    sMMMm`
+                                       /NMMN-:ohmMMMMNNmdyo+/--    .mMMMo
+                                       sMMMMmMMMMNmyo/.`   `.:/+ossodMMMN:
+                                      .mMMMMMNmy+.`    `-+ymNMMMMMMMMMMMMd`
+                                      :MMMMNs:`  ``./oymNMMMMNdhyssyhmMMMMo
+                                      yMMMNyoooyhdNNMMMMNMMMMo`      `dMMMd`
+                                      -dNMMMMMMMMMNNNdy+:oMMMN:    `:hMMMN:
+                                       `:+syyyyso/:.`     yMMMm` `/dMMMMd:
+                                                          .dMMMhomMMMNh/
+                                                           -NMMMMMMNy-
+                                                            +NMMMms.
+                                                             sMmo`
+                                                             `/`
 
 */
 
