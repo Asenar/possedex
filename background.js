@@ -322,6 +322,7 @@ function debunkSite(url, tab_id, display){
                         console && console.log('site FOUND ! ', site_id);
                     }
                     try {
+                        site_url       = url;
                         site_actif     = sites[site_id][col_nom];                    // nom du site
                         updated        = new Date(sites[site_id][col_updated]);      // last maj
                         classement     = sites[site_id][col_classement_possedex];   // classement possedex

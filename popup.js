@@ -202,7 +202,9 @@ function main() {
         document.querySelector("#verif-insoumis").classList.remove("active");
         document.querySelector("#possedex-window").classList.add('active');
         var site_slug = background.site_actif.replace(/ /,'-');
+        var site_url = background.site_url;
         document.querySelector("#more-info").href = "http://www.acrimed.org/+-"+site_slug+"-+";
+        document.querySelector("#more-info").href = "http://www.possedex.info/#"+site_url;
     }
     else {
         document.querySelector("#verif-insoumis").style.display = "block";
