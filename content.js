@@ -143,6 +143,7 @@ var browser = browser || chrome;
             var body = document.querySelector('body');
 
             // Création de la structure du popup
+            //console && console.log("infobulle - structure");
             infobulle = createChild(body, 'div');
             var header = createChild(infobulle, 'header');
             var title = createChild(header, 'h1');
@@ -150,12 +151,21 @@ var browser = browser || chrome;
             var close = createChild(header, 'div');
             var content = createChild(infobulle, 'div');
             var text = createChild(content, 'div');
+
+            var proprietaire1 = createChild(content, 'div');
+            var proprietaire1_a = createChild(proprietaire1, 'a');
+
+            var proprietaire2 = createChild(content, 'div');
+            var proprietaire2_a = createChild(proprietaire2, 'a');
+
+            var proprietaire3 = createChild(content, 'div');
+            var proprietaire3_a = createChild(proprietaire3, 'a');
             var more = createChild(content, 'p');
 
             // Ajout du style
-            var forceImportant = true;
-            //var currentColor = colors[insoumis_note]; // note
+            var forceImportant = false;
             var currentColor = request.color; // note
+            var currentColor = '#888888'; // note
 
             var reset = {
                 'display': 'block',
@@ -208,7 +218,7 @@ var browser = browser || chrome;
                 'width': '255px',
                 //'width': '215px',
                 'border-radius': '2px',
-                'background-color': '#fafbfc',
+                'background-color': '#dadbdc',
                 'box-shadow': '0 0 10px 0 #5d666d',
                 'transition': 'all .5s ease',
                 'opacity': '1',
@@ -227,21 +237,21 @@ var browser = browser || chrome;
                 'font-size': '15px',
                 'float': 'left',
                 'line-height': '20px',
-                'color': '#fff'
+                'color': '#222'
             }], forceImportant);
 
-            css(picto, [reset, resetText, {
-                'display': 'inline-block',
-                'width': '22px',
-                'height': '22px',
-                'border': 'solid 2px #ffffff',
-                'border-radius': '20px',
-                'vertical-align': 'top',
-                'text-align': 'center',
-                'line-height': '18px',
-                'margin': '-1px 10px -1px 0',
-                'color': '#fff'
-            }], forceImportant);
+            //css(picto, [reset, resetText, {
+            //    'display': 'inline-block',
+            //    'width': '22px',
+            //    'height': '22px',
+            //    'border': 'solid 2px #ffffff',
+            //    'border-radius': '20px',
+            //    'vertical-align': 'top',
+            //    'text-align': 'center',
+            //    'line-height': '18px',
+            //    'margin': '-1px 10px -1px 0',
+            //    'color': '#222'
+            //}], forceImportant);
 
             css(close, [reset, resetText, {
                 'float': 'right',
@@ -255,25 +265,37 @@ var browser = browser || chrome;
                 'cursor': 'pointer'
             }], forceImportant);
 
-            css(content, [reset, {
-                'padding': '10px'
-            }], forceImportant);
+            //css(content, [reset, {
+            //    'padding': '10px'
+            //}], forceImportant);
 
-            css(text, [reset, resetText, {
-                'margin': '0 0 5px 0'
-            }], forceImportant);
+            //css(text, [reset, resetText, {
+            //    'margin': '0 0 5px 0'
+            //}], forceImportant);
 
-            css(more, [reset, resetText, {
-                'font-weight': 'bold',
-                'color': '#16212c'
-            }], forceImportant);
+            //css(more, [reset, resetText, {
+            //    'font-weight': 'bold',
+            //    'color': '#16212c'
+            //}], forceImportant);
 
             // Ajout du contenu
-            appendText(title, request.bandeau_msg); // note
+            appendText(title, request.nom); // note
             // le picto= un carré avec border-radius + un caractere
             appendText(picto, 'i');
             appendText(close, 'Fermer');
             text.innerText = request.message; // no html
+            //console && console.log("infobulle - le message");
+            //console && console.log(request);
+
+            proprietaire1_a.target    = "_blank"; // no html
+            proprietaire1_a.innerText = ' '+request.proprietaires[0].nom; // no html
+            proprietaire1_a.href      = request.proprietaires[0].url; // no html
+            proprietaire2_a.target    = "_blank"; // no html
+            proprietaire2_a.innerText = ' '+request.proprietaires[1].nom; // no html
+            proprietaire2_a.href      = request.proprietaires[1].url; // no html
+            proprietaire3_a.innerText = ' '+request.proprietaires[2].nom; // no html
+            proprietaire3_a.href      = request.proprietaires[2].url; // no html
+            proprietaire3_a.target    = "_blank"; // no html
             var icone = new Image();
             icone.src = request.icone; // note
             css(icone, [reset, {
@@ -311,8 +333,4 @@ var browser = browser || chrome;
     });*/
 
 })();
-
-
-
-
 

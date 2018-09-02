@@ -118,57 +118,57 @@ function main() {
 
     if(background.has_info == true) {
         // TODO afficher les infos manquantes avec popup.js et popup.html
-        document.querySelector(".content #site-name").innerText = background.site_actif;
-        document.querySelector("#notule").innerText = background.notule;
+        document.querySelector(".content #site-name").innerText = background.entity.nom;
+        document.querySelector("#notule").innerText = 'notule - '+background.notule;
         document.querySelector("#last-update").style["color"] = background.color;
         document.querySelector("#last-update").style["color"] = background.color;
         document.querySelector("#last-update-date").innerText = background.updated_human;
 
 
-        //if(background.decodex_note) {
-        //    document.querySelector("#les-decodeurs #comment").innerText = "Les Décodeurs du Monde jugent eux ce site comme ";
-        //    document.querySelector("#les-decodeurs #description").style["color"] = background.possedex_color;
-        //    document.querySelector("#les-decodeurs #description").style["font-weight"] = "bold";
-        //    document.querySelector("#les-decodeurs #description").innerText = background.possedex_desc;
-        //}
-        //else {
-        //    document.querySelector("#les-decodeurs").innerText = "Les Décodeurs du Monde n'ont pas noté ce site. Ils le considèrent (peut être) comme fiable ou ne le connaissent pas.";
-        //}
-
-        document.querySelector("#owner-msg").innerText = background.owner_msg;
-        //document.querySelector("#proprietaires span.content").innerText = background.proprietaires.join(",");
+        document.querySelector("#owner-msg").innerText = 'owner msg '+background.owner_msg
+        document.querySelector("#proprietaires span.content").innerText = '';
 
         for(var i in background.proprietaires) {
-            if (!background.proprietaires[i]) {
-                document.querySelector("#proprietaire"+i).style = "display:none";
-            } else {
-                document.querySelector("#proprietaire"+i).style = "";
-                document.querySelector("#proprietaire"+i+" .nom").innerText = background.proprietaires[i]
-            }
-
-            if (!background.fortunes[i]) {
-                document.querySelector("#proprietaire"+i+" td.detail").style = "display:none";
-            } else {
-                if (background.fortunes[i].length) {
-                    document.querySelector("#proprietaire"+i+" td.detail .d1").innerText = background.fortunes[i]
-                } else {
-                    document.querySelector("#proprietaire"+i+" td.detail .d1").style = "display:none";
-                }
-                if (background.marques[i].length) {
-                    document.querySelector("#proprietaire"+i+" td.detail .d2").innerText = "[marque] "  + background.marques[i]
-                } else {
-                    document.querySelector("#proprietaire"+i+" td.detail .d2").style = "display:none";
-                }
-                if (background.influences[i].length) {
-                    document.querySelector("#proprietaire"+i+" td.detail .d3").innerText = "[secteur] " + background.influences[i]
-                } else {
-                    document.querySelector("#proprietaire"+i+" td.detail .d3").style = "display:none";
-                }
-
-                document.querySelector("#proprietaire"+i+" td.detail").style = "";
-            }
-
+                console && console.info(background.proprietaires[i]);
+            createLink(document.querySelector("#proprietaires span.content"), 
+                background.proprietaires[i].url,
+                background.proprietaires[i].nom
+            )
         }
+        + background.proprietaires.join(",")+" (les proprietaires)"
+
+        //for(var i in entity.est_possede) {
+        //    if (!entity.est_possede[i]) {
+        //        //document.querySelector("#proprietaire"+i).style = "display:none";
+        //    } else {
+        //        document.querySelector("#proprietaire"+i).style = "";
+        //        document.querySelector("#proprietaire"+i+" .nom").innerText
+        //            = entity.est_possede[i].nom + "("+entity.est_possede[i].value+")"
+        //    }
+
+        //    if (!background.fortunes[i]) {
+        //        document.querySelector("#proprietaire"+i+" td.detail").style = "display:none";
+        //    } else {
+        //        if (background.fortunes[i].length) {
+        //            document.querySelector("#proprietaire"+i+" td.detail .d1").innerText = background.fortunes[i]
+        //        } else {
+        //            document.querySelector("#proprietaire"+i+" td.detail .d1").style = "display:none";
+        //        }
+        //        if (background.marques[i].length) {
+        //            document.querySelector("#proprietaire"+i+" td.detail .d2").innerText = "[marque] "  + background.marques[i]
+        //        } else {
+        //            document.querySelector("#proprietaire"+i+" td.detail .d2").style = "display:none";
+        //        }
+        //        if (background.influences[i].length) {
+        //            document.querySelector("#proprietaire"+i+" td.detail .d3").innerText = "[secteur] " + background.influences[i]
+        //        } else {
+        //            document.querySelector("#proprietaire"+i+" td.detail .d3").style = "display:none";
+        //        }
+
+        //        document.querySelector("#proprietaire"+i+" td.detail").style = "";
+        //    }
+
+        //}
 
         //document.querySelector("#fortunes span.content").innerText = background.fortunes.join(",");
         //document.querySelector("#brands span.content").innerText = background.marques.join(",");

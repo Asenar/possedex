@@ -58,21 +58,16 @@
 
 var browser = browser || chrome;
 
-var _debug = 0; // 0=quiet, 1=verbose, 2=more verbose, 3= very very verbose, 4=even more. 5 very very verbose
+var checkSite_in_progress = false;
+
+var _debug = 2; // 0=quiet, 1=verbose, 2=more verbose, 3= very very verbose, 4=even more. 5 very very verbose
 if (_debug) {
     console && console.info("DEBUG LEVEL", _debug);
 }
 
 /***** constants and variables *****/
-let col_nom                 = 0;
-let col_desc                = 1;
-let col_slug                = 2;
-let col_classement_possedex = 3;
 let col_updated             = 4;
 
-let col_pub           = 5;
-let col_subventions   = 6;
-let col_sources       = 7;
 
 let col_proprietaire1 =  8;
 let col_fortune1      =  9;
@@ -90,10 +85,10 @@ let col_marque3       = 18;
 let col_influence3    = 19;
 
 let messages = {
- inconnu     :    "non classé",
- capital     :    "Ce média dépend d'intérêts industriels, financiers, ou de groupe de presse.",
- etat        :    "Ce média dépend d'un ou plusieurs états",
- independant :  "Ce média est indépendant vis à vis d'intérêts industriels, financiers, groupe de presse ou étatique.",
+ inconnu     : "non classé",
+ capital     : "Ce média dépend d'intérêts industriels, financiers, ou de groupe de presse.",
+ etat        : "Ce média dépend d'un ou plusieurs états",
+ independant : "Ce média est indépendant vis à vis d'intérêts industriels, financiers, groupe de presse ou étatique.",
  rien        : "rien"
 };
 let icones = {
@@ -136,7 +131,8 @@ var colors = {
 // let possedex_colors = [ "#A2A9AE", "#129AF0", "#D50303", "#F5A725", "#468847" ];
 // let possedex_descs = [ "inclassable", "parodique", "pas fiable du tout", "peu fiable", "fiable" ];
 
-var base_url = "http://possedex.info/database.json";
+var base_url = "http://possedex.info/mdiplo.json";
+var DOMAIN = "possedex.info";
 var CURRENT_VERSION = '0.0.3';
 var always_refresh = false;
 var urls = "";
@@ -190,8 +186,8 @@ function onInstall() {
 }
 
 
-browser.storage.local.get(['installed'], function(results){
-    var install = results.installed;
+browser.storage.local.get(['installed'], function(data){
+    var install = data.installed;
     if (install != CURRENT_VERSION) {
         onInstall();
     }
@@ -229,10 +225,10 @@ function loadData(){
         console && console.info('start loadData()');
         //console && console.info('NO DEBUG');
     }
-    browser.storage.local.get('last_update', function(results){
+    browser.storage.local.get('last_update', function(data){
         var new_update = new Date();
         if (2 <= _debug) {
-            console && console.log("found last update : ", results, "base url=", base_url+"?"+new_update.getTime());
+            console && console.log("found last update : ", data, "base url=", base_url+"?"+new_update.getTime());
         }
         loadJSON(base_url+"?"+new_update.getTime(),
                 function(data) {
@@ -242,8 +238,8 @@ function loadData(){
                     browser.storage.local.set({'urls': data['urls']}, function() {
                     });
                     if (2 <= _debug)
-                        console && console.info("set sites to", data['sites']);
-                    browser.storage.local.set({'sites': data['sites']}, function() {
+                        console && console.info("set objets to", data['objets']);
+                    browser.storage.local.set({'objets': data['objets']}, function() {
                     });
                     if (3 <= _debug)
                         console && console.info("set last_update to", new_update.getTime());
@@ -301,19 +297,19 @@ function debunkSite(url, tab_id, display){
         console && console.group('STARRT debunk site '+url);
     }
 
-    browser.storage.local.get(['urls', "sites", "already_visited", "infobulles", "persistant", "last_update"], function(results){
+    browser.storage.local.get(['urls', "objets", "already_visited", "infobulles", "persistant", "last_update"], function(data){
         if (3 <= _debug) {
-            console && console.info("debunkSite : var results");
-            console && console.log(results);
+            console && console.info("debunkSite : var data");
+            console && console.log(data);
         }
 
-        if ("urls" in results) {
+        if ("urls" in data) {
             if (_debug > 4) {
-                console && console.log("urls is in results");
+                console && console.log("urls is in data");
             }
             try {
-                urls = results.urls;
-                sites = results.sites;
+                urls = data.urls;
+                objets = data.objets;
                 has_info = urls.hasOwnProperty(url);
                 // si le site est trouvé direct
                 if (has_info == true) {
@@ -322,39 +318,59 @@ function debunkSite(url, tab_id, display){
                         console && console.log('site FOUND ! ', site_id);
                     }
                     try {
-                        site_url       = url;
-                        site_actif     = sites[site_id][col_nom];                    // nom du site
-                        updated        = new Date(sites[site_id][col_updated]);      // last maj
-                        classement     = sites[site_id][col_classement_possedex];   // classement possedex
-                        notule         = sites[site_id][col_desc];                   // description originale
-                        slug           = sites[site_id][col_slug];                   // nom normalisé
+                        entity = objets[site_id];
+                        if (3 <= _debug) {
+                            console && console.log(entity.est_possede);
+                        }
 
-                        owner_msg      = owner_msgs[classement];               // message "ce media est la propriété ..."
+                        site_actif     = objets[site_id].nom;                    // nom du site
+                        updated        = new Date(entity[col_updated]);      // last maj
+                        //console && console.info("CLA SSE MENT");
+                        //console && console.log(col_classement_possedex);
+                        classement     = entity.possedex.classement;   // classement possedex
+                        console && console.log(entity.possedex);
+                        notule         = entity.possedex.desc;                   // description originale
+                        slug           = entity.possedex.slug;                   // nom normalisé
 
-                        var proprietaire1 = sites[site_id][col_proprietaire1];      // propriétaires
-                        var fortunes1      = sites[site_id][col_fortune1     ];      // propriétaires
-                        var marque1        = sites[site_id][col_marque1      ];      // propriétaires
-                        var influence1     = sites[site_id][col_influence1   ];      // propriétaires
+                        //owner_msg      = owner_msgs[classement];               // message "ce media est la propriété ..."
 
-                        var proprietaire2 = sites[site_id][col_proprietaire2];      // propriétaires
-                        var fortunes2      = sites[site_id][col_fortune2     ];      // propriétaires
-                        var marque2        = sites[site_id][col_marque2      ];      // propriétaires
-                        var influence2     = sites[site_id][col_influence2   ];      // propriétaires
+                        if (entity.hasOwnProperty('est_possede')) {
+                            proprietaires = []
+                                console && console.log("POUET POUET");
+                            entity.est_possede.forEach(function(el, i) {
+                                console && console.log("POUET POUET");
+                                console && console.log(el);
+                                proprietaires.push({
+                                        "url" : 'http://'+DOMAIN+'#'+el.nom,
+                                        "nom" : el.nom + ' ('+el.valeur +(parseInt(el.valeur)?'%':'') +')'
+                                    //+ " (" + fortunes1 + ")"
+                                });
+                            })
+                        }
+                        //var proprietaire1 = objets[site_id][col_proprietaire1];      // propriétaires
+                        //var fortunes1      = objets[site_id][col_fortune1     ];      // propriétaires
+                        //var marque1        = objets[site_id][col_marque1      ];      // propriétaires
+                        //var influence1     = objets[site_id][col_influence1   ];      // propriétaires
 
-                        var proprietaire3 = sites[site_id][col_proprietaire3];      // propriétaires
-                        var fortunes3      = sites[site_id][col_fortune3     ];      // propriétaires
-                        var marque3        = sites[site_id][col_marque3      ];      // propriétaires
-                        var influence3     = sites[site_id][col_influence3   ];      // propriétaires
+                        //var proprietaire2 = objets[site_id][col_proprietaire2];      // propriétaires
+                        //var fortunes2      = objets[site_id][col_fortune2     ];      // propriétaires
+                        //var marque2        = objets[site_id][col_marque2      ];      // propriétaires
+                        //var influence2     = objets[site_id][col_influence2   ];      // propriétaires
 
-                        proprietaires = [proprietaire1, proprietaire2, proprietaire3];
-                        fortunes      = [fortunes1    , fortunes2    , fortunes3    ];
-                        marques       = [marque1     , marque2       , marque3      ];
-                        influences    = [influence1  , influence2    , influence3   ];
+                        //var proprietaire3 = objets[site_id][col_proprietaire3];      // propriétaires
+                        //var fortunes3      = objets[site_id][col_fortune3     ];      // propriétaires
+                        //var marque3        = objets[site_id][col_marque3      ];      // propriétaires
+                        //var influence3     = objets[site_id][col_influence3   ];      // propriétaires
 
-                        subventions    = sites[site_id][col_subventions];            // Montant des subventions d'état
-                        publicite      = sites[site_id][col_pub];                    // Pub ?
+                        //proprietaires = [proprietaire1, proprietaire2, proprietaire3];
+                        //fortunes      = [fortunes1    , fortunes2    , fortunes3    ];
+                        //marques       = [marque1     , marque2       , marque3      ];
+                        //influences    = [influence1  , influence2    , influence3   ];
 
-                        var raw_sources = sites[site_id][col_sources];                // Nos sources (urls séparés par virgule et/ou espace)
+                        subventions    = entity.possedex.subventions;            // Montant des subventions d'état
+                        publicite      = entity.possedex.pub;                    // Pub ?
+
+                        var raw_sources = entity.possedex.sources;                // Nos sources (urls séparés par virgule et/ou espace)
 
                         if (3 <= _debug) {
                             console && console.info("sources avant markdown", sources);
@@ -398,7 +414,7 @@ function debunkSite(url, tab_id, display){
                         bandeau_msg   = bandeau_msgs[classement];
                         icone         = icones[classement];
 
-                        if (2 <= _debug) {
+                        if (3 <= _debug) {
                             console && console.group("tout s'est bien passé");
                             console && console.log('site_actif     =',site_actif     );
                             console && console.log('updated        =',updated_human  );
@@ -417,27 +433,47 @@ function debunkSite(url, tab_id, display){
                         if (1 <= _debug) {
                             console && console.error("ERREUR has_info");
                             console && console.error(e);
-                            console && console.log(sites[site_id]);
+                            console && console.log(objets[site_id]);
                         }
                     }
 
+                    // // change l'icone bouton du navigateur
                     //browser.browserAction.setIcon({
                     //    path: "img/icones/icon-" + classement + ".png", // note
-                    //    tabId: t
+                    //    tabId: tabId
                     //});
 
-                    if(results.infobulles[classement] == true && display == true){  // note
+                    console && console.log("if envoyer le message");
+                    if(true || display == true){  // note
+                        console && console.log("debut envoyer le message");
+                        console && console.log("classement");
+                        console && console.log(classement);
+                        console && console.log("messages");
+                        console && console.log(messages);
                         browser.tabs.query({active: true, currentWindow: true}, function(tabs) {
-                            // sendMessage to the content.js listener
-                            browser.tabs.sendMessage(tabs[0].id, {
-                                show_popup  : true,
-                                note        : classement,
+                            msg = {
+                                show_popup    : true,
+                                nom           : entity.nom,
+                                proprietaires : proprietaires,
+                                //proprietaire1 : proprietaires.proprietaire1,
+                                //proprietaire2 : proprietaires.proprietaire2,
+                                //proprietaire3 : proprietaires.proprietaire3,
+                                //proprietaire1 : proprietaires.proprietaire1,
+                                //proprietaire2 : proprietaires.proprietaire2,
+                                //proprietaire3 : proprietaires.proprietaire3,
                                 color       : colors[classement],
                                 message     : messages[classement],
                                 bandeau_msg : bandeau_msgs[classement],
                                 icone       : icones[classement],
-                                persistant  : results.persistant
-                            }, function(response) { // note
+                                persistant  : data.persistant
+                            };
+                            console && console.log("envoyer le message");
+                            console && console.log(msg);
+
+                            // sendMessage to the content.js listener
+                            browser.tabs.sendMessage(tabs[0].id, msg, function(response) { // note
+                                //console && console.log("message envoyé");
+                                //console && console.log(response);
                             });
                         });
                     }
@@ -485,7 +521,7 @@ function debunkSite(url, tab_id, display){
         }
 
         var today = new Date();
-        last_update = results.last_update;
+        last_update = data.last_update;
         if(always_refresh || (today.getTime() - last_update)/1000/60/60 >= 24) {
 
             if (1 <= _debug) {
@@ -506,8 +542,15 @@ function debunkSite(url, tab_id, display){
 
 
 function checkSite(do_display){
+
+    if (checkSite_in_progress == true)
+        return;
+
+    checkSite_in_progress = true;
+
     browser.tabs.query({currentWindow: true, active: true}, function(tabs){
         if (!tabs.length) {
+            checkSite_in_progress = false;
             return;
         }
         var tab;
@@ -520,6 +563,7 @@ function checkSite(do_display){
         }
 
         if(active_url.indexOf("chrome-extension://") == 0) {
+            checkSite_in_progress = false;
             return;
         }
         // YOUTUBE
@@ -556,14 +600,14 @@ function checkSite(do_display){
                 console && console.log("find_url urls[\""+clean_url+"\"]", urls[clean_url]);
             }
 
-            // {{{ this might be removed (redundant with after the for()
+            // {{{ this might be removed (redundant with after the for())
             if (find_url) {
                 matches.push(find_url);
                 if (4 <= _debug) {
                     console && console.warn("URL MATCHES !!!! (clean_url="+clean_url+")", find_url);
                 }
             }
-            // }}} this might be removed (redundant with after the for()
+            // }}} this might be removed (redundant with after the for())
 
             if (4 <= _debug) {
                 console && console.group("for key in urls");
@@ -622,6 +666,7 @@ function checkSite(do_display){
             }
             debunkSite(clean_url, tab.id, do_display);
         }
+        checkSite_in_progress = false;
     });
 }
 
@@ -642,6 +687,7 @@ browser.windows.getCurrent(function (tabId, tab) {
 
 // This event happens everytime but seems required to update logo color
 // onload
+// déclenché quand un onglet est mis à jour
 browser.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     //if (4 <= _debug) {
     //    console && console.log("onUpdated");
@@ -649,6 +695,7 @@ browser.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     checkSite(changeInfo.status && (changeInfo.status == "complete"));
 });
 
+// déclenché quand la fenêtre actuelle change
 browser.windows.onFocusChanged.addListener(function (tabId, tab) {
     if (4 <= _debug) {
         console && console.log("onFocusChanged");
@@ -656,6 +703,7 @@ browser.windows.onFocusChanged.addListener(function (tabId, tab) {
     checkSite(false);
 });
 
+// déclenché quand l'icone d'action du navigateur est cliqué
 browser.browserAction.onClicked.addListener(function (tabId, tab) {
     if (4 <= _debug) {
         console && console.log("onClicked");
@@ -663,6 +711,8 @@ browser.browserAction.onClicked.addListener(function (tabId, tab) {
     checkSite(false);
 });
 
+
+// déclenché quand un onglet est créé
 browser.tabs.onCreated.addListener(function (tabId, tab) {
     if (4 <= _debug) {
         console && console.log("onCreated");
