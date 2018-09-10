@@ -1,8 +1,9 @@
 /*          POSSEDEX
             VERSION 1 / MARS 2017
             VERSION 2 / JANVIER 2018
+            VERSION 3 / AOUT 2018
             REMERCIEMENT A L'EQUIPE LES DECODEURS DU MONDE
-            REMERCIEMENT AUX INSOUMIS QUI SE RECONNAITRONT
+            INFINIMENT MERCI AU MONDE DIPLOMATIQUE QUI A PUBLIÉ SA BASE
                              .y.
                             -dMm.
                            .mMMMd.
@@ -60,29 +61,14 @@ var browser = browser || chrome;
 
 var checkSite_in_progress = false;
 
-var _debug = 2; // 0=quiet, 1=verbose, 2=more verbose, 3= very very verbose, 4=even more. 5 very very verbose
+var _debug = 1; // 0=quiet, 1=verbose, 2=more verbose, 3= very very verbose, 4=even more. 5 very very verbose
 if (_debug) {
     console && console.info("DEBUG LEVEL", _debug);
 }
 
+var DOMAIN = "possedex.info";
+
 /***** constants and variables *****/
-let col_updated             = 4;
-
-
-let col_proprietaire1 =  8;
-let col_fortune1      =  9;
-let col_marque1       = 10;
-let col_influence1    = 11;
-
-let col_proprietaire2 = 12;
-let col_fortune2      = 13;
-let col_marque2       = 14;
-let col_influence2    = 15;
-
-let col_proprietaire3 = 16;
-let col_fortune3      = 17;
-let col_marque3       = 18;
-let col_influence3    = 19;
 
 let messages = {
  inconnu     : "non classé",
@@ -131,16 +117,14 @@ var colors = {
 // let possedex_colors = [ "#A2A9AE", "#129AF0", "#D50303", "#F5A725", "#468847" ];
 // let possedex_descs = [ "inclassable", "parodique", "pas fiable du tout", "peu fiable", "fiable" ];
 
-var base_url = "http://possedex.info/mdiplo.json";
-var DOMAIN = "possedex.info";
-var CURRENT_VERSION = '0.0.3';
+var base_url = "http://"+DOMAIN+"/mdiplo.json";
+var CURRENT_VERSION = '0.1.0';
 var always_refresh = false;
 var urls = "";
 var note = null;
 var classement = null;
 var notule = ""
 var active_url = "";
-var has_info = false;
 var clean_url = "";
 
 var owner_msg = '';
@@ -166,71 +150,81 @@ var bandeau_msg   = '';
 var icone         = '';
 
 function onInstall() {
-    if (1 <= _debug)
+    if (1 <= _debug) {
         console && console.log("Le Possedex est installé");
-    loadData();
+    }
+    Possedex.loadData();
     var last_update = new Date();
-    browser.storage.local.set({
-                'infobulles': {
-                    'inconnu'     : false,
-                    'capital'     : true,
-                    'etat'        : true,
-                    'independant' : true
-                },
-                'persistant'  : false,
 
-                "installed" : CURRENT_VERSION,
-                'last_update': last_update.getTime()
+    browser.storage.local.set({
+        'infobulles': {
+            'inconnu'     : false,
+            'capital'     : true,
+            'etat'        : true,
+            'independant' : true
+        },
+        'persistant'  : false,
+
+        "installed" : CURRENT_VERSION,
+        'last_update': last_update.getTime()
+        },
+        function(){
+            dbg(1, "installed :)");
+        }
+    );
+    browser.tabs.create({
+        active : true,
+        url    : "install.html"
     });
-    browser.tabs.create({url: "install.html"});
 }
 
 
 browser.storage.local.get(['installed'], function(data){
     var install = data.installed;
-    if (install != CURRENT_VERSION) {
+    if (true || install != CURRENT_VERSION) {
         onInstall();
     }
 });
 
 
-function loadJSON(path, success, error)
-{
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function()
-    {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-                if (success) {
-                    if (4 <= _debug) {
-                        console && console.info("raw json");
-                        console && console.log(xhr.responseText);
+let Possedex = {
+    data : {},
+    regex_url_seule : new RegExp(/^(http[s]?:\/\/([^/]+)\/[^" ,]+)[^"]{1,2}$/g),
+
+    loadJSON : function(path, success, error) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    if (success) {
+                        if (4 <= _debug) {
+                            console && console.info("raw json");
+                            console && console.log(xhr.responseText);
+                        }
+                        success(JSON.parse(xhr.responseText));
                     }
-                    success(JSON.parse(xhr.responseText));
+                } else {
+                    if (error)
+                        error(xhr);
                 }
-            } else {
-                if (error)
-                    error(xhr);
             }
+        };
+        xhr.open("GET", path, true);
+        xhr.send();
+    },
+
+    loadData: function(){
+
+        if (1 <= _debug) {
+            console && console.info('start loadData()');
+            //console && console.info('NO DEBUG');
         }
-    };
-    xhr.open("GET", path, true);
-    xhr.send();
-}
-
-
-function loadData(){
-
-    if (1 <= _debug) {
-        console && console.info('start loadData()');
-        //console && console.info('NO DEBUG');
-    }
-    browser.storage.local.get('last_update', function(data){
-        var new_update = new Date();
-        if (2 <= _debug) {
-            console && console.log("found last update : ", data, "base url=", base_url+"?"+new_update.getTime());
-        }
-        loadJSON(base_url+"?"+new_update.getTime(),
+        browser.storage.local.get('last_update', function(data){
+            var new_update = new Date();
+            if (2 <= _debug) {
+                console && console.log("found last update : ", data, "base url=", base_url+"?"+new_update.getTime());
+            }
+            Possedex.loadJSON(base_url+"?"+new_update.getTime(),
                 function(data) {
                     if (2 <= _debug) {
                         console && console.info("storing urls...", data['urls']);
@@ -251,248 +245,242 @@ function loadData(){
                     console && console.error("error on loadJSON with "+base_url);
                     console && console.info(data);
                 }
-                );
-    });
-}
+            );
+        });
+    },
 
-function removeAfterLastSlash(url){
-    if(url.lastIndexOf('/') !== -1) {
-        return url.substring(0, url.lastIndexOf('/'));
-    }
-    else {
-        return url;
-    }
-}
+    removeAfterLastSlash: function(url){
+        if(url.lastIndexOf('/') !== -1) {
+            return url.substring(0, url.lastIndexOf('/'));
+        }
+        else {
+            return url;
+        }
+    },
 
-function lastSlash(url){ // remove the last slash at the end of the string
-    if(url.lastIndexOf('/') == url.length-1) {
-        return url.substring(0, url.length-1);
-    }
-    else {
-        return url;
-    }
-}
+    lastSlash: function(url) { // remove the last slash at the end of the string
+        if(url.lastIndexOf('/') == url.length-1) {
+            return url.substring(0, url.length-1);
+        }
+        else {
+            return url;
+        }
+    },
 
-function url_cleaner(url){
-    return url
-        .replace("http://", "")
-        .replace('www.', "")
-        .replace("https://", "")
-        .replace("\n", "");
-}
+    url_cleaner : function(url){
+        return url
+            .replace("http://", "")
+            .replace('www.', "")
+            .replace("https://", "")
+            .replace("\n", "");
+    },
 
-function youtubeChannel(url){
-    var elms = url.split('/');
-    if(elms.length > 2){
-        return elms[0] + '/' + elms[1] + "/" + elms[2];
-    }
-    else{
-        return url;
-    }
-}
+    getAllChildrenForEntity: function(entity, medias = []) {
+        // console && console.log("start getAllChildrenForEntity");
+        for(item_index in entity.possessions) {
+            item = entity.possessions[item_index];
+            // console && console.info(item);
+            entity_id = Possedex.getEntityIdFromNom(item.nom);
+            entity = Possedex.data.objets[entity_id]
+            if (entity.type != 3) {
+                // console && console.log("A creuser");
+                medias = Possedex.getAllChildrenForEntity(entity, medias);
+                // console && console.log(entity);
+            } else {
+                // console && console.log("A ajouter");
+                // console && console.log(entity);
+                medias.push(entity);
+            }
+        }
+        return medias;
+    },
 
+    getAllParentsForEntity: function(entity, medias = []) {
+        console && console.log("start getAllParentsForEntity");
+        for(item_index in entity.est_possede) {
+            console && console.group("Une boucle de est_possede de "+entity.nom);
+            item = entity.est_possede[item_index];
+            parentId = Possedex.getEntityIdFromNom(item.nom);
+            parentEntity = Possedex.data.objets[parentId]
+            //console && console.log("Dealing with item.nom = "+item.nom);
+            //console && console.log(parentEntity);
+            if (parentEntity.type != 1) {
+                console && console.log("A creuser pour "+parentEntity.nom);
+                a_creuser = Possedex.getAllParentsForEntity(parentEntity, medias);
 
-function debunkSite(url, tab_id, display){
-    if (3 <= _debug) {
-        console && console.group('STARRT debunk site '+url);
-    }
+            } else {
+                console && console.info("Tiens, cette entité est une personne physique");
+                console && console.log(parentEntity);
+                medias.push(parentEntity);
+            }
+            console && console.groupEnd();
+        }
+        console && console.warn("au final");
+        console && console.warn(medias);
+        return medias;
+    },
 
-    browser.storage.local.get(['urls', "objets", "already_visited", "infobulles", "persistant", "last_update"], function(data){
+    getEntityIdFromNom: function(str) {
+        if (Possedex.data.urls.hasOwnProperty(str)) {
+            return Possedex.data.urls[str];
+        } else {
+            for(id in Possedex.data.objets) {
+                //console && console.log("check id="+id);
+
+                if (Possedex.data.objets[id].nom == str) {
+                    //console && console.info("TROUVé : "+id);
+                    return id;
+                }
+            }
+            return false;
+        }
+    },
+
+    youtubeChannel: function(url) {
+        var elms = url.split('/');
+        if(elms.length > 2){
+            return elms[0] + '/' + elms[1] + "/" + elms[2];
+        }
+        else{
+            return url;
+        }
+    },
+
+    debunkSite: function (url, tab_id, display){
         if (3 <= _debug) {
-            console && console.info("debunkSite : var data");
-            console && console.log(data);
+            console && console.group('START debunk site '+url);
         }
 
-        if ("urls" in data) {
-            if (_debug > 4) {
-                console && console.log("urls is in data");
+        infosToGet = [
+            'urls',
+            "objets",
+            "already_visited",
+            "infobulles",
+            "persistant",
+            "last_update"
+        ];
+        browser.storage.local.get(infosToGet, function(data) {
+            if (3 <= _debug) {
+                console && console.info("debunkSite : var results");
+                console && console.log(data);
             }
-            try {
+
+            if ("urls" in data) {
+                if (_debug > 4) {
+                    console && console.log("urls is in data");
+                }
                 urls = data.urls;
                 objets = data.objets;
-                has_info = urls.hasOwnProperty(url);
-                // si le site est trouvé direct
-                if (has_info == true) {
-                    site_id = urls[url];
+
+                entity_id = Possedex.getEntityIdFromNom(url)
+
+                if (entity_id == false) {
+
                     if (2 <= _debug) {
-                        console && console.log('site FOUND ! ', site_id);
-                    }
-                    try {
-                        entity = objets[site_id];
-                        if (3 <= _debug) {
-                            console && console.log(entity.est_possede);
-                        }
-
-                        site_actif     = objets[site_id].nom;                    // nom du site
-                        updated        = new Date(entity[col_updated]);      // last maj
-                        //console && console.info("CLA SSE MENT");
-                        //console && console.log(col_classement_possedex);
-                        classement     = entity.possedex.classement;   // classement possedex
-                        console && console.log(entity.possedex);
-                        notule         = entity.possedex.desc;                   // description originale
-                        slug           = entity.possedex.slug;                   // nom normalisé
-
-                        //owner_msg      = owner_msgs[classement];               // message "ce media est la propriété ..."
-
-                        if (entity.hasOwnProperty('est_possede')) {
-                            proprietaires = []
-                                console && console.log("POUET POUET");
-                            entity.est_possede.forEach(function(el, i) {
-                                console && console.log("POUET POUET");
-                                console && console.log(el);
-                                proprietaires.push({
-                                        "url" : 'http://'+DOMAIN+'#'+el.nom,
-                                        "nom" : el.nom + ' ('+el.valeur +(parseInt(el.valeur)?'%':'') +')'
-                                    //+ " (" + fortunes1 + ")"
-                                });
-                            })
-                        }
-                        //var proprietaire1 = objets[site_id][col_proprietaire1];      // propriétaires
-                        //var fortunes1      = objets[site_id][col_fortune1     ];      // propriétaires
-                        //var marque1        = objets[site_id][col_marque1      ];      // propriétaires
-                        //var influence1     = objets[site_id][col_influence1   ];      // propriétaires
-
-                        //var proprietaire2 = objets[site_id][col_proprietaire2];      // propriétaires
-                        //var fortunes2      = objets[site_id][col_fortune2     ];      // propriétaires
-                        //var marque2        = objets[site_id][col_marque2      ];      // propriétaires
-                        //var influence2     = objets[site_id][col_influence2   ];      // propriétaires
-
-                        //var proprietaire3 = objets[site_id][col_proprietaire3];      // propriétaires
-                        //var fortunes3      = objets[site_id][col_fortune3     ];      // propriétaires
-                        //var marque3        = objets[site_id][col_marque3      ];      // propriétaires
-                        //var influence3     = objets[site_id][col_influence3   ];      // propriétaires
-
-                        //proprietaires = [proprietaire1, proprietaire2, proprietaire3];
-                        //fortunes      = [fortunes1    , fortunes2    , fortunes3    ];
-                        //marques       = [marque1     , marque2       , marque3      ];
-                        //influences    = [influence1  , influence2    , influence3   ];
-
-                        subventions    = entity.possedex.subventions;            // Montant des subventions d'état
-                        publicite      = entity.possedex.pub;                    // Pub ?
-
-                        var raw_sources = entity.possedex.sources;                // Nos sources (urls séparés par virgule et/ou espace)
-
-                        if (3 <= _debug) {
-                            console && console.info("sources avant markdown", sources);
-                        }
-                        // Markdown style
-                        var regex = new RegExp(/\[([^\]]*?)\]\(([^\)]*?)\)[, ]{0,2}/gm);
-                        match = regex.exec(raw_sources);
-                        sources = [];
-                        while (match != null) {
-                            title = match[1];
-                            url   = match[2];
-                            sources.push({"url":url, "title":title});
-                            match = regex.exec(raw_sources);
-                        }
-
-                        if (3 <= _debug) {
-                            console && console.log("sources apres markdown", sources);
-                        }
-
-                        // URL toute seule
-                        var regex = new RegExp(/^(http[s]?:\/\/([^/]+)\/[^" ,]+)[^"]{1,2}$/g);
-                        match = regex.exec(raw_sources);
-                        while (match != null) {
-                            url   = match[1];
-                            title = match[2];
-                            sources.push({"url":url, "title":title});
-                            match = regex.exec(raw_sources);
-                        }
-
-                        if (3 <= _debug) {
-                            console && console.log("sources apres urls simples", sources);
-                        }
-
-                        note          = classement;
-                        color         = colors[classement];
-                        message       = messages[classement];
-                        //possedex_color = possedex_colors[possedex_note];
-                        //possedex_desc  = possedex_descs[possedex_note];
-                        updated_human  = updated.toLocaleString('fr');
-                        //.' à ' .updated.toLocaleTimeString('fr');
-                        bandeau_msg   = bandeau_msgs[classement];
-                        icone         = icones[classement];
-
-                        if (3 <= _debug) {
-                            console && console.group("tout s'est bien passé");
-                            console && console.log('site_actif     =',site_actif     );
-                            console && console.log('updated        =',updated_human  );
-                            console && console.log('classement     =',classement     );
-                            console && console.log('notule         =',notule         );
-                            console && console.log('slug           =',slug           );
-                            console && console.log('proprietaires  =',proprietaires  );
-                            console && console.log('interets       =',interets       );
-                            console && console.log('conflits       =',conflits       );
-                            console && console.log('subventions    =',subventions    );
-                            console && console.log('sources        =',sources        );
-                            console && console.groupEnd();
-
-                        }
-                    } catch(e) {
-                        if (1 <= _debug) {
-                            console && console.error("ERREUR has_info");
-                            console && console.error(e);
-                            console && console.log(objets[site_id]);
-                        }
-                    }
-
-                    // // change l'icone bouton du navigateur
-                    //browser.browserAction.setIcon({
-                    //    path: "img/icones/icon-" + classement + ".png", // note
-                    //    tabId: tabId
-                    //});
-
-                    console && console.log("if envoyer le message");
-                    if(true || display == true){  // note
-                        console && console.log("debut envoyer le message");
-                        console && console.log("classement");
-                        console && console.log(classement);
-                        console && console.log("messages");
-                        console && console.log(messages);
-                        browser.tabs.query({active: true, currentWindow: true}, function(tabs) {
-                            msg = {
-                                show_popup    : true,
-                                nom           : entity.nom,
-                                proprietaires : proprietaires,
-                                //proprietaire1 : proprietaires.proprietaire1,
-                                //proprietaire2 : proprietaires.proprietaire2,
-                                //proprietaire3 : proprietaires.proprietaire3,
-                                //proprietaire1 : proprietaires.proprietaire1,
-                                //proprietaire2 : proprietaires.proprietaire2,
-                                //proprietaire3 : proprietaires.proprietaire3,
-                                color       : colors[classement],
-                                message     : messages[classement],
-                                bandeau_msg : bandeau_msgs[classement],
-                                icone       : icones[classement],
-                                persistant  : data.persistant
-                            };
-                            console && console.log("envoyer le message");
-                            console && console.log(msg);
-
-                            // sendMessage to the content.js listener
-                            browser.tabs.sendMessage(tabs[0].id, msg, function(response) { // note
-                                //console && console.log("message envoyé");
-                                //console && console.log(response);
-                            });
-                        });
-                    }
-                }
-                else {
-                    if (3 <= _debug) {
                         console && console.info("site non trouvé avec l'url suivante :", url);
-                        console && console.log(url);
-                        console && console.log("dans la base :");
-                        console && console.log(urls);
+
                     }
                     //browser.browserAction.setIcon({
                     //    path: "icone.png",
                     //    tabId: t
                     //});
                     // Optional : add a badge text and badge bg with the icon
-                    //browser.browserAction.setBadgeText({"text" : "Soumis :p"});
+                    //browser.browserAction.setBadgeText({"text" : ""});
                     //browser.browserAction.setBadgeBackgroundColor({'color' : "#D50303"});
+                    return;
                 }
+
+                if (2 <= _debug) {
+                    console && console.info("Site id pour "+url+", entity_id = "+entity_id);
+                }
+
+                entity = Possedex.data.objets[entity_id];
+                if (2 <= _debug) {
+                    console && console.log("contenu", entity);
+                }
+
+
+                classement     = entity.possedex.classement;   // classement possedex
+                console && console.log(entity.possedex);
+                notule         = entity.possedex.desc;                   // description originale
+                slug           = entity.possedex.slug;                   // nom normalisé
+
+                //owner_msg      = owner_msgs[classement];               // message "ce media est la propriété ..."
+
+                if (entity.hasOwnProperty('est_possede')) {
+                    entity.proprietaires = []
+                    console && console.log("POUET POUET");
+                    entity.est_possede.forEach(function(el, i) {
+                        console && console.log("POUET POUET");
+                        console && console.log(el);
+                        entity.proprietaires.push({
+                            "url" : 'http://'+DOMAIN+'#'+el.nom,
+                            "nom" : el.nom + ' ('+el.valeur +(parseInt(el.valeur)?'%':'') +')'
+                            //+ " (" + fortunes1 + ")"
+                        });
+                    })
+                }
+
+                subventions    = entity.possedex.subventions;            // Montant des subventions d'état
+                publicite      = entity.possedex.pub;                    // Pub ?
+
+                var raw_sources = entity.possedex.sources;                // Nos sources (urls séparés par virgule et/ou espace)
+
+                if (3 <= _debug) {
+                    console && console.info("sources avant markdown", sources);
+                }
+                // Markdown style
+                var regex = new RegExp(/\[([^\]]*?)\]\(([^\)]*?)\)[, ]{0,2}/gm);
+                match = regex.exec(raw_sources);
+                sources = [];
+                while (match != null) {
+                    title = match[1];
+                    url   = match[2];
+                    sources.push({
+                        "url"   : url,
+                        "title" : title
+                    });
+                    match = regex.exec(raw_sources);
+                }
+
+                if (3 <= _debug) {
+                    console && console.log("sources apres markdown", sources);
+                }
+
+                // URL toute seule
+                match = Possedex.regex_url_seule.exec(raw_sources);
+                while (match != null) {
+                    sources.push({
+                        "url"   : match[1],
+                        "title" : match[2]
+                    });
+                    match = regex.exec(raw_sources);
+                }
+
+                if (3 <= _debug) {
+                    console && console.log("sources apres urls simples", sources);
+                }
+
+                updated_human  = updated.toLocaleString('fr');
+
+                if (2 <= _debug) {
+                    console && console.group("tout s'est bien passé");
+                    console && console.log('nom            =',entity.nom                     );
+                    console && console.log('updated        =',entity.possedex.updated_human  );
+                    console && console.log('classement     =',entity.possedex.classement     );
+                    console && console.log('notule         =',entity.possedex.notule         );
+                    console && console.log('slug           =',entity.possedex.slug           );
+                    console && console.log('proprietaires  =',entity.possedex.proprietaires  );
+                    console && console.log('interets       =',entity.possedex.interets       );
+                    console && console.log('conflits       =',entity.possedex.conflits       );
+                    console && console.log('subventions    =',entity.possedex.subventions    );
+                    console && console.log('sources        =',entity.possedex.sources        );
+                    console && console.groupEnd();
+                }
+
+                // display results
+                Possedex.sendToOutput(entity);
+
 
                 if (url.match(/youtube.com/)) {
 
@@ -515,30 +503,72 @@ function debunkSite(url, tab_id, display){
                     if ("" == sources)
                         sources        = "";             // Nos sources (urls séparés par virgule et/ou espace)
                 }
-            } catch(e) {
-                console && console.error(e);
             }
-        }
 
-        var today = new Date();
-        last_update = data.last_update;
-        if(always_refresh || (today.getTime() - last_update)/1000/60/60 >= 24) {
+            var today = new Date();
+            last_update = data.last_update;
+            if(always_refresh || (today.getTime() - last_update)/1000/60/60 >= 24) {
 
-            if (1 <= _debug) {
-                console && console.log("refresh every hour or refresh forced");
+                if (1 <= _debug) {
+                    console && console.log("refresh every hour or refresh forced");
+                }
+                Possedex.loadData();
+            } else {
+                if (2 <= _debug) {
+                    human_date = new Date(last_update).toString();
+                    console && console.log("(not refresh) use data found in cache (from "+human_date+")");
+                }
             }
-            loadData();
-        } else {
-            if (2 <= _debug) {
-                human_date = new Date(last_update).toString();
-                console && console.log("(not refresh) use data found in cache (from "+human_date+")");
-            }
+        });
+        if (3 <= _debug) {
+            console && console.groupEnd();
         }
-    });
-    if (3 <= _debug) {
-        console && console.groupEnd();
+    },
+
+    sendToOutput : function(obj) {
+        // // change l'icone bouton du navigateur
+        //browser.browserAction.setIcon({
+        //    path: "img/icones/icon-" + classement + ".png", // note
+        //    tabId: tabId
+        //});
+
+        console && console.log("if envoyer le message");
+        if(true || display == true){  // note
+            console && console.log("debut envoyer le message");
+            console && console.log("classement");
+            console && console.log(classement);
+            console && console.log("messages");
+            console && console.log(messages);
+            browser.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                msg = {
+                    show_popup    : true, // @TODO: put in config
+                    nom           : entity.nom,
+                    nom_url       : 'http://'+DOMAIN+'#'+entity.nom,
+                    proprietaires : entity.proprietaires,
+
+                    color       : colors[entity.possedex.classement],
+                    message     : messages[entity.possedex.classement],
+                    bandeau_msg : bandeau_msgs[entity.possedex.classement],
+                    icone       : icones[entity.possedex.classement],
+                    persistant  : Possedex.data.persistant
+                };
+                console && console.log("envoyer le message");
+                console && console.log(msg);
+
+                // sendMessage to the content.js listener
+                browser.tabs.sendMessage(tabs[0].id, msg, function(response) { // note
+                    //console && console.log("message envoyé");
+                    //console && console.log(response);
+                });
+            });
+        }
+    },
+
+    rien : function() {
     }
 }
+
+
 
 
 function checkSite(do_display){
@@ -549,15 +579,18 @@ function checkSite(do_display){
     checkSite_in_progress = true;
 
     browser.tabs.query({currentWindow: true, active: true}, function(tabs){
+
+        // {{{ check if research is needed
         if (!tabs.length) {
             checkSite_in_progress = false;
             return;
         }
+
         var tab;
         for (active_tab of tabs) {
             tab = active_tab;
         }
-        active_url = lastSlash(tab.url);
+        active_url = Possedex.lastSlash(tab.url);
         if (_debug > 5) {
             console && console.warn("active url", active_url);
         }
@@ -566,6 +599,9 @@ function checkSite(do_display){
             checkSite_in_progress = false;
             return;
         }
+        // }}}
+
+        // @TODO: move youtube part in getEntityIdFromNom
         // YOUTUBE
         if(active_url.indexOf("youtube.com/") > -1){
             if(active_url.indexOf("channel") == -1){
@@ -577,13 +613,13 @@ function checkSite(do_display){
                 });
             }
             else {
-                clean_url = youtubeChannel(url_cleaner(active_url));
+                clean_url = Possedex.youtubeChannel(url_cleaner(active_url));
                 debunkSite(clean_url, tab.id, do_display);
             }
         }
-        // SOCIAL NETWORKS HOMEPAGE
+        // @TODO: move facebook/twitter part in getEntityIdFromNom
         else if(active_url == 'https://www.facebook.com' || active_url == 'https://twitter.com' || active_url == 'https://www.youtube.com'){
-            clean_url = url_cleaner(active_url);
+            clean_url = Possedex.url_cleaner(active_url);
             debunkSite(clean_url, tab.id, do_display);
         }
         // OTHER URLS
@@ -591,53 +627,42 @@ function checkSite(do_display){
             matches = []
 
             // @TODO: recursiv last slash
-            clean_url = url_cleaner(active_url);
+            clean_url = Possedex.url_cleaner(active_url);
             find_url = urls[clean_url];
-            if (4 <= _debug) {
-                console && console.log("all urls", urls);
-                console && console.log("active_url",  active_url);
-                console && console.log("clean_url",   clean_url);
-                console && console.log("find_url urls[\""+clean_url+"\"]", urls[clean_url]);
-            }
 
             // {{{ this might be removed (redundant with after the for())
             if (find_url) {
                 matches.push(find_url);
-                if (4 <= _debug) {
-                    console && console.warn("URL MATCHES !!!! (clean_url="+clean_url+")", find_url);
-                }
             }
             // }}} this might be removed (redundant with after the for())
 
             if (4 <= _debug) {
-                console && console.group("for key in urls");
+                console && console.group("for oneUrlInDb in urls");
             }
 
-            for (var key in urls) {
-                if (!urls.hasOwnProperty(key)) {
-                    if (4 <= _debug) {
-                        console && console.info("this url «key» has not ownProperty", key);
-                    }
+            for (var oneUrlInDb in urls) {
+                if (!urls.hasOwnProperty(oneUrlInDb)) {
                     continue;
                 }
-                var index = active_url.indexOf(key);
+                var index = active_url.indexOf(oneUrlInDb);
+                // si l'url est un sous domaine ou avec un chemin
                 if(index != -1) {
                     if (4 <= _debug) {
-                        console && console.info("url FOUND !", key, index);
+                        console && console.info("url FOUND !", oneUrlInDb, index);
                     }
                     if((
-                        active_url.indexOf('http://www.'+ key) == 0
-                        || active_url.indexOf('https://www.'+ key) == 0
-                        || active_url.indexOf('http://'+ key) == 0
-                        || active_url.indexOf('https://'+ key) == 0
+                        active_url.indexOf('http://www.'+ oneUrlInDb) == 0
+                        || active_url.indexOf('https://www.'+ oneUrlInDb) == 0
+                        || active_url.indexOf('http://'+ oneUrlInDb) == 0
+                        || active_url.indexOf('https://'+ oneUrlInDb) == 0
                     )
                         && index != 0
                         && (active_url[index-1] == "/" || active_url[index-1] == ".")
-                        && key != "facebook.com"
-                        && key != "twitter.com") {
+                        && oneUrlInDb != "facebook.com"
+                        && oneUrlInDb != "twitter.com") {
                         // current active_url contains the current url from
-                        // the loop (key)
-                        matches.push(key);
+                        // the loop (oneUrlInDb)
+                        matches.push(oneUrlInDb);
                         if (_debug > 4) {
                             console && console.warn("URL MATCHES !!!!");
                         }
@@ -648,7 +673,8 @@ function checkSite(do_display){
             if (4 <= _debug) {
                 console && console.groupEnd();
             }
-            tampon = "";
+            // {{{ take best accurate url (the longuest)
+            var tampon = "";
             for(var url_i=0;url_i<matches.length;url_i++){
                 if(matches[url_i].length > tampon.length){
                     tampon = matches[url_i];
@@ -658,6 +684,7 @@ function checkSite(do_display){
                 }
             }
             clean_url = tampon; // this contains the longest url match
+            // }}} take best accurate url (the longuest)
             if (4 <= _debug) {
                 console && console.log("call debunkSite");
                 console && console.log("clean_url", clean_url);
@@ -671,16 +698,9 @@ function checkSite(do_display){
 }
 
 
-browser.tabs.onActivated.addListener(function (tabId, tab) {
-    if (4 <= _debug) {
+browser.tabs.onActivated.addListener(function (activeInfo) {
+    if (1 <= _debug) {
         console && console.log("listener onActivated");
-    }
-    checkSite(false);
-});
-
-browser.windows.getCurrent(function (tabId, tab) {
-    if (4 <= _debug) {
-        console && console.log("windows.getCurrent");
     }
     checkSite(false);
 });
@@ -689,23 +709,23 @@ browser.windows.getCurrent(function (tabId, tab) {
 // onload
 // déclenché quand un onglet est mis à jour
 browser.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-    //if (4 <= _debug) {
-    //    console && console.log("onUpdated");
-    //}
+    if (1 <= _debug) {
+        console && console.log("onUpdated");
+    }
     checkSite(changeInfo.status && (changeInfo.status == "complete"));
 });
 
 // déclenché quand la fenêtre actuelle change
-browser.windows.onFocusChanged.addListener(function (tabId, tab) {
-    if (4 <= _debug) {
+browser.windows.onFocusChanged.addListener(function (windowId) {
+    if (1 <= _debug) {
         console && console.log("onFocusChanged");
     }
     checkSite(false);
 });
 
 // déclenché quand l'icone d'action du navigateur est cliqué
-browser.browserAction.onClicked.addListener(function (tabId, tab) {
-    if (4 <= _debug) {
+browser.browserAction.onClicked.addListener(function (tab) {
+    if (1 <= _debug) {
         console && console.log("onClicked");
     }
     checkSite(false);
@@ -713,9 +733,10 @@ browser.browserAction.onClicked.addListener(function (tabId, tab) {
 
 
 // déclenché quand un onglet est créé
-browser.tabs.onCreated.addListener(function (tabId, tab) {
-    if (4 <= _debug) {
+browser.tabs.onCreated.addListener(function (tab) {
+    if (1 <= _debug) {
         console && console.log("onCreated");
     }
     checkSite(true);
 });
+
