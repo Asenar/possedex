@@ -183,27 +183,27 @@ var browser = browser || chrome;
                     'world-spacing': '0'
                 },
                 infobulle: {
-                'display': 'block',
-                'top': '60px',
-                'right': '20px',
-                'position': 'fixed',
-                'width': '500px',
-                'height': '300px',
-                //'width': '255px',
-                //'width': '215px',
-                'border-width': '4px',
-                'border-style': 'solid',
-                'border-color': '#ffc000',
-                'border-radius': '2px',
-                'background-color': '#ffffff',
-                'box-shadow': '0 0 10px 0 #5d666d',
-                'padding' : '6px',
-                'transition': 'all .5s ease',
-                'opacity': '1',
-                'transform': 'translate(0,0)',
-                'overflow': 'hidden',
-                "z-index": "2147483647"
-            },
+                    'display': 'block',
+                    'top': '60px',
+                    'right': '20px',
+                    'position': 'fixed',
+                    'width': '500px',
+                    'height': '300px',
+                    //'width': '255px',
+                    //'width': '215px',
+                    'border-width': '4px',
+                    'border-style': 'solid',
+                    'border-color': '#ffc000',
+                    'border-radius': '2px',
+                    'background-color': '#ffffff',
+                    'box-shadow': '0 0 10px 0 #5d666d',
+                    'padding' : '6px',
+                    'transition': 'all .5s ease',
+                    'opacity': '1',
+                    'transform': 'translate(0,0)',
+                    'overflow': 'hidden',
+                    "z-index": "2147483647"
+                },
                 header   : {
                     'display': 'block',
                     'padding': '10px',
@@ -218,7 +218,8 @@ var browser = browser || chrome;
                 },
                 title_link: {
                     'display': 'inline-block',
-                    'font-size': '22px',
+                    'font-size': '15px',
+                    'font-style': 'italic',
                     'text-align': 'center',
                     'color': '#ffc000',
                     //'line-height': '20px',
@@ -236,8 +237,8 @@ var browser = browser || chrome;
                     'vertical-align': 'top',
                     'text-align': 'center',
                     'line-height': '18px',
-                    'margin': '-1px 10px -1px 0',
-                    'color': 'red'
+                    'margin': '-1px 10px -1px 0'
+                    //'color': 'red',
                 },
                 close: {
                     'display': 'block',
@@ -246,12 +247,12 @@ var browser = browser || chrome;
                     'width': '15px',
                     'height': '20px',
                     'background': 'url(data:image/svg+xml,%3Csvg%20version%3D%221.1%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2013%2013%22%3E%0A%3Cstyle%20type%3D%22text/css%22%3E%0A%09.st0%7Bfill%3A%23FFFFFF%3B%7D%0A%3C/style%3E%0A%3Cpolygon%20id%3D%22_x2B_%22%20class%3D%22st0%22%20points%3D%220.7%2C1.9%205.5%2C6.6%200.7%2C11.4%201.9%2C12.5%206.6%2C7.7%2011.4%2C12.5%2012.5%2C11.4%207.7%2C6.6%2012.5%2C1.9%2011.4%2C0.7%0A%096.6%2C5.5%201.9%2C0.7%20%22/%3E%0A%3C/svg%3E) center no-repeat',
-                    'background-color': 'yellow',
+                    'color': 'yellow',
                     'text-indent': '100%',
                     'white-space': 'nowrap',
                     'overflow': 'hidden',
-                    'cursor': 'pointer',
-                    'border' : '1px solid red'
+                    'cursor': 'pointer'
+                    //'border' : '1px solid red'
                 },
                 content: {
                     'padding': '10px'

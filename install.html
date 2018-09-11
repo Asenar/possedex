@@ -1,56 +1,136 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <script src="install.js"></script>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>Possedex - page d'accueil</title>
-	<link rel="stylesheet" href="css/install.css">
-</head>
-<body>
-	<header>
-		<div class="center">
-			<h1>Possedex</h1>
-            <div class="logo">
-                <!-- @TODO: rajouter des remerciement pour les sources (acrimed & co) ? --></div>
-		</div>
-	</header>
-	<div class="center">
-		<div class="main">
-			<h2 style="color:green">Merci d’utiliser le Possedex !</h2>
-			<h3>CHANGELOG</h3>
-			<p>Les évolutions principales de l'extension sont listées ici.</p>
-			<h4>0.0.3</h4>
-			<ul>
-				<li>La page d'installation s'ouvrira à chaque mise à jour</li>
-				<li>Icônes modifiées</li>
-				<li>Nouvelle option «infobulle persistante»</li>
-			</ul>
-			<p><a href="https://github.com/Asenar/possedex">Voir le code source de l'extension</a></p>
-			<h3>Comment ça marche&nbsp;?</h3>
-			<p>
-				Le Possedex vous permet d’afficher des informations sur les sites que vous visitez en parallèle de votre navigation par deux moyens :
-			</p>
-			<div class="paragraph-wrapper">
-				<div class="paragraph">
-					Des informations détaillées qui <strong>apparaîtront en haut à droite de votre écran</strong> lorsque vous consulterez les sites (pop-up). Elles s’afficheront de la manière suivante :
-					<figure class="notifications">
-						<img style="max-width: 360px;" src="img/notifications@2x-min.png" alt="">
-						<figcaption>Quelques exemples d'infobulles</figcaption>
-					</figure>
-				</div>
-                <hr>
-				<div class="paragraph">Des informations à votre disposition <strong>en un clic à tout moment, via l’icône du Possedex en haut à droite de votre navigateur</strong> :
-					<figure class="extension">
-						<img style="max-width: 260px;" src="img/extension@2x-min.png" alt="aperçu de l'extension">
-						<figcaption>La fenêtre d'information détaillée</figcaption>
-					</figure>
-				</div>
-			</div>
-			<h3>Réglages avancés</h3>
-			<p>Par défaut, le Possedex affiche les informations détaillées pour chaque site dont nous avons connaissance. Mais vous pouvez vous-même paramétrer le Possedex selon vos attentes. Pour chaque catégorie, vous pouvez choisir si vous souhaitez avoir des informations détaillées ou non.<br></p>
-			<h4>Réglez ici vos préférences pour l'affichage de l'infobulle</h4>
+    <head>
+        <meta charset="utf-8">
+        <script src="install.js"></script>
+
+
+        <title>Possedex - page d'accueil</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link href="css/possedex.css" rel="stylesheet">
+        <link rel="stylesheet" href="caass/install.css">
+
+        <meta name="description"        content="Possedex vous permet de trouver en quelques clics des informations utiles sur les propriétaires du site que vous visitez"/>
+        <meta property="og:title"       content="Possedex, l'extension" />
+        <meta property="og:type"        content="website" />
+        <meta property="og:description" content="Possedex vous permet de trouver en quelques clics des informations utiles sur les propriétaires du site que vous visitez" />
+        <meta property="og:image"       content="http://possedex.info/img/capture-medias-miliardaires.jpg" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="author" content="Michaël Marinetti">
+        <link rel="icon" href="https://possedex.info/favicon.ico">
+        <!-- Bootstrap core CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+        <!-- Custom styles for this template -->
+
+    </head>
+
+    <body class="possedex" >
+
+        <div id="top" class="header">
+            <a href="https://possedex.info" id="logo" ><svg class="img" viewBox="0 0 111 162" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <desc>Possedex</desc><defs></defs><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <g transform="translate(-41.000000, -38.000000)" fill="var(--bright-color)">
+                            <g transform="translate(41.000000, 38.000000)">
+                                <g id="Logo-Possedex-V2" transform="translate(55.500000, 81.000000) rotate(-360.000000) translate(-55.500000, -81.000000) ">
+                                    <g transform="translate(-0.000000, 0.000000)">
+                                        <path d="M71.0171124,141.073019 C68.3730828,143.125982 65.2131449,145.443844 62.5046267,147.430583 C60.2475282,149.086198 58.2483838,150.54314 57.2165674,151.40406 C57.53901,154.053045 58.9577576,160.874181 61.4728102,161.536428 C62.6336038,161.867551 63.5364431,162 64.245817,162 C69.4693878,162 68.6310369,155.046414 95.2647991,144.781598 C100.681835,142.728634 111,139.08628 111,139.08628 C111,139.08628 80.4969261,106.967337 79.0781785,106.702439 C75.7892635,106.106417 71.2750665,104.517026 68.9534795,100.940897 C68.9534795,100.940897 61.0213905,88.5568919 64.4392825,81.8682048 C62.2466726,83.7224943 59.7961085,84.3185159 57.4745215,84.3185159 C52.7668589,84.3185159 48.6395931,81.8682048 48.4461275,81.8019802 C48.4461275,81.8019802 52.2509507,85.7754576 52.895836,89.1529135 C53.6696983,93.1926155 52.2509507,96.2389483 52.2509507,96.2389483 C53.992141,99.2190563 55.8623083,99.4177302 55.9267968,106.503765 C56.0557739,116.834806 47.8012422,121.934102 40.7075041,121.934102 C39.353245,121.934102 37.9989859,121.735429 36.7737039,121.338081 C36.5157498,122.265226 24.1339523,158.158972 22.5217391,160.543058 C23.5535556,160.675508 24.585372,160.741732 25.6171885,160.741732 C36.0643301,160.741732 46.8339143,154.317944 56.1202624,148.026604 C57.1520788,147.165684 59.2157118,145.708742 61.6662758,143.854453 C62.2466726,143.390881 62.8915579,142.927308 63.5364431,142.463736 C68.1151287,138.688932 70.3077386,137.033317 73.1452339,134.053209 C77.0790341,129.947282 79.9810179,128.225442 81.7222081,128.225442 C82.8185131,128.225442 83.4633984,128.821463 83.785841,129.881057 C84.3662378,132.596267 72.1134174,140.212099 71.0171124,141.073019 Z M57.4745215,127.62942 C55.9912853,132.596267 51.9929966,134.318107 51.9929966,134.318107 C51.9929966,134.318107 54.5080492,129.417485 55.5398656,126.503601 C56.5716821,123.589718 57.8614527,118.689096 57.8614527,118.689096 C57.8614527,118.689096 58.9577576,122.662573 57.4745215,127.62942 Z M64.245817,129.947282 C64.245817,129.947282 64.245817,129.35126 64.1813284,128.357891 C64.1168399,127.364522 64.0523514,125.90758 63.9233743,124.251964 C63.8588858,123.391044 63.7943973,122.463899 63.7299087,121.536755 C63.6654202,120.543385 63.5364431,119.550016 63.4719546,118.490422 C63.4074661,117.430828 63.278489,116.305009 63.149512,115.245415 C63.0205349,114.119597 62.8270693,112.993778 62.6980923,111.86796 C62.5691152,110.742141 62.3756496,109.616322 62.1821841,108.490504 C61.9887185,107.364685 61.7952529,106.305091 61.6017873,105.245497 C61.3438332,104.185903 61.1503676,103.192534 60.956902,102.265389 C60.6989479,101.338244 60.5054823,100.4111 60.2475282,99.6164041 C59.9895741,98.8217086 59.7961085,98.0270131 59.6026429,97.3647669 C59.4091773,96.7025206 59.1512232,96.1727236 59.0222462,95.6429266 C58.6998035,94.7157819 58.5063379,94.1859849 58.5063379,94.1859849 C58.5063379,94.1859849 63.6654202,99.5501795 65.2776334,110.01367 C66.696381,120.477161 64.245817,129.947282 64.245817,129.947282 Z M71.0171124,148.688851 C69.7273419,150.079568 69.0179681,150.808039 67.5992204,152.39743 C66.3739384,153.721922 65.5355875,154.582842 64.9551908,155.907335 C64.5682596,156.900704 64.374794,157.894073 65.2131449,157.894073 C65.6000761,157.894073 66.1804728,157.695399 67.0188237,157.165602 C67.7281975,156.768255 70.7591583,154.185494 70.7591583,154.185494 C70.7591583,154.185494 67.1478007,158.026523 65.4066105,158.953667 C64.8262137,159.28479 64.245817,159.41724 63.7943973,159.41724 C63.4074661,159.41724 63.0850235,159.28479 62.8270693,159.019892 C62.5046267,158.55632 62.3111611,156.569581 65.2131449,153.457023 C66.696381,151.867633 68.6310369,150.278242 72.306883,147.09946 L71.0171124,148.688851 Z M87.8486183,128.821463 C87.5261757,127.563195 86.5588478,126.569826 85.7204969,125.775131 C84.753169,124.91421 83.785841,123.920841 82.9474902,122.927472 C82.1091393,122.000327 81.2707884,121.006958 80.4324376,120.013588 C78.7557358,117.960625 77.2724997,116.106335 76.1761947,114.649394 C73.7256306,111.536836 72.1779059,109.351424 72.1134174,109.285199 L72.0489289,109.218975 L72.306883,109.020301 L72.6938142,109.417648 C72.7583027,109.483873 83.9793066,120.344711 84.882146,121.338081 C85.3335657,121.801653 87.5906642,124.05329 87.5906642,124.05329 C88.6869692,125.112884 89.7832742,126.437377 90.2346939,128.159217 C90.4281595,129.086362 90.492648,129.947282 90.3636709,130.808202 C90.2346939,131.669122 89.8477627,132.397593 89.5898086,133.059839 L89.5898086,133.126064 C88.6224807,135.179027 87.4616872,136.039947 86.5588478,136.768418 C86.4943592,136.834643 86.3653822,136.900867 86.3008936,136.967092 C85.5915198,137.496889 74.3705159,145.443844 74.3705159,145.443844 C74.3705159,145.443844 84.6241919,135.841273 85.3335657,135.179027 C86.3653822,134.251882 87.074756,133.390962 87.5261757,132.463818 C88.0420839,131.271774 88.2355495,130.013507 87.8486183,128.821463 Z" id="Shape"></path>
+                                        <g>
+                                            <path d="M48.9592181,4.49108911 C40.3346141,5.77425743 42.6690934,13.6657426 33.4608696,20.8514851 L39.0376812,52.6740594 C39.0376812,52.6740594 42.1503202,46.7714851 51.2288507,47.5413861 C53.3039434,47.7338614 54.665723,48.3112871 54.665723,48.3112871 C56.0923492,41.7671287 56.9353556,39.0724752 58.4916751,26.8182178 C60.5019211,11.1635644 58.2971352,3.14376238 48.9592181,4.49108911 Z M43.9660263,44.1409901 C43.9660263,44.1409901 42.4745534,36.8910891 41.9557802,32.1433663 C41.4370071,27.7164356 40.5940007,21.2364356 40.529154,20.3382178 C40.529154,20.2740594 40.4643074,20.2740594 40.4643074,20.209901 L40.529154,20.209901 C40.529154,20.209901 40.529154,20.2740594 40.529154,20.3382178 C41.5018537,22.7120792 42.7987867,28.9354455 43.2527132,32.0792079 C43.7714863,36.3778218 43.9660263,44.1409901 43.9660263,44.1409901 Z" id="Shape"></path>
+                                            <path d="M22.6314796,0 C16.7952814,11.2277228 12.6450961,16.6170297 5.31742501,21.749703 C-3.37202562,27.8447525 1.23208628,34.1322772 5.25257836,39.2649505 C10.5700034,46.129901 19.4539939,57.4217822 19.4539939,57.4217822 C19.4539939,57.4217822 23.0205595,55.1762376 27.8192113,55.240396 C32.5530165,55.3045545 35.9250421,56.8443564 35.9250421,56.8443564 L22.6314796,0 Z M25.9386586,41.7671287 C23.7338726,36.8910891 19.3243006,29.769505 19.3243006,29.769505 C19.3243006,29.769505 21.46424,38.1742574 23.6041793,42.5370297 C25.1604988,45.7449505 29.1809909,51.9683168 31.5803168,53.9572277 L31.5154702,53.9572277 C31.5154702,53.9572277 28.1434446,46.6431683 25.9386586,41.7671287 Z" id="Shape"></path>
+                                            <path d="M64.9763397,28.6146535 L58.3619818,49.0811881 C58.3619818,49.0811881 59.788608,49.530297 62.2527806,49.4019802 C62.3176272,49.1453465 69.3859117,33.939802 69.3859117,33.939802 C69.3859117,33.939802 68.413212,38.4308911 66.9865858,42.8578218 C66.402966,44.590099 65.2357263,48.9528713 65.1708797,49.209505 C67.8944388,48.439604 68.6077519,48.2471287 70.9422312,46.7714851 C76.7784294,38.110099 79.048062,29.2562376 83.263094,10.2011881 C74.1197169,21.3005941 71.4610044,24.7651485 64.9763397,28.6146535 Z" id="Shape"></path>
+                                        </g>
+                                    </g>
+                                </g>
+                                <g transform="translate(0.000000, 54.000000)" fill-rule="nonzero">
+                                    <path d="M26.7436123,41.5435917 C27.3880367,42.0547508 28.0969036,42.502015 28.8702128,43.013174 C29.5790797,43.4604382 30.2879465,43.9077024 31.0612558,44.3549666 C32.7367592,45.3133898 34.1544929,45.8884438 35.3788992,46.1440233 C36.0233236,46.2718131 36.667748,46.335708 37.5054997,46.335708 C37.9565968,46.335708 38.6654636,46.2079182 39.4387729,46.0162335 C40.8565065,45.6328642 42.2097978,45.1217052 43.3053192,44.4827563 C44.4652831,43.8438075 45.3030349,43.0770689 45.8830168,42.2464354 C46.4629988,41.4796968 46.785211,40.5851685 46.9785383,39.6906401 C47.1074232,38.668322 47.1074232,37.8376885 47.0429807,37.3265294 L47.0429807,37.1348448 C46.9785383,36.432001 46.8496534,35.5374727 46.2696714,34.0678903 C45.6252471,32.4066234 44.594168,31.0648308 41.8875856,29.4674587 L39.7609851,28.764615 C39.6321002,28.9562997 39.5032153,29.1479843 39.309888,29.339669 C38.4721363,30.2980922 37.6343846,31.0648308 36.7321904,31.6398848 C35.7011114,32.2788336 34.6700324,32.7260978 33.6389533,33.0455722 C32.6723167,33.3650466 31.5767953,33.4928364 30.4168314,33.5567313 C28.5480006,33.6206262 26.4858426,33.4289415 24.2303572,32.8538876 C23.0703933,32.5344131 22.1681991,32.2788336 21.3304474,32.0232541 C20.6215806,31.7676745 19.9127138,31.512095 19.2038469,31.2565155 L18.623865,31.0648308 C17.6572284,30.6814615 13.4040274,30.3619871 10.3107903,30.1703025 C10.3752327,30.4897769 10.4396752,30.8731462 10.5685601,31.3204104 C10.7618874,32.087149 11.0196571,32.8538876 11.4063118,33.684521 C11.728524,34.3234699 12.3729484,35.1541034 13.4040274,35.7291573 C14.370664,36.3042113 15.6595128,36.6236857 16.9483615,37.007055 L17.1416889,37.0709499 C19.0105196,37.5821089 20.5571382,38.1571629 21.9104294,38.7961117 C23.5214904,39.3711657 25.1969938,40.3934838 26.7436123,41.5435917 Z" id="Shape"></path>
+                                    <path d="M47.9451749,46.0162335 C47.3007505,46.7829721 46.4629988,47.4858159 45.6252471,48.0608698 C44.143071,49.0831879 42.4675675,49.8499266 40.5987368,50.4249805 C40.0831973,50.5527703 39.6321002,50.68056 39.1165607,50.7444549 C38.8587909,50.8083498 38.6010212,50.8083498 38.3432514,50.8722447 L37.5054997,50.9361396 L37.3766148,50.9361396 C36.2810934,50.9361396 35.1855719,50.7444549 34.2189353,50.4888754 C32.0923348,49.8499266 30.2879465,48.8276084 28.8702128,47.8691852 C28.161346,47.421921 27.3880367,46.846867 26.550285,46.2718131 C25.7769757,45.6967591 25.0681089,45.1217052 24.3592421,44.5466512 C23.0703933,43.4604382 21.7815445,42.5659098 20.3638108,41.8630661 C20.1060411,41.7352764 19.8482713,41.6074866 19.5905016,41.4796968 C20.1060411,45.8884438 22.1681991,49.7221368 24.8103391,51.1278242 C29.3213099,53.4919349 30.803486,54.7698326 31.9634499,55.8560456 C33.0589714,56.8144688 33.9611655,57.5812074 37.1832875,59.0507898 C41.8231431,61.095426 46.5918836,58.8591051 48.7184841,55.7921507 C50.9095271,52.5974065 50.5228724,49.0831879 47.9451749,46.0162335 Z" id="Shape"></path>
+                                    <path d="M10.2463479,25.505976 C10.6974449,25.505976 11.0840996,25.505976 11.5351966,25.505976 C12.3085059,25.505976 13.0818152,25.505976 13.8551245,25.5698709 C15.9172825,25.6976606 17.9149981,26.0810299 19.7838289,26.6560839 L20.4926957,26.8477685 C21.1371201,27.0394532 21.7815445,27.2311378 22.3615265,27.4228225 C23.1992782,27.678402 24.1014723,27.8061918 24.939224,27.9978764 C25.7769757,28.1256662 26.6147274,28.253456 27.5169216,28.253456 C28.4191158,28.3173508 29.2568675,28.3173508 30.0301767,28.253456 C30.8679284,28.1895611 31.6412377,28.1256662 32.414547,27.9339815 C33.1878563,27.7422969 33.8967231,27.4867174 34.5411475,27.1672429 C35.2500143,26.7838736 35.8299963,26.4005043 36.3455358,25.8893453 C36.7321904,25.505976 37.1188451,25.0587118 37.5054997,24.5475527 C39.0521182,20.4582802 38.0854817,14.3243714 33.0589714,10.3628886 C31.6412377,9.2127807 27.6458065,8.31825234 23.6503752,8.76551652 C20.8793503,9.08499094 18.8171923,10.0434142 17.7861133,11.3852067 L17.012804,12.34363 L10.117463,3.71782073 C2.38437026,8.12656768 1.15996391,10.171204 0.644424393,14.9633202 C0.515539515,16.4967974 0.579981954,17.9663797 0.902194151,19.3720672 L1.15996391,19.8832262 C1.4821761,20.5860699 1.93327318,21.4167034 2.4488127,22.2473369 C2.96435221,23.0779704 3.47989172,23.6530244 3.99543124,24.1641834 C4.51097075,24.6753425 5.15539515,25.0587118 5.86426198,25.2503964 C6.63757125,25.505976 7.47532296,25.5698709 8.24863224,25.5698709 C8.89305663,25.505976 9.53748102,25.505976 10.2463479,25.505976 Z" id="Shape"></path>
+                                    <path d="M70.7577984,32.6622029 C72.4977443,40.3295889 76.0420784,44.8661256 81.261916,45.9523387 C83.8396136,46.4634977 91.5082639,46.9107619 93.7637492,46.9107619 C93.7637492,46.9107619 93.1193249,46.9107619 93.1193249,46.9107619 C94.4726161,46.9107619 95.5036951,46.5273926 95.5681375,44.0354922 C95.5681375,41.3519071 95.6970224,14.6438458 95.7614649,10.8101528 C95.7614649,8.63772675 95.2459254,7.10424955 93.441537,7.10424955 C91.6371487,7.10424955 83.904056,6.72088025 82.292995,7.48761885 C82.292995,7.55151373 82.292995,7.61540862 82.292995,7.6793035 C82.292995,7.80709327 82.3574375,7.99877792 82.3574375,8.12656768 C82.4218799,8.4460421 82.4218799,8.70162164 82.4218799,9.02109605 C82.4863224,10.1073091 82.4218799,11.1935221 82.292995,12.4075249 C82.0352253,14.2604765 81.5841282,16.177323 80.9397038,18.0302746 C80.4886067,19.3081723 79.9730672,20.5860699 79.3286428,21.7361779 C78.9419882,22.4390216 78.6842184,22.8862858 78.5553336,23.0779704 C78.4908911,23.2057602 78.4264487,23.2057602 78.3620062,23.2696551 C78.2975638,23.3335499 78.2331214,23.3335499 78.1686789,23.3335499 L77.9109092,23.4613397 L77.8464667,23.3974448 L77.7820243,23.3974448 L77.5242545,23.1418653 L77.9109092,22.6946011 L77.3953697,22.5029165 C77.3953697,22.4390216 77.4598121,22.1195472 77.6531394,21.1611239 C77.7820243,20.5221751 77.9753516,19.1803825 78.2975638,17.3274309 C78.4908911,15.6661639 78.7486609,13.8771072 78.8131033,12.0880505 C78.8131033,11.0018374 78.8131033,10.1073091 78.7486609,9.27667559 C78.7486609,9.02109605 78.6842184,8.8294114 78.6842184,8.57383187 L78.5553336,7.87098815 C78.4264487,7.35982908 78.2975638,6.9125649 78.1686789,6.5291956 C77.9109092,5.69856212 77.5242545,4.86792863 77.008715,4.10119003 C76.5576179,3.39834631 75.977636,2.75939748 75.3332116,2.24823841 C74.6887872,1.73707934 73.9799204,1.35371004 73.2710535,1.03423563 C72.5621867,0.71476121 71.7888774,0.523076559 71.0800106,0.395286793 C70.8866833,0.331391909 70.693356,0.331391909 70.5000286,0.331391909 L69.7267194,0.523076559 C67.2779067,1.16202539 63.8624574,1.99265888 58.8359471,2.24823841 C55.8071525,2.37602818 53.4872247,2.05655376 51.5539515,1.73707934 C48.9118115,1.35371004 46.9785383,1.09813051 44.8519378,2.24823841 C41.8231431,3.90950538 40.4054095,7.04035467 40.8565065,10.8101528 C41.4364885,15.3466895 44.9808227,20.8416495 51.8117212,22.6946011 C57.1604437,24.1641834 62.7669359,23.3974448 68.8245252,20.3943853 L69.7911618,19.8832262 L69.7267194,20.9694393 C69.6622769,21.2250188 69.4045072,26.8477685 70.7577984,32.6622029 Z" id="Shape"></path>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+            </svg></a>
+            <h1 id="site-title">Possedex</h1>
+
+            <nav class="float-right d-none d-sm-block">
+                <ul class="nav nav-pills">
+                    <li class="nav-item">
+                        <a target="_blank" title="Nous suivre sur Twitter" class="nav-link lead" href="https://www.twitter.com/possedex/"><span
+                                class="fab fa-twitter-square"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a target="_blank" title="Notre page Facebook" class="nav-link lead" href="https://www.facebook.com/possedex/"><span
+                                class="fab fa-facebook-square"></span></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div id="main-install" class="container-fluid">
+            <div class="">
+                <div class="col-lg-10 col-xs-12">
+                    <div>
+                        <div class="align-middle">
+                            <h1 class="display-4">
+                                Merci d’utiliser le Possedex !
+                            </h1>
+                            <p>Le site et l'extension Possedex sont mise à jour
+                                bénévolement sur notre temps libre. Si vous souhaitez nous
+                                aider financièrement, eh bien c'est très gentil de votre
+                                part mais nous n'avons pas de frais important. Par contre  Mais 
+                                vous pouvez passer sur <a target="_blank"
+                                    href="https://discord.gg/JZzKaxW">notre
+                                    discord</a> qu'on a ouvert pour l'occasion </p>
+                            <h3>CHANGELOG</h3>
+                            <p>Les évolutions principales de l'extension sont listées ici.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                <h4>0.1.0</h4>
+                <ul>
+                    <li>Nouveau look (pour aller avec le site)!</li>
+                    <li>Code plus stable</li>
+                    <li>La base de données est synchronisée tous les jours
+                        avec les données publiées par Le Monde Diplomatique.</li>
+                </ul>
+                <p><a href="https://github.com/Asenar/possedex">Voir le code source de l'extension</a></p>
+
+                <h4>0.0.3</h4>
+                <ul>
+                    <li>La page d'installation s'ouvrira à chaque mise à jour</li>
+                    <li>Icônes modifiées</li>
+                    <li>Nouvelle option «infobulle persistante»</li>
+                </ul>
+                <p><a href="https://github.com/Asenar/possedex">Voir le code source de l'extension</a></p>
+
+                <h3>Comment ça marche&nbsp;?</h3>
+                <p>
+                    Le Possedex vous permet d’afficher des informations sur les sites que vous visitez en parallèle de votre navigation par deux moyens :
+                </p>
+                <div class="paragraph-wrapper">
+                    <div class="paragraph">
+                        Des informations détaillées qui <strong>apparaîtront en haut à droite de votre écran</strong> lorsque vous consulterez les sites (pop-up). Elles s’afficheront de la manière suivante :
+                        <figure class="notifications">
+                            <img style="max-width: 360px;" src="img/notifications@2x-min.png" alt="">
+                            <figcaption>Quelques exemples d'infobulles</figcaption>
+                        </figure>
+                    </div>
+                    <hr>
+                    <div class="paragraph">Des informations à votre disposition <strong>en un clic à tout moment, via l’icône du Possedex en haut à droite de votre navigateur</strong> :
+                        <figure class="extension">
+                            <img style="max-width: 260px;" src="img/extension@2x-min.png" alt="aperçu de l'extension">
+                            <figcaption>La fenêtre d'information détaillée</figcaption>
+                        </figure>
+                    </div>
+                </div>
+                <h3>Réglages avancés</h3>
+                <p>Par défaut, le Possedex affiche les informations détaillées pour chaque site dont nous avons connaissance. Mais vous pouvez vous-même paramétrer le Possedex selon vos attentes. Pour chaque catégorie, vous pouvez choisir si vous souhaitez avoir des informations détaillées ou non.<br></p>
+                <h4>Réglez ici vos préférences pour l'affichage de l'infobulle</h4>
 
                 <div id="alert-inconnu" class="option-bulle">
                     <input id="check-alert-inconnu" type="checkbox">
@@ -69,27 +149,27 @@
                     <label for="check-alert-independant">Média indépendant: Bravo !</label>
                 </div>
 
-        </div>
+            </div>
 
-			<p class="font-small">
-				Vous pourrez retrouver à tout moment les informations disponibles sur une source en cliquant sur l’icône du Possedex en haut à droite de votre navigateur, puis sur l'icône en forme d'engrenage.
-			</p>
-			<div class="relative">
-				<p>
-					<strong>Vous consultez un site qui n’est pas dans notre
+            <p class="font-small">
+                Vous pourrez retrouver à tout moment les informations disponibles sur une source en cliquant sur l’icône du Possedex en haut à droite de votre navigateur, puis sur l'icône en forme d'engrenage.
+            </p>
+            <div class="relative">
+                <p>
+                    <strong>Vous consultez un site qui n’est pas dans notre
                         base de données&nbsp;?</strong>
-                        <div style="text-align:center">
-                            <span class="colored"><strong>NE PANIQUEZ PAS !</strong></span><br/>
-                        </div>
-                        Il vous suffit de chercher par vous même les informations de ce média.
-                    </strong>
-				</p>
+                    <div style="text-align:center">
+                        <span class="colored"><strong>NE PANIQUEZ PAS !</strong></span><br/>
+                    </div>
+                    Il vous suffit de chercher par vous même les informations de ce média.
+                </strong>
+            </p>
 
-				<!--<figure class="verifier">
-					<img style="max-width: 360px;" src="img/verifier@2x-min.png" alt="">
-                </figure>-->
-			</div>
-		</div>
-	</div>
+            <!--<figure class="verifier">
+                <img style="max-width: 360px;" src="img/verifier@2x-min.png" alt="">
+            </figure>-->
+        </div>
+    </div>
+</div>
 </body>
 </html>
