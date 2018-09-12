@@ -1,0 +1,470 @@
+
+@font-face {
+    font-family: Brown;
+    src: url('/fonts/lineto-brown-bold.eot');
+    src: url('/fonts/lineto-brown-bold.eot?#iefix') format('embedded-opentype'),
+       url('/fonts/lineto-brown-bold.woff') format('woff'),
+       url('/fonts/lineto-brown-bold.ttf')  format('truetype'),
+       url('/fonts/lineto-brown-bold.svg#svgFontName') format('svg');
+      font-weight: bold;
+}
+
+@font-face {
+    font-family: Brown;
+    src: url('/fonts/lineto-brown-regular.eot');
+    src: url('/fonts/lineto-brown-regular.eot?#iefix') format('embedded-opentype'),
+       url('/fonts/lineto-brown-regular.woff') format('woff'),
+       url('/fonts/lineto-brown-regular.ttf')  format('truetype'),
+       url('/fonts/lineto-brown-regular.svg#svgFontName') format('svg');
+      font-weight: normal;
+}
+
+
+:root {
+    --dark-color: #0b0b17;
+    --bright-color: #FFBF00;
+    --bright-color-2: #956922;
+    --white-color: white;
+}
+/*.main-title { font-size : 46px}*/
+/* Space out content a bit */
+body {
+  padding-top: 0rem;
+  font-family: Brown;
+  /*font-size: 0.85em;*/
+  color: var(--dark-color);
+}
+
+/* Everything but the jumbotron gets side spacing for mobile first views */
+.header,
+.footer,
+.main {
+
+}
+
+/* Custom page header */
+.header {
+    position:fixed;
+    top:0;
+    width: 100%;
+    margin: 0;
+    z-index : 90;
+    background-color:white;
+    border-bottom: 2px solid var(--bright-color)
+
+}
+/* Make the masthead heading the same height as the navigation */
+.header h3 {
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 3rem;
+}
+
+/* Custom page footer */
+.footer {
+    padding-top: 1.5rem;
+padding-bottom: 0.5rem;
+    color: white;
+    border-top: 0;
+    background-color: var(--dark-color);
+}
+.separator {
+    margin-top:4rem;margin-bottom:-2rem;
+}
+#rechercher{
+
+}
+
+#logo .img {
+    width:60px;
+    display:inline-block;
+}
+#logo {
+    margin: 20px;
+    display: inline-block;
+}
+#site-title {
+    color : #ffbf00;
+    display:inline-block;
+    font-size : 62px;
+    height : 94px;
+    margin-bottom:0;
+    vertical-align:middle;
+}
+
+.container-narrow > hr {
+  margin: 2rem 0;
+}
+
+.section{
+    padding-top: 120px;
+    margin-bottom: 5px;
+    min-height: 400px;
+}
+
+#medias-et-miliardaires{
+    background-color: var(--dark-color);
+    color: var(--white-color);
+    font-weight: 300;
+    padding-bottom: 120px;
+}
+/*#section2{                                     */
+/*    padding: 120px;                            */
+/*    background-color: var(--dark-color);       */
+/*    color: var(--white-color);                 */
+/*    font-weight: 300;                          */
+/*    margin-right: calc(-100vw / 2 + 840px / 2);*/
+/*    margin-left: calc(-100vw / 2 + 840px / 2); */
+/*    padding-left: calc(100vw / 2 - 840px / 2); */
+/*    padding-right: calc(100vw / 2 - 840px / 2);*/
+/*    margin-bottom: 7rem;                       */
+/*                                               */
+/*}                                              */
+h2 {
+    color: var(--bright-color);
+    margin-bottom: 3rem!important;
+}
+.text{
+    line-height: 1.75rem;
+    font-size: 0.85rem;
+    margin-top: -0.5rem;
+}
+.graphique-emprise-miliardaire{
+    background-color: var(--bright-color);
+    padding: 22px;
+    /* removed in stash max-width: 320px;*/
+    max-width: 320px;
+
+}
+h4{
+    font-size:0.9rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    line-height: 1.75rem;
+    color: var(--bright-color-2);
+}
+.visuel{width: 100%;  margin-left: -3px;}
+.legende{font-size:0.7rem;  color:var(--bright-color); font-weight:normal;}
+
+#contribuer{
+    min-height: 400px;
+    margin-bottom: 100px;
+};
+
+.cadre2{
+    width:1Opx;
+    border-bottom: 1px solid var(--dark-color);
+    padding-left: 2rem;
+        padding-right: 2rem;
+}
+.illustration-extension {
+    padding-left: 4.1rem;padding-right: 4.1rem;border-bottom:  1px solid;
+}
+.lien-extension { font-weight:bold;}
+
+.visuel2{
+    border: 1px solid var(--dark-color);
+
+/*=======                                          */
+/*min-height: 400px;                               */
+/*    margin-bottom: 100px;                        */
+/*};                                               */
+/*                                                 */
+/*.cadre2{                                         */
+/*    width:1Opx;                                  */
+/*    border-bottom: 1px solid var(--dark-color);  */
+/*    padding-left: 2rem;                          */
+/*        padding-right: 2rem;                     */
+/*}                                                */
+/*.visuel2{                                        */
+/*        border-left: 1px solid var(--dark-color);*/
+/*    border-right: 1px solid var(--dark-color);   */
+/*    border-top: 1px solid var(--dark-color);     */
+/*>>>>>>> Stashed changes                          */
+    width: 100%;
+}
+
+
+
+
+/* Main message and sign up button */
+.jumbotron {
+  border-bottom: .05rem solid #e5e5e5;
+  text-align : left;
+}
+.jumbotron .btn {
+  padding: .75rem 1.5rem;
+  font-size: 1.5rem;
+}
+
+/* Supporting content */
+@media screen and (max-height: 599px) {
+    .header {
+        height : auto;
+        position : relative;
+        padding : 0px;
+    }
+}
+
+/* Supporting content */
+@media screen and (min-height: 600px) {
+    .header {
+        position:fixed;
+        top:0;
+        width: 100%;
+        margin: 0;
+        z-index : 90;
+        background-color:white;
+        border-bottom: 2px solid var(--bright-color)
+
+    }
+
+    #main,#main-install {
+        margin-top: 180px;
+        z-index : 10;
+    }
+}
+
+@media screen and (max-width: 930px) {
+    #logo {
+        font-size : 1.2em!important;
+        display : inline;
+        text-align:center;
+        margin: 0;
+    }
+    #logo .img {
+        height : 25px;
+    }
+    #site-title {
+        display : inline;
+        text-align:center;
+        margin : auto;
+        padding : 0px;
+        font-size : 1.2em!important;
+    }
+    .header {
+        height : auto;
+        position : relative;
+        padding : 0px;
+    }
+}
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 48em) {
+  /* Remove the padding we set earlier */
+  .header,
+  .footer {
+      /*   padding-right: 0;*/
+      /*    padding-left: 0;*/
+  }
+  /* Space out the masthead */
+  .header {
+      margin-bottom: 12vh;
+  }
+  /* Remove the bottom border on the jumbotron for visual effect */
+  .jumbotron {
+      border-bottom: 0;
+  }
+}
+
+
+#menu {
+}
+
+#menu .nav-item {
+    display:inline-block;
+    vertical-align: middle;
+    /*height : 46px;*/
+    padding: 8px 6px;
+}
+
+.nav-item > a {
+    vertical-align: middle;
+    height : 46px;
+    line-height : 0.9em;
+
+}
+
+.container-fluid {
+    width: 90vw;
+}
+
+.section {
+    margin-right: -5vw;
+    margin-left:  -5vw;
+    padding-left: 5vw;
+    padding-right: 5vw;
+}
+
+
+.footer {
+    margin-right: -5vw;
+    margin-left:  -5vw;
+    padding-left: 5vw;
+    padding-right: 5vw;
+}
+
+h1{
+    font-size: 4vH!important;
+    font-weight: 500 !important;
+    line-height: 6vh !important;
+    max-width: 900px;
+}
+
+
+
+@media (min-width: 768px) {
+    .nav{visibility:visible;}
+}
+
+
+@media (min-width: 922px) {
+    .header {
+    }
+
+    #main {
+        margin-top: 180px;
+        z-index : 10;
+    }
+
+    #menu .nav{
+        margin: 3rem !important;
+        font-weight: bold;
+        color: var(--dark-color) ;
+    }
+
+    .container-fluid {width: 840px;}
+    .section {
+        margin-right: calc(-100vw / 2 + 840px / 2)!important;
+        margin-left: calc(-100vw / 2 + 840px / 2)!important;
+        padding-left: calc(100vw / 2 - 840px / 2)!important;
+        padding-right: calc(100vw / 2 - 840px / 2) !important;
+
+    }
+    .footer {
+        margin-right: calc(-100vw / 2 + 840px / 2)!important;
+        margin-left: calc(-100vw / 2 + 840px / 2)!important;
+        padding-left: calc(100vw / 2 - 840px / 2)!important;
+        padding-right: calc(100vw / 2 - 840px / 2) !important;
+
+    }
+    h1{
+        font-size: 2.1REM !important;
+        font-weight: 500 !important;
+        line-height: 3rem !important;
+        max-width: 900px;
+    }
+    /** {{{ search form **/
+    .titre{
+        font-weight: 900 !important;
+        color: var(--bright-color);
+    }
+
+    .form-control{
+        height: 85px;
+        padding: 0.5rem 2rem;
+        border-radius: 0 !important;
+        border:2px solid var(--dark-color)!important;
+        font-size:1.5rem;
+        color: var(--dark-color) !important;
+
+        font-family : Brown;
+    }
+
+    .input-group-addon{
+        border-left:0;
+        border-bottom :2px solid var(--dark-color)!important;
+        border-right: 2px solid var(--dark-color)!important;
+        border-top: 2px solid var(--dark-color)!important;
+        background-color: white !important;
+        border-radius: 0 !important;
+    }
+
+    .btn{
+        font-size:1.5rem;
+    }
+    /** }}} search form **/
+}
+    .input-group-addon{
+        background-color: white !important;
+    }
+
+.possedex .nav-link.active{
+}
+.possedex .nav-link.active span{
+
+    padding-bottom:1,5px;
+}
+
+.possedex .nav-link.active,
+.possedex .nav-link:hover{
+    color:var(--bright-color) !important;
+    transition-property: color;
+    transition-duration: 0.2s;
+}
+
+.possedex h3.text-muted{
+    color : #555
+}
+
+.possedex a { color : #111;}
+
+.possedex a.detail-media,
+.possedex a.detail-owner
+{ color : #111;font-weight:bold; }
+
+
+h1, h2, h3, h4, h5, h6, #result label{
+    font-family : Brown;
+}
+
+h1{
+    font-size: 2.1REM !important;
+    font-weight: 500 !important;
+    line-height: 3rem !important;
+    max-width: 900px;
+
+    font-family : Brown;
+}
+
+::placeholder {
+    color: var(--dark-color)!important;
+}
+
+#result {
+    color            : var(--dark-color);
+    padding          : 20px;
+}
+#result label {
+    font-size        : 24px;
+}
+#result p {
+    font-size        : 18px;
+    margin-left      : 30px;
+}
+
+.main-title a {
+    color:#555;
+    font-weight:normal;
+    text-decoration : none;
+}
+
+a {
+    color: inherit !important;
+    text-decoration: none;
+    background-color: transparent;
+    -webkit-text-decoration-skip: objects;
+}
+
+#result a, .possedex a.detail-owner, .possedex a.detail-media {
+    color : white;
+}
+.possedex #result .list-group-item a.goto-media,
+.possedex #result .list-group-item a.detail-media,
+.possedex #result .list-group-item a.goto-acrimed
+{
+    color : #222;
+    font-weight : normal;
+}
+.goto-media {
+    font-weight: normal;
+}
