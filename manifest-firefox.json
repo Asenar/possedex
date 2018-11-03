@@ -29,6 +29,11 @@
       "js": ["content.js"]
     }
   ],
+    "web_accessible_resources": [
+      "css/content.css",
+        "fonts/*",
+        "*.ttf"
+  ],
   "permissions" : [
     "tabs",
     "storage",

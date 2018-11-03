@@ -2,6 +2,7 @@
             VERSION 1 / MARS 2017
             VERSION 2 / JANVIER 2018
             VERSION 3 / AOUT 2018
+            VERSION 4 / NOVEMBRE 2018
             REMERCIEMENT A L'EQUIPE LES DECODEURS DU MONDE
             INFINIMENT MERCI AU MONDE DIPLOMATIQUE QUI A PUBLIÉ SA BASE
                              .y.
@@ -56,7 +57,6 @@
                                                              `/`
 
 */
-
 var browser = browser || chrome;
 
 const removeAfter = 10000; // En milliseconde
@@ -81,7 +81,7 @@ const removeAfter = 10000; // En milliseconde
     }
 
     function clearRemoveTimeout(){
-        clearTimeout(timers.removeTimeout);
+        clearTimeout(removeTimeout);
     }
 
     function removeAterTime(){
@@ -97,7 +97,7 @@ const removeAfter = 10000; // En milliseconde
             fn.call(arr, arr[i], i, l);
     }
 
-    function createChild(parent, tag){
+    function createChild(parent, tag, elementClass){
         const elem = document.createElement(tag);
         parent.appendChild(elem);
         return elem;
@@ -110,14 +110,13 @@ const removeAfter = 10000; // En milliseconde
     }
 
     function isVisible(elem){
-        return !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length );
+        return !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length ); // Merci jquery
     }
 
     function css(elem, styles, important){
-        let i, l;
         const merged = {};
         styles = [].concat(styles);
-        for(i = 0, l = styles.length; i<l; i++)
+        for(let i = 0, l = styles.length; i<l; i++)
             for(let style in styles[i])
                 merged[style] = styles[i][style] + ((important) ? ' !important' : '');
 
@@ -129,6 +128,43 @@ const removeAfter = 10000; // En milliseconde
         return elem;
     }
 
+    //import de la fueille de style css
+    // TODO: remplacer par browser
+    function importCSS() {
+            var linkTag = document.createElement ("link");
+
+            if(getBrowser()== "Firefox"){
+                linkTag.href = browser.extension.getURL("css/content.css");
+            }else if(getBrowser() == "Chrome"){
+                linkTag.href = chrome.extension.getURL("css/content.css");
+            }else{console.log("Type de browser non identifé");}
+
+            linkTag.rel = "stylesheet";
+            var head = document.getElementsByTagName ("head")[0];
+            head.appendChild (linkTag);
+    }
+    //pour pouvoir détecter le type de navigateur
+    function getBrowser() {
+        if (typeof chrome !== "undefined") {
+            if (typeof browser !== "undefined") {
+              return "Firefox";
+            } else {
+              return "Chrome";
+            }
+        } else {
+            return "Unknown";
+        }
+    }
+
+    function fixZIndexCurrentPage() {
+
+        forEach(document.querySelectorAll('body *'), function(elem){
+            const style = window.getComputedStyle(elem);
+            if(style.position !== 'static' && style.zIndex === 2147483647)
+                elem.style.zIndex = 2147483646;
+        });
+    }
+
 
     browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         // Supprimer infobulle si existant
@@ -138,55 +174,49 @@ const removeAfter = 10000; // En milliseconde
         if (request.show_popup){ // debunker
             // Ajout du contenu
 
-            forEach(document.querySelectorAll('body *'), function(elem){
-                var style = window.getComputedStyle(elem);
-                if(style.position != 'static' && style.zIndex == '2147483647')
-                    elem.style.zIndex = '2147483646';
-            });
+            // fix zindex for all bodyChilds
+            fixZIndexCurrentPage();
             const apply_style = browser.extension.getBackgroundPage().Possedex.styles;
-
+            importCSS();
 
             const body = document.querySelector('body');
 
             // Création de la structure du popup
             //console && console.log("infobulle - structure");
-            const infobulle = createChild(body, 'div');
-            infobulle.className = "possedex-infobulle";
-            var header = createChild(infobulle, 'header');
+            infobulle = createChild(body, 'div', 'possedex-infobulle');
 
-            var title = createChild(header, 'h1');
-            var picto = createChild(title, 'span');
-            var title_link = createChild(title, 'a');
+            const header = createChild(infobulle, 'header',"possedex-header");
 
-            var close = createChild(title, 'div');
-            var content = createChild(infobulle, 'div');
-            var main_text = createChild(content, 'div');
+            const title = createChild(header, 'h1', "possedex-title");
+            const picto = createChild(title, 'span', "possedex-picto");
+            const title_link = createChild(title, 'a', "possedex-link");
 
-            var proprietaires = createChild(content, 'div');
+            const close = createChild(title, 'div',"possedex-close");
+            const content = createChild(infobulle, 'div',"possedex-content");
+            const main_text = createChild(content, 'div',"possedex-main_text");
 
-            var proprietaires_h = createChild(proprietaires, 'h2');
-            if (request.proprietaires.length == 1) {
+            const proprietaires = createChild(content, 'div',"possedex-prop");
+
+            const proprietaires_h = createChild(proprietaires, 'h2' ,"possedex-proph");
+            if (request.proprietaires.length === 1) {
                 appendText(proprietaires_h, 'Ce média appartient à');
             } else {
                 appendText(proprietaires_h, 'Ce média appartient à');
             }
 
-            for (var i in request.proprietaires) {
-                var proprio_div = createChild(proprietaires, 'div');
-                css(proprio_div, [
-                    apply_style.reset,
-                    apply_style.resetText,
-                    apply_style.proprio
-                ]);
-                var proprio_a = createChild(proprio_div, 'a');
+            for (let i in request.proprietaires) {
+                let proprio_div = createChild(proprietaires, 'div');
+                css(proprio_div, [apply_style.reset, apply_style.resetText, apply_style.proprio]);
+                let proprio_a = createChild(proprio_div, 'a');
                 css(proprio_a,   [apply_style.reset, apply_style.resetText, apply_style.proprio_a]);
                 proprio_a.target    = "_blank"; // no html
                 proprio_a.innerText = ' '+request.proprietaires[i].nom; // no html
                 proprio_a.href      = request.proprietaires[i].url; // no html
+                // Il manque quelque chose ici
 
             }
 
-            var more = createChild(content, 'p'); // TODO
+            const more = createChild(content, 'p'); // TODO
 
             // Ajout du style
             var forceImportant = false;
@@ -198,24 +228,18 @@ const removeAfter = 10000; // En milliseconde
 
 
             // @TODO: add option to fix on bottom, or on right
-            css(infobulle, [apply_style.reset, apply_style.infobulle], forceImportant);
 
-            css(header, [apply_style.reset, apply_style.header], forceImportant);
-
-            css(title, [apply_style.reset, apply_style.resetText, apply_style.title ], forceImportant);
-
-            css(title_link, [{}, apply_style.title_link], forceImportant);
-
-            css(picto, [apply_style.reset, apply_style.resetText, apply_style.picto], forceImportant);
-
-            css(close, [apply_style.reset, apply_style.resetText, apply_style.close], forceImportant);
-
-            css(content, [apply_style.reset, apply_style.content], forceImportant);
-
-            css(main_text, [apply_style.reset, apply_style.resetText, apply_style.main_text], forceImportant);
-            css(proprietaires_h, [apply_style.reset, apply_style.resetText, apply_style.proprietaires_h], forceImportant);
-
-            css(more, [apply_style.reset, apply_style.resetText, apply_style.more], forceImportant);
+            // FIXME dessous, des trucs du merge à garder ou à virer
+            //  css(infobulle, [apply_style.reset, apply_style.infobulle], forceImportant);
+            //  css(header, [apply_style.reset, apply_style.header], forceImportant);
+            //  css(title, [apply_style.reset, apply_style.resetText, apply_style.title ], forceImportant);
+            //  css(title_link, [{}, apply_style.title_link], forceImportant);
+            //  css(picto, [apply_style.reset, apply_style.resetText, apply_style.picto], forceImportant);
+            //  css(close, [apply_style.reset, apply_style.resetText, apply_style.close], forceImportant);
+            //  css(content, [apply_style.reset, apply_style.content], forceImportant);
+            //  css(main_text, [apply_style.reset, apply_style.resetText, apply_style.main_text], forceImportant);
+            //  css(proprietaires_h, [apply_style.reset, apply_style.resetText, apply_style.proprietaires_h], forceImportant);
+            //  css(more, [apply_style.reset, apply_style.resetText, apply_style.more], forceImportant);
 
             // Ajout du contenu
             title_link.target = "_blank";
@@ -230,7 +254,8 @@ const removeAfter = 10000; // En milliseconde
 
             var more_icone = new Image();
             more_icone.src = request.icone; // note
-            css(more_icone, [apply_style.reset, apply_style.more_icone], forceImportant);
+            more_icone.className = "possedex-more_icon";
+
             // @FIXME do not insert direct HTML.
             more.innerHTML = "<span style='vertical-align:middle;'>+ d'infos en cliquant sur &nbsp;</span>";
             more.appendChild(more_icone);

@@ -37,5 +37,10 @@
     "webRequest",
 
     "http://possedex.info/mdiplo.json"
+  ],
+    "web_accessible_resources": [
+      "css/content.css",
+    "fonts/*",
+        "*.ttf"
   ]
 }
