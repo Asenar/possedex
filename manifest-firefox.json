@@ -11,6 +11,7 @@
   "background": {
     "scripts": ["background.js", "content.js", "install.js"],
   },
+  "homepage_url": "http://possedex.info/",
   "icons": {
     "16": "icon-16.png",
     "32": "icon-32.png",
@@ -29,11 +30,6 @@
       "js": ["content.js"]
     }
   ],
-    "web_accessible_resources": [
-      "css/content.css",
-        "fonts/*",
-        "*.ttf"
-  ],
   "permissions" : [
     "tabs",
     "storage",
@@ -42,5 +38,12 @@
     "webRequest",
 
     "http://possedex.info/mdiplo.json"
+  ],
+    "web_accessible_resources": [
+      "css/content.css",
+    "fonts/*",
+        "*.ttf",
+        "*.gif",
+        "img/prop/*"
   ]
 }

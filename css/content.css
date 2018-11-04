@@ -19,6 +19,13 @@
       font-weight: normal;
 }
 
+:root {
+    --dark-color: #0b0b17;
+    --bright-color: #FFBF00;
+    --bright-color-2: #956922;
+    --white-color: white;
+}
+
 .possedex-infobulle{
     /* all permet de reset le css*/
     all: initial; 
@@ -26,22 +33,24 @@
     top: 60px;
     right: 20px;
     position: fixed;
-    width: 320px;
+    width: 295px;
     min-height: 200px;
-    border-width: 4px;
+    border-width: 2.5px;
     border-style: solid;
     border-color: #ffc000;
-    border-radius: 2px;
+    border-radius: 0px;
     background-color: #ffffff;
     box-shadow: 0 0 10px 0 #5d666d;
-    padding: 6px;
+    padding: 10px 12px 5px 12px;
     transition: all .5s ease;
     opacity: 1;
     transform: translate(0,0);
     overflow: hidden;
+    font-family: Brown;
     z-index: 2147483647;
 }
 
+/*
 .possedex-header {
     display : block;
     padding : 10px;
@@ -61,49 +70,95 @@
     text-align: center;
     color: #ffc000;
 }
-
+*/
 .possedex-close {
     display : block;
-    float: right;
     overflow : hidden;
-    width : 15px;
-    height : 20px;
-    background : url(data:image/svg+xml,%3Csvg%20version%3D%221.1%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2013%2013%22%3E%0A%3Cstyle%20type%3D%22text/css%22%3E%0A%09.st0%7Bfill%3A%23FFFFFF%3B%7D%0A%3C/style%3E%0A%3Cpolygon%20id%3D%22_x2B_%22%20class%3D%22st0%22%20points%3D%220.7%2C1.9%205.5%2C6.6%200.7%2C11.4%201.9%2C12.5%206.6%2C7.7%2011.4%2C12.5%2012.5%2C11.4%207.7%2C6.6%2012.5%2C1.9%2011.4%2C0.7%0A%096.6%2C5.5%201.9%2C0.7%20%22/%3E%0A%3C/svg%3E) center no-repeat;
-    color : yellow;
-    text-indent : 100%;
-    white-space : nowrap;
+    font-size : 22px;
+    color : var(--dark-color);
     overflow : hidden;
     cursor : pointer;
+    position: absolute;
+    right: 10px;
+    top: 3px;
+    color: var(--bright-color);
+    font-family: Arial, sans-serif;
+}
+
+.possedex-close:after {
+  content: '×'; /* UTF-8 symbol */
 }
 
 .possedex-content{
-    padding: 10px;
+    padding: 7px;
 }
 
+/*
 .possedex-main_text{
     margin: 0 0 5px 0;
 }
+*/
 
 .possedex-proph {
+    all:initial;
+    font-family: brown;
     display : block;
-    font-weight : bold;
-    font-size : 15px;
+    font-weight : normal;
+    font-size : 13px;
     text-align : left;
+    color: var(--bright-color);
+    margin-bottom: 10px;
 }
 .possedex-prop {
-    text-align : center;
 }
 
 .possedex-propa {
-    text-decoration : underline;
-    font-size : 28px;
+    all:inherit;
+    margin: 0;
+    text-decoration : none;
+    font-size : 39px;
+    font-weight: bold;
+    line-height: 34px;
 }
-
+.possedex-propdetail{
+    font-size:12px;
+    line-height: 17px;
+    float: left;
+}
+    
+.possedex-propint{
+    color: #888;
+    font-size:12px;
+    line-height: 17px;
+    float: left;
+}
+    
+.possedex-propdiv{
+    margin: 12px 0 12px 0;
+    overflow: hidden;
+    float: left;
+}
+.possedex-proptext{
+    all:inherit;
+        width: 180px;
+        margin-left: 10px;
+    float: left;
+   color: var(--dark-color);
+       margin: 0 0 10px 10px;
+    overflow: visible;
+}
+.possedex-propimg{
+    width: 90px;
+    float: left;
+}
+    
+/*
 .possedex-more{
     bottom : 2px;
     color: #16212c;
     font-weight : bold;
-    position : fixed:
+    position : fixed;
+    clear: both;
 }
 
 .possedex-more_icone{
@@ -125,4 +180,5 @@
     line-height: 18px;
     margin: -1px 10px -1px 0;
 }
+*/  
 

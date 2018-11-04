@@ -61,7 +61,7 @@ var browser = browser || chrome;
 
 const removeAfter = 10000; // En milliseconde
 (function (){
-    'use strict';
+    "use strict";
 
     var infobulle = {}
     const timers = {
@@ -100,6 +100,7 @@ const removeAfter = 10000; // En milliseconde
     function createChild(parent, tag, elementClass){
         const elem = document.createElement(tag);
         parent.appendChild(elem);
+        elem.className = elementClass;
         return elem;
     }
 
@@ -120,51 +121,44 @@ const removeAfter = 10000; // En milliseconde
             for(let style in styles[i])
                 merged[style] = styles[i][style] + ((important) ? ' !important' : '');
 
-        var balise = '';
-        for(var attr in merged)
-            balise += attr+':'+merged[attr]+';';
+        var balise = "";
+        for(let attr in merged)
+            balise += attr+":"+merged[attr]+";";
 
-        elem.setAttribute('style', balise);
+        elem.setAttribute("style", balise);
         return elem;
     }
 
     //import de la fueille de style css
-    // TODO: remplacer par browser
     function importCSS() {
-            var linkTag = document.createElement ("link");
+        const linkTag = document.createElement ("link");
+        linkTag.href = getBrowser().extension.getURL("css/content.css");
 
-            if(getBrowser()== "Firefox"){
-                linkTag.href = browser.extension.getURL("css/content.css");
-            }else if(getBrowser() == "Chrome"){
-                linkTag.href = chrome.extension.getURL("css/content.css");
-            }else{console.log("Type de browser non identifé");}
-
-            linkTag.rel = "stylesheet";
-            var head = document.getElementsByTagName ("head")[0];
-            head.appendChild (linkTag);
+        linkTag.rel = "stylesheet";
+        document.getElementsByTagName ("head")[0]
+            .appendChild (linkTag);
     }
+
     //pour pouvoir détecter le type de navigateur
-    function getBrowser() {
+     function getBrowser() {
         if (typeof chrome !== "undefined") {
             if (typeof browser !== "undefined") {
-              return "Firefox";
+              return browser;
             } else {
-              return "Chrome";
+              return chrome;
             }
         } else {
-            return "Unknown";
+            console.log("Le navigateur n'est pas compatible avec l'extension possedex");
         }
     }
 
     function fixZIndexCurrentPage() {
-
-        forEach(document.querySelectorAll('body *'), function(elem){
+        document.querySelectorAll('body *').forEach(function(elem){
             const style = window.getComputedStyle(elem);
             if(style.position !== 'static' && style.zIndex === 2147483647)
                 elem.style.zIndex = 2147483646;
         });
     }
-
 
     browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         // Supprimer infobulle si existant
@@ -177,113 +171,89 @@ const removeAfter = 10000; // En milliseconde
             // fix zindex for all bodyChilds
             fixZIndexCurrentPage();
             const apply_style = browser.extension.getBackgroundPage().Possedex.styles;
+            // FIXME: importer une seule fois
             importCSS();
+            
+            const body = document.querySelector("body");
 
-            const body = document.querySelector('body');
+            // Structure du popup
+            infobulle = createChild(body, "div","possedex-infobulle");
+            const close = createChild(infobulle, "div","possedex-close");
+            const content = createChild(infobulle, "div","possedex-content");
+            const proprietaires = createChild(content, "div","possedex-prop");
 
-            // Création de la structure du popup
-            //console && console.log("infobulle - structure");
-            infobulle = createChild(body, 'div', 'possedex-infobulle');
-
-            const header = createChild(infobulle, 'header',"possedex-header");
-
-            const title = createChild(header, 'h1', "possedex-title");
-            const picto = createChild(title, 'span', "possedex-picto");
-            const title_link = createChild(title, 'a', "possedex-link");
-
-            const close = createChild(title, 'div',"possedex-close");
-            const content = createChild(infobulle, 'div',"possedex-content");
-            const main_text = createChild(content, 'div',"possedex-main_text");
-
-            const proprietaires = createChild(content, 'div',"possedex-prop");
-
-            const proprietaires_h = createChild(proprietaires, 'h2' ,"possedex-proph");
-            if (request.proprietaires.length === 1) {
-                appendText(proprietaires_h, 'Ce média appartient à');
-            } else {
-                appendText(proprietaires_h, 'Ce média appartient à');
-            }
+            // Section propriétaire
+            const proprietaires_h = createChild(proprietaires, "span" ,"possedex-proph");
+            appendText(proprietaires_h, request.nom+" appartient à");
 
             for (let i in request.proprietaires) {
-                let proprio_div = createChild(proprietaires, 'div');
-                css(proprio_div, [apply_style.reset, apply_style.resetText, apply_style.proprio]);
-                let proprio_a = createChild(proprio_div, 'a');
-                css(proprio_a,   [apply_style.reset, apply_style.resetText, apply_style.proprio_a]);
+
+                let proprio_div = createChild(proprietaires, "div","possedex-propdiv");
+
+                // Image
+                let proprietaire_img = new Image();
+                let img_link = "img/prop/"+ request.proprietaires[i].nom.replace(" ","") +".gif";
+                proprietaire_img.src = getBrowser().extension.getURL(img_link);
+                proprietaire_img.className = "possedex-propimg";
+                proprio_div.appendChild(proprietaire_img);
+
+                // Bloc nom et détails
+                let proprio_text = createChild(proprio_div, "div","possedex-proptext");
+
+                // Nom
+                let proprio_a = createChild(proprio_text, "a","possedex-propa");
                 proprio_a.target    = "_blank"; // no html
-                proprio_a.innerText = ' '+request.proprietaires[i].nom; // no html
+                proprio_a.innerText = " "+request.proprietaires[i].nom; // no html
                 proprio_a.href      = request.proprietaires[i].url; // no html
-                // Il manque quelque chose ici
+
+                // Détails
+                let proprio_rang = createChild(proprio_text,"span","possedex-propdetail");
+                let proprio_boite = createChild(proprio_text,"span","possedex-propdetail");
+                appendText(proprio_rang, "1ère fortune française");
+                appendText(proprio_boite, "Dirige LVMH");
+
+
+                // Intéret
+                let proprio_interet = createChild(proprio_div,"span","possedex-propint");
+                appendText(proprio_interet, request.proprietaires[i].nom +" a des intérêts dans le luxe, la saucisse et le pastaga");
 
             }
 
-            const more = createChild(content, 'p'); // TODO
-
-            // Ajout du style
-            var forceImportant = false;
-            //var currentColor = request.color; // note
-            //var currentColor = '#888888'; // note
-
-
-           ;
-
-
-            // @TODO: add option to fix on bottom, or on right
-
-            // FIXME dessous, des trucs du merge à garder ou à virer
-            //  css(infobulle, [apply_style.reset, apply_style.infobulle], forceImportant);
-            //  css(header, [apply_style.reset, apply_style.header], forceImportant);
-            //  css(title, [apply_style.reset, apply_style.resetText, apply_style.title ], forceImportant);
-            //  css(title_link, [{}, apply_style.title_link], forceImportant);
-            //  css(picto, [apply_style.reset, apply_style.resetText, apply_style.picto], forceImportant);
-            //  css(close, [apply_style.reset, apply_style.resetText, apply_style.close], forceImportant);
-            //  css(content, [apply_style.reset, apply_style.content], forceImportant);
-            //  css(main_text, [apply_style.reset, apply_style.resetText, apply_style.main_text], forceImportant);
-            //  css(proprietaires_h, [apply_style.reset, apply_style.resetText, apply_style.proprietaires_h], forceImportant);
-            //  css(more, [apply_style.reset, apply_style.resetText, apply_style.more], forceImportant);
-
-            // Ajout du contenu
-            title_link.target = "_blank";
-            title_link.href = request.possedex_link;
-            appendText(title_link, request.nom); // note
-            // le picto= un carré avec border-radius + un caractere
-            // appendText(picto, 'i');
-            appendText(close, 'Fermer');
-            main_text.innerText = request.message; // no html
-            //console && console.log("infobulle - le message");
-            //console && console.log(request);
+            /*
+            // Lien vers plus de détail
+            var more = createChild(content, "p", "possedex-more"); // TODO
+            appendText(more, "+ d'infos en cliquant sur ");
 
             var more_icone = new Image();
             more_icone.src = request.icone; // note
             more_icone.className = "possedex-more_icon";
-
-            // @FIXME do not insert direct HTML.
-            more.innerHTML = "<span style='vertical-align:middle;'>+ d'infos en cliquant sur &nbsp;</span>";
             more.appendChild(more_icone);
-            // Bind des event au clique
+            */
 
-            close.addEventListener('click', closeInfoBulle);
+            // Bind des event au clique
+            close.addEventListener("click", closeInfoBulle);
+
             if (!request.persistant) {
                 // note : theses log are displayed in the classic console
-                infobulle.addEventListener('mouseenter', clearRemoveTimeout);
-                infobulle.addEventListener('mouseleave', removeAterTime);
+                infobulle.addEventListener("mouseenter", clearRemoveTimeout);
+                infobulle.addEventListener("mouseleave", removeAterTime);
                 removeAterTime();
             } else {
                 //console && console.log("persistant is enabled");
             }
-        }
-        else {
-            if (request.text == 'report_back') {
-               sendResponse({farewell: document.querySelector(".yt-user-info").getElementsByTagName('a')[0].href});
+
+        } else {
+            if (request.text === "report_back") {
+               sendResponse({farewell: document.querySelector(".yt-user-info").getElementsByTagName("a")[0].href});
                //console.log("URL CHANNEL ---> " + document.querySelector(".yt-user-info"));
             }
-
         }
       });
 
     /*browser.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
-        if (msg.text === 'report_back') {
-            sendResponse({farewell: document.getElementsByClassName("yt-user-info")[0].getElementsByTagName('a')[0].href});
-            //console.log("URL CHANNEL ---> " + document.getElementsByClassName("yt-user-info")[0].getElementsByTagName('a')[0].href);
+        if (msg.text === "report_back") {
+            sendResponse({farewell: document.getElementsByClassName("yt-user-info")[0].getElementsByTagName("a")[0].href});
+            //console.log("URL CHANNEL ---> " + document.getElementsByClassName("yt-user-info")[0].getElementsByTagName("a")[0].href);
         }
     });*/
 

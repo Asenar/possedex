@@ -37,7 +37,9 @@
   ],
     "web_accessible_resources": [
       "css/content.css",
-        "fonts/*",
-        "*.ttf"
-    ]
+    "fonts/*",
+        "*.ttf",
+        "*.gif",
+        "img/prop/*"
+  ]
 }
