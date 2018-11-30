@@ -81,7 +81,7 @@ const removeAfter = 10000; // En milliseconde
     }
 
     function clearRemoveTimeout(){
-        clearTimeout(removeTimeout);
+        clearTimeout(timers.removeTimeout);
     }
 
     function removeAterTime(){
@@ -170,7 +170,7 @@ const removeAfter = 10000; // En milliseconde
 
             // fix zindex for all bodyChilds
             fixZIndexCurrentPage();
-            const apply_style = browser.extension.getBackgroundPage().Possedex.styles;
+            const apply_style = request.styles;
             // FIXME: importer une seule fois
             importCSS();
             
@@ -206,17 +206,83 @@ const removeAfter = 10000; // En milliseconde
                 proprio_a.innerText = " "+request.proprietaires[i].nom; // no html
                 proprio_a.href      = request.proprietaires[i].url; // no html
 
-                // Détails
-                let proprio_rang = createChild(proprio_text,"span","possedex-propdetail");
-                let proprio_boite = createChild(proprio_text,"span","possedex-propdetail");
-                appendText(proprio_rang, "1ère fortune française");
-                appendText(proprio_boite, "Dirige LVMH");
+                // Fortune
+                if(request.proprietaires[i].fortune){
+                    var proprio_rang = createChild(proprio_text,"span","possedex-propdetail");
+                    if(request.proprietaires[i].fortune == 1){
+                        var fortune_phrase = "1ère fortune de France";
+                    } else {
+                        var fortune_phrase = request.proprietaires[i].fortune + "ème fortune de France";
+                    }
+                    appendText(proprio_rang, fortune_phrase);
+                }
+
+                // Possessions
+                var proprio_boite = createChild(proprio_text,"span","possedex-propdetail");
+                // Liste des possessions avec le pourcentage entre parenthese
+                let possessions_liste = request.proprietaires[i].possessions.map(a => a.nom + " ("+ a.valeur+"%)");
+                // La transformer en phrase (si plusieurs entreprises : "x,x et x" au lieu de "x,x,x")
+                var possessions_phrase = "Dirige "
+                for (let j in possessions_liste) {
+                    if (j === 0){
+                        possessions_phrase += possessions_liste[j] ;
+                    }
+                    else{
+                        if(j === (possessions_liste.length-1) ){
+                            possessions_phrase += " et " + possessions_liste[j] ;
+                        }
+                        else {
+                            possessions_phrase +=", "+ possessions_liste[j];
+                        }
+                    }
+                }
+                appendText(proprio_boite, possessions_phrase);
 
 
-                // Intéret
-                let proprio_interet = createChild(proprio_div,"span","possedex-propint");
-                appendText(proprio_interet, request.proprietaires[i].nom +" a des intérêts dans le luxe, la saucisse et le pastaga");
+                // Medias
+                var proprio_interet = createChild(proprio_div,"span","possedex-propint");
 
+
+
+                /*
+                for (var k in request.proprietaires[i].medias) {
+                    if(k == 0){medias_phrase += request.proprietaires[i].medias[k] ;}
+                    else{
+                        if(k == (request.proprietaires[i].medias.length-1) ){ medias_phrase += " et " + request.proprietaires[i].medias[k] ;}
+                        else{ medias_phrase +=", "+ request.proprietaires[i].medias[k]; }
+                    }
+                }
+                */
+
+                var medias_phrase = "";
+                var nbmax = 2;
+
+                for (let k=0; (k < request.proprietaires[i].medias.length) &&  (k < nbmax+1); k++) {
+                    if (k === 0) {
+                        medias_phrase += request.proprietaires[i].nom + " a des parts dans " + request.proprietaires[i].medias[k] ;
+                    } else if (k === (request.proprietaires[i].medias.length-1) ){
+                         medias_phrase += " et " + request.proprietaires[i].medias[k] ;
+                    } else if (k === (nbmax) && (request.proprietaires[i].medias.length > nbmax)){
+                         medias_phrase += " et " + (request.proprietaires[i].medias.length-nbmax) + " autres media";
+                    } else {
+                        medias_phrase +=", "+ request.proprietaires[i].medias[k];
+                    }
+                    // console.log(" k=" + k +" length="+ request.proprietaires[i].medias.length + " "+ medias_phrase);
+
+                }
+
+                appendText(proprio_interet, medias_phrase);
+
+                console.log(request);
+
+                /*
+                console.log(request.proprietaires[i].media.length);
+
+                // Test
+                //chrome.extension.getBackgroundPage().console.log('saluttoi');
+                console.log(request.proprietaires[i].possessions[0].nom);
+                console.log(possessions_noms);
+                */
             }
 
             /*

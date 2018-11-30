@@ -188,13 +188,13 @@ function main() {
         var target_sources = document.querySelector("#sources .content");
         target_sources.innerText = "";
 
-        if (background.sources.length == 0) {
+        if (entity.possedex.sources.length === 0) {
             source_wrapper.style.display = "none";
         }
         else {
             source_wrapper.style.display = "block";
-            for(var i in background.sources) {
-                var obj = background.sources[i];
+            for(let i in entity.possedex.sources) {
+                let obj = entity.possedex.sources[i];
                 createLink(target_sources, obj.url, obj.title);
             }
         }

@@ -11,6 +11,7 @@
   "background": {
     "scripts": ["background.js", "content.js", "install.js"]
   },
+  "homepage_url": "http://possedex.info/",
   "icons": {
     "16": "icon-16.png",
     "32": "icon-32.png",

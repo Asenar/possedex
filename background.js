@@ -465,9 +465,9 @@ var Possedex = {
 
     getAllChildrenForEntity: function(entity, medias = []) {
         // console && console.log("start getAllChildrenForEntity");
-        for(item_index in entity.possessions) {
-            item = entity.possessions[item_index];
-             console && console.info(item);
+        for(let item_index in entity.possessions) {
+            let item = entity.possessions[item_index];
+            // console && console.info("une possession de "+entity.nom+ " : " + item.nom);
             childId = Possedex.getEntityIdFromNom(item.nom);
             childEntity = Possedex.data.objets[childId]
             if (childEntity.type != 3) {
@@ -575,38 +575,27 @@ var Possedex = {
 
             if (Possedex.entity.hasOwnProperty('est_possede')) {
                 Possedex.entity.proprietaires = Possedex.getAllParentsForEntity(Possedex.entity);
+
+                for(j in Possedex.entity.proprietaires){
+                    /*
+                entity.proprietaires[j].medias = Possedex.getAllChildrenForEntity(entityP);
+                */
+                    var entityP_id = Possedex.getEntityIdFromNom(Possedex.entity.proprietaires[j].nom);
+                    var entityP = Possedex.data.objets[entityP_id];
+                    var medias_entity = Possedex.getAllChildrenForEntity(entityP);
+                    Possedex.entity.proprietaires[j].medias = medias_entity.map(a => a.nom);
+                }
             }
 
-            subventions = Possedex.entity.possedex.subventions;            // Montant des subventions d'état
-            publicite = Possedex.entity.possedex.pub;                    // Pub ?
-
+            //subventions = Possedex.entity.possedex.subventions;            // Montant des subventions d'état
+            //publicite = Possedex.entity.possedex.pub;                    // Pub ?
 
             Possedex.entity.sources = Possedex.getHTMLForSources(Possedex.entity);
-
             //updated_human  = entity.possedex.updated.toLocaleString('fr');
 
             // display results
             Possedex.sendToOutput(Possedex.entity);
 
-            if (url.match(/youtube.com/)) {
-
-
-                //browser.browserAction.setIcon({
-                //    path: "img/icones/icon-" + (classement) + ".png", // note
-                //    tabId: t
-                //});
-
-                if ("" == proprietaires)
-                    proprietaires = "Youtube est une propriété de la Holding Alphabet (Google)";                             // propriétaires
-                if ("" == interets)
-                    interets = "Le groupe Alphabet(Google) a de nombreux intérêts internationnaux. Son business model est fortement basé sur la publicité et son quasi-monopole de la publicité. Google exerce de nombreuses pressions sur les états et l'Union Européenne.";                               // intérets
-                if ("" == conflits)
-                    conflits = "Youtube peut être un outil de partage de connaissances. Les vidéastes et utilisateurs de la plateforme youtube ne sont pas forcément soumis à Google, mais… ";  // exemple de conflits / complicité idéologique
-                if ("" == subventions)
-                    subventions = "";             // Montant des subventions d'état
-                if ("" == sources)
-                    sources = "";             // Nos sources (urls séparés par virgule et/ou espace)
-            }
 
         });
 
@@ -728,7 +717,7 @@ var Possedex = {
 
 function checkSite(do_display){
 
-    if (checkSite_in_progress == true) {
+    if (checkSite_in_progress === true) {
         console.warn("checkSite already in progress : cancelling …")
         return;
     }
@@ -741,6 +730,7 @@ function checkSite(do_display){
         tab = tabs[0];
         dbg(4, "tab is ", tab);
         if (!tabs.length) {
+            dbg(1, "tabs.length is empty")
             checkSite_in_progress = false;
             return;
         }
@@ -758,7 +748,7 @@ function checkSite(do_display){
         return;
 
         // OTHER URLS
-        matches = []
+        const matches = []
 
         matches.push(urls[active_url]);
         dbg(3, "find url : ", Possedex.data.urls[active_url]);
@@ -837,7 +827,7 @@ browser.tabs.onActivated.addListener(function (activeInfo) {
 // C'est déclenché lorsqu'un onglet est mis à jour.
 browser.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     dbg(1, "onUpdated");
-    checkSite(changeInfo.status && (changeInfo.status == "complete"));
+    checkSite(changeInfo.status && (changeInfo.status === "complete"));
 });
 // déclenché quand un onglet est créé
 browser.tabs.onCreated.addListener(function (tab) {
