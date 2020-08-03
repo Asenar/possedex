@@ -142,7 +142,8 @@ var colors = {
 // let possedex_colors = [ "#A2A9AE", "#129AF0", "#D50303", "#F5A725", "#468847" ];
 // let possedex_descs = [ "inclassable", "parodique", "pas fiable du tout", "peu fiable", "fiable" ];
 
-var base_url = "http://"+DOMAIN+"/mdiplo.json";
+const base_url = "http://"+DOMAIN+"/mdiplo.json";
+
 var CURRENT_VERSION = '0.1.0';
 var always_refresh = false;
 var urls = "";
@@ -176,7 +177,7 @@ var icone         = '';
 
 function onInstall(tabId) {
     dbg(1, "Le Possedex est installé");
-     Possedex.loadData();
+     Possedex.loadExtensionInfo();
     var last_update = new Date();
 
     browser.storage.local.set({
@@ -239,10 +240,31 @@ var Possedex = {
         xhr.send();
     },
 
-    loadData: function(){
+    loadAndStoreDB: function() {
+        return Possedex.loadJSON(
+            base_url+"?"+new_update.getTime(),
+            function(data) {
+                browser.storage.local.set({'urls': data['urls']}, function() {
+                    console && console.info("urls set to ...", data['urls']);
+                });
+                browser.storage.local.set({'objets': data['objets']}, function() {
+                    console && console.info("objets set to", data['objets']);
+                });
+                browser.storage.local.set({'last_update': new_update.getTime()}, function() {
+                    console && console.info("last_update set to", new_update.getTime());
+                });
+            },
+            function(data) {
+                console && console.error("error on loadJSON with "+base_url);
+                console && console.info(data);
+            }
+        )
+    },
+
+    loadExtensionInfo: function(){
 
         if (2 <= _debug) {
-            console && console.info('start loadData()');
+            console && console.info('start loadExtensionInfo()');
             //console && console.info('NO DEBUG');
         }
         browser.storage.local.get('last_update', function(data){
@@ -250,28 +272,7 @@ var Possedex = {
             if (2 <= _debug) {
                 console && console.log("found last update : ", data, "base url=", base_url+"?"+new_update.getTime());
             }
-            Possedex.loadJSON(base_url+"?"+new_update.getTime(),
-                function(data) {
-                    if (2 <= _debug) {
-                        console && console.info("storing urls...", data['urls']);
-                    }
-                    browser.storage.local.set({'urls': data['urls']}, function() {
-                    });
-                    if (2 <= _debug)
-                        console && console.info("set objets to", data['objets']);
-                    browser.storage.local.set({'objets': data['objets']}, function() {
-                    });
-                    if (3 <= _debug)
-                        console && console.info("set last_update to", new_update.getTime());
-                    browser.storage.local.set({'last_update': new_update.getTime()}, function() {
-                    });
-
-                },
-                function(data) {
-                    console && console.error("error on loadJSON with "+base_url);
-                    console && console.info(data);
-                }
-            );
+            Possedex.loadAndStoreDB();
         });
     },
 
@@ -348,7 +349,6 @@ var Possedex = {
         } else {
             for(id in Possedex.data.objets) {
                 //console && console.log("check id="+id);
-
                 if (Possedex.data.objets[id].nom == str) {
                     //console && console.info("TROUVé : "+id);
                     return id;
@@ -369,14 +369,10 @@ var Possedex = {
     },
 
     debunkSite: function (url, tab_id, display){
-        if (3 <= _debug) {
-            console && console.group('START debunk site '+url);
-        }
 
         infosToGet = [
             'urls',
             "objets",
-            "already_visited",
             "infobulles",
             "persistant",
             "last_update"
@@ -386,42 +382,23 @@ var Possedex = {
                 console && console.info("debunkSite : var results");
                 console && console.log(data);
             }
+            const {urls, objets, infobulles, persistant, last_update} = data;
 
             Possedex.data = data;
             if ("urls" in data) {
-                if (_debug > 4) {
-                    console && console.log("urls is in data");
-                }
-                urls = data.urls;
-                objets = data.objets;
+                dbg(4, "urls is in data");
 
                 entity_id = Possedex.getEntityIdFromNom(url)
 
-                if (entity_id == false) {
-
-                    if (2 <= _debug) {
-                        console && console.info("site non trouvé avec l'url suivante :", url);
-
-                    }
-                    //browser.browserAction.setIcon({
-                    //    path: "icone.png",
-                    //    tabId: t
-                    //});
-                    // Optional : add a badge text and badge bg with the icon
-                    //browser.browserAction.setBadgeText({"text" : ""});
-                    //browser.browserAction.setBadgeBackgroundColor({'color' : "#D50303"});
+                if (false === entity_id) {
+                    dbg(2, "site non trouvé avec l'url suivante :" + url);
                     return;
                 }
 
-                if (2 <= _debug) {
-                    console && console.info("Site id pour "+url+", entity_id = "+entity_id);
-                }
+                dbg(2, "Site id pour "+url+", entity_id = "+entity_id);
 
                 entity = Possedex.data.objets[entity_id];
-                if (2 <= _debug) {
-                    console && console.log("contenu", entity);
-                }
-
+                dbg(2, entity);
 
                 classement     = entity.possedex.classement;   // classement possedex
                 console && console.log(entity.possedex);
@@ -432,17 +409,6 @@ var Possedex = {
 
                 if (entity.hasOwnProperty('est_possede')) {
                     entity.proprietaires = Possedex.getAllParentsForEntity(entity);
-                    //entity.proprietaires = []
-                    //console && console.log("POUET POUET");
-                    //entity.est_possede.forEach(function(el, i) {
-                    //    console && console.log("POUET POUET");
-                    //    console && console.log(el);
-                    //    entity.proprietaires.push({
-                    //        "url" : 'http://'+DOMAIN+'#'+el.nom,
-                    //        "nom" : el.nom + ' ('+el.valeur +(parseInt(el.valeur)?'%':'') +')'
-                    //        //+ " (" + fortunes1 + ")"
-                    //    });
-                    //})
                 }
 
                 subventions    = entity.possedex.subventions;            // Montant des subventions d'état
@@ -460,10 +426,7 @@ var Possedex = {
                 while (match != null) {
                     title = match[1];
                     url   = match[2];
-                    sources.push({
-                        "url"   : url,
-                        "title" : title
-                    });
+                    sources.push({"url" : url, "title" : title});
                     match = regex.exec(raw_sources);
                 }
 
@@ -486,21 +449,6 @@ var Possedex = {
                 }
 
                 //updated_human  = entity.possedex.updated.toLocaleString('fr');
-
-                if (2 <= _debug) {
-                    console && console.group("tout s'est bien passé");
-                    console && console.log('nom            =',entity.nom                     );
-                    //console && console.log('updated        =',updated_human  );
-                    console && console.log('classement     =',entity.possedex.classement     );
-                    console && console.log('notule         =',entity.possedex.notule         );
-                    console && console.log('slug           =',entity.possedex.slug           );
-                    console && console.log('proprietaires  =',entity.possedex.proprietaires  );
-                    console && console.log('interets       =',entity.possedex.interets       );
-                    console && console.log('conflits       =',entity.possedex.conflits       );
-                    console && console.log('subventions    =',entity.possedex.subventions    );
-                    console && console.log('sources        =',entity.possedex.sources        );
-                    console && console.groupEnd();
-                }
 
                 // display results
                 Possedex.sendToOutput(entity);
@@ -536,7 +484,7 @@ var Possedex = {
             if (1 <= _debug) {
                 console && console.log("refresh every hour or refresh forced");
             }
-            Possedex.loadData();
+            Possedex.loadExtensionInfo();
         } else {
             if (2 <= _debug) {
                 human_date = new Date(last_update).toString();

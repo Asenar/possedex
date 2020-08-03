@@ -56,20 +56,23 @@
                                                              `/`
 
 */
-var browser = browser || chrome;
 
-(function possedexInfobulle(){
+const browser = browser || chrome;
+
+const removeAfter = 10000; // En milliseconde
+(function (){
     'use strict';
 
-    var infobulle;
-    var removeTimeout;
-    var removeAfter = 10000; // En milliseconde
+    var infobulle = {}
+    const timers = {
+        removeTimeout : null
+    }
 
     var heights = [213, 180, 212, 203, 213];
 
     // Helpers function
     function closeInfoBulle(){
-        clearTimeout(removeTimeout);
+        clearTimeout(timers.removeTimeout);
         infobulle.style.opacity = 0;
         infobulle.style.transform = 'translate(0,-100%)';
         removeTimeout = setTimeout(function(){
@@ -78,11 +81,11 @@ var browser = browser || chrome;
     }
 
     function clearRemoveTimeout(){
-        clearTimeout(removeTimeout);
+        clearTimeout(timers.removeTimeout);
     }
 
     function removeAterTime(){
-        removeTimeout = setTimeout(closeInfoBulle, removeAfter);
+        timers.removeTimeout = setTimeout(closeInfoBulle, removeAfter);
     }
 
     function removeElement(elem){
@@ -90,32 +93,32 @@ var browser = browser || chrome;
     }
 
     function forEach(arr, fn){
-        for(var i = 0, l = arr.length; i<l; i++)
+        for (let i = 0, l = arr.length; i<l; i++)
             fn.call(arr, arr[i], i, l);
     }
 
     function createChild(parent, tag){
-        var elem = document.createElement(tag);
+        const elem = document.createElement(tag);
         parent.appendChild(elem);
         return elem;
     }
 
     function appendText(parent, text){
-        var elem = document.createTextNode(text);
+        const elem = document.createTextNode(text);
         parent.appendChild(elem);
         return parent;
     }
 
     function isVisible(elem){
-        return !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length ); // Merci jquery
+        return !!( elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length );
     }
 
     function css(elem, styles, important){
-        var i, l;
-        var merged = {};
+        let i, l;
+        const merged = {};
         styles = [].concat(styles);
         for(i = 0, l = styles.length; i<l; i++)
-            for(var style in styles[i])
+            for(let style in styles[i])
                 merged[style] = styles[i][style] + ((important) ? ' !important' : '');
 
         var balise = '';
@@ -141,7 +144,7 @@ var browser = browser || chrome;
                     elem.style.zIndex = '2147483646';
             });
 
-            var apply_style = {
+            const apply_style = {
                 reset : {
                     'position': 'static',
                     'box-sizing': 'border-box',
@@ -243,7 +246,6 @@ var browser = browser || chrome;
                 close: {
                     'display': 'block',
                     'float': 'right',
-                    'overflow': 'hidden',
                     'width': '15px',
                     'height': '20px',
                     'background': 'url(data:image/svg+xml,%3Csvg%20version%3D%221.1%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2013%2013%22%3E%0A%3Cstyle%20type%3D%22text/css%22%3E%0A%09.st0%7Bfill%3A%23FFFFFF%3B%7D%0A%3C/style%3E%0A%3Cpolygon%20id%3D%22_x2B_%22%20class%3D%22st0%22%20points%3D%220.7%2C1.9%205.5%2C6.6%200.7%2C11.4%201.9%2C12.5%206.6%2C7.7%2011.4%2C12.5%2012.5%2C11.4%207.7%2C6.6%2012.5%2C1.9%2011.4%2C0.7%0A%096.6%2C5.5%201.9%2C0.7%20%22/%3E%0A%3C/svg%3E) center no-repeat',
@@ -288,11 +290,11 @@ var browser = browser || chrome;
                 }
             }
 
-            var body = document.querySelector('body');
+            const body = document.querySelector('body');
 
             // Création de la structure du popup
             //console && console.log("infobulle - structure");
-            infobulle = createChild(body, 'div');
+            const infobulle = createChild(body, 'div');
             infobulle.className = "possedex-infobulle";
             var header = createChild(infobulle, 'header');
 
