@@ -57,7 +57,7 @@
 
 */
 
-const browser = browser || chrome;
+var browser = browser || chrome;
 
 const removeAfter = 10000; // En milliseconde
 (function (){
@@ -68,14 +68,14 @@ const removeAfter = 10000; // En milliseconde
         removeTimeout : null
     }
 
-    var heights = [213, 180, 212, 203, 213];
+    const heights = [213, 180, 212, 203, 213];
 
     // Helpers function
     function closeInfoBulle(){
         clearTimeout(timers.removeTimeout);
         infobulle.style.opacity = 0;
         infobulle.style.transform = 'translate(0,-100%)';
-        removeTimeout = setTimeout(function(){
+        timers.removeTimeout = setTimeout(function(){
             removeElement(infobulle);
         }, 1000);
     }
@@ -133,7 +133,7 @@ const removeAfter = 10000; // En milliseconde
     browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         // Supprimer infobulle si existant
         clearRemoveTimeout();
-        removeElement(infobulle);
+        // removeElement(infobulle);
 
         if (request.show_popup){ // debunker
             // Ajout du contenu
@@ -271,11 +271,13 @@ const removeAfter = 10000; // En milliseconde
                 },
 
                 proprio : {
-                    'text-align' : 'center'
+                    'display' : 'inline-block',
+                    'text-align' : 'center',
+                    'padding'   : '3px',
                 },
                 proprio_a : {
                     'text-decoration': 'underline',
-                    'font-size': '28px'
+                    'font-size': '14px'
                 },
 
                 more: {
@@ -317,7 +319,11 @@ const removeAfter = 10000; // En milliseconde
 
             for (var i in request.proprietaires) {
                 var proprio_div = createChild(proprietaires, 'div');
-                css(proprio_div, [apply_style.reset, apply_style.resetText, apply_style.proprio]);
+                css(proprio_div, [
+                    apply_style.reset,
+                    apply_style.resetText,
+                    apply_style.proprio
+                ]);
                 var proprio_a = createChild(proprio_div, 'a');
                 css(proprio_a,   [apply_style.reset, apply_style.resetText, apply_style.proprio_a]);
                 proprio_a.target    = "_blank"; // no html

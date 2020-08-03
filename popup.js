@@ -88,6 +88,7 @@ function refreshDatabase(e){
     browser.storage.local.set({
         'last_update': ((new Date().getTime()) - 24*60*60*1000)
     });
+    browser.extension.getBackgroundPage().Possedex.reloadAndStoreDB();
     // @FIXME popup scroll
     return false;
 }
@@ -114,28 +115,35 @@ function createLink(toDOM,url,title) {
 
 function main() {
     // retrieve all datas from background.js
-    var background = browser.extension.getBackgroundPage();
+    // var background = browser.extension.getBackgroundPage();
+    const background = browser.extension.getBackgroundPage();
+    const Possedex = background.Possedex;
+    const entity = background.Possedex.entity;
+    console.log("background (possedex)");
+    console.log(Possedex);
 
-    if(background.has_info == true) {
+    if(entity !== null) {
         // TODO afficher les infos manquantes avec popup.js et popup.html
-        document.querySelector(".content #site-name").innerText = background.entity.nom;
-        document.querySelector("#notule").innerText = 'notule - '+background.notule;
-        document.querySelector("#last-update").style["color"] = background.color;
-        document.querySelector("#last-update").style["color"] = background.color;
-        document.querySelector("#last-update-date").innerText = background.updated_human;
+        document.querySelector(".content #site-name")
+            .innerText = 'site name résultat est '
+            + entity.nom;
+        // document.querySelector("#notule").innerText = entity.notule;
+        // document.querySelector("#last-update").style["color"] = entity.color;
+        // document.querySelector("#last-update").style["color"] = entity.color;
+        // document.querySelector("#last-update-date").innerText = background.updated_human;
 
 
         document.querySelector("#owner-msg").innerText = 'owner msg '+background.owner_msg
         document.querySelector("#proprietaires span.content").innerText = '';
 
-        for(var i in background.proprietaires) {
+        for (let i in background.proprietaires) {
                 console && console.info(background.proprietaires[i]);
             createLink(document.querySelector("#proprietaires span.content"), 
                 background.proprietaires[i].url,
                 background.proprietaires[i].nom
             )
         }
-        + background.proprietaires.join(",")+" (les proprietaires)"
+        // + background.proprietaires.join(",")+" (les proprietaires)"
 
         //for(var i in entity.est_possede) {
         //    if (!entity.est_possede[i]) {
@@ -145,7 +153,6 @@ function main() {
         //        document.querySelector("#proprietaire"+i+" .nom").innerText
         //            = entity.est_possede[i].nom + "("+entity.est_possede[i].value+")"
         //    }
-
         //    if (!background.fortunes[i]) {
         //        document.querySelector("#proprietaire"+i+" td.detail").style = "display:none";
         //    } else {
@@ -164,10 +171,8 @@ function main() {
         //        } else {
         //            document.querySelector("#proprietaire"+i+" td.detail .d3").style = "display:none";
         //        }
-
         //        document.querySelector("#proprietaire"+i+" td.detail").style = "";
         //    }
-
         //}
 
         //document.querySelector("#fortunes span.content").innerText = background.fortunes.join(",");
@@ -201,10 +206,10 @@ function main() {
         document.querySelector("#possedex-window").style.display = "block";
         document.querySelector("#verif-insoumis").classList.remove("active");
         document.querySelector("#possedex-window").classList.add('active');
-        var site_slug = background.site_actif.replace(/ /,'-');
-        var site_url = background.site_url;
-        document.querySelector("#more-info").href = "http://www.acrimed.org/+-"+site_slug+"-+";
-        document.querySelector("#more-info").href = "http://www.possedex.info/#"+site_url;
+        console && console.log(entity);
+        document.querySelector("#more-info").href = "http://www.acrimed.org/+-"+entity.slug.replace(/ /,'-')+"-+";
+        //var site_url = entity.site_url;
+        //document.querySelector("#more-info").href = "http://www.possedex.info/#"+site_url;
     }
     else {
         document.querySelector("#verif-insoumis").style.display = "block";
