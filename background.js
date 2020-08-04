@@ -829,6 +829,14 @@ browser.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     dbg(1, "onUpdated");
     checkSite(changeInfo.status && (changeInfo.status === "complete"));
 });
+
+// déclenché quand l'icone d'action du navigateur est cliqué
+browser.browserAction.onClicked.addListener(function (tab) {
+    dbg(1, "onClicked");
+    checkSite(true);
+});
+
+
 // déclenché quand un onglet est créé
 browser.tabs.onCreated.addListener(function (tab) {
     dbg(1, "onCreated");
