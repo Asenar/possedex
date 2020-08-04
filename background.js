@@ -222,6 +222,8 @@ var Possedex = {
     notule : null,
     slug : null,
 
+    entity : null,
+
     data : {},
     regex_url_seule : new RegExp(/^(http[s]?:\/\/([^/]+)\/[^" ,]+)[^"]{1,2}$/g),
 
@@ -578,39 +580,8 @@ var Possedex = {
             subventions = Possedex.entity.possedex.subventions;            // Montant des subventions d'état
             publicite = Possedex.entity.possedex.pub;                    // Pub ?
 
-            var raw_sources = Possedex.entity.possedex.sources;                // Nos sources (urls séparés par virgule et/ou espace)
 
-            if (3 <= _debug) {
-                console && console.info("sources avant markdown", sources);
-            }
-            // Markdown style
-            var regex = new RegExp(/\[([^\]]*?)\]\(([^\)]*?)\)[, ]{0,2}/gm);
-            match = regex.exec(raw_sources);
-            sources = [];
-            while (match != null) {
-                title = match[1];
-                url = match[2];
-                sources.push({"url": url, "title": title});
-                match = regex.exec(raw_sources);
-            }
-
-            if (3 <= _debug) {
-                console && console.log("sources apres markdown", sources);
-            }
-
-            // URL toute seule
-            match = Possedex.regex_url_seule.exec(raw_sources);
-            while (match != null) {
-                sources.push({
-                    "url": match[1],
-                    "title": match[2]
-                });
-                match = regex.exec(raw_sources);
-            }
-
-            if (3 <= _debug) {
-                console && console.log("sources apres urls simples", sources);
-            }
+            Possedex.entity.sources = Possedex.getHTMLForSources(Possedex.entity);
 
             //updated_human  = entity.possedex.updated.toLocaleString('fr');
 
@@ -641,6 +612,46 @@ var Possedex = {
 
     },
 
+    getHTMLForSources : function(entity) {
+
+        const sources = [];
+
+        // Récupération des sources (du googledoc)
+        var raw_sources = Possedex.entity.possedex.sources;                // Nos sources (urls séparés par virgule et/ou espace)
+
+        if (3 <= _debug) {
+            console && console.info("sources avant markdown", raw_sources);
+        }
+        // Markdown style
+        var regex = new RegExp(/\[([^\]]*?)\]\(([^\)]*?)\)[, ]{0,2}/gm);
+        match = regex.exec(raw_sources);
+        while (match != null) {
+            title = match[1];
+            url = match[2];
+            sources.push({"url": url, "title": title});
+            match = regex.exec(raw_sources);
+        }
+
+        if (3 <= _debug) {
+            console && console.log("sources apres markdown", sources);
+        }
+
+        // URL toute seule
+        match = Possedex.regex_url_seule.exec(raw_sources);
+        while (match != null) {
+            sources.push({
+                "url": match[1],
+                "title": match[2]
+            });
+            match = regex.exec(raw_sources);
+        }
+
+        if (3 <= _debug) {
+            console && console.log("sources apres urls simples", sources);
+        }
+        return sources;
+    },
+
     sendToOutput : function(entity) {
         // // change l'icone bouton du navigateur
         //browser.browserAction.setIcon({
@@ -658,6 +669,7 @@ var Possedex = {
             browser.tabs.query({active: true, currentWindow: true}, function(tabs) {
                 msg = {
                     show_popup    : true, // @TODO: put in config
+                    entity        : entity,
                     nom           : entity.nom,
                     possedex_link : 'http://'+DOMAIN+'#'+entity.nom,
                     proprietaires : entity.proprietaires,
@@ -665,8 +677,9 @@ var Possedex = {
                     //color       : colors[entity.possedex.classement],
                     //message     : messages[entity.possedex.classement],
                     // bandeau_msg : bandeau_msgs[entity.possedex.classement],
-                    icone       : icones[entity.possedex.classement],
-                    persistant  : Possedex.data.persistant
+                    // icone       : icones[entity.possedex.classement],
+                    persistant  : Possedex.data.persistant,
+                    styles       : Possedex.styles
                 };
                 console && console.log("envoyer le message");
                 console && console.log(msg);
