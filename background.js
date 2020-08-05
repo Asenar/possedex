@@ -600,7 +600,12 @@ var Possedex = {
             //updated_human  = entity.possedex.updated.toLocaleString('fr');
 
             // display results
-            Possedex.sendToOutput(Possedex.entity);
+            if (display) {
+                console && console.log("oui pour sendToOutput");
+                Possedex.sendToOutput(Possedex.entity);
+            } else {
+                console && console.log("NON pour sendToOutput");
+            }
 
 
         });
@@ -654,38 +659,30 @@ var Possedex = {
         //    tabId: tabId
         //});
 
-        console && console.log("if envoyer le message");
-        if(true || display == true){  // note
-            console && console.log("debut envoyer le message");
-            console && console.log("classement");
-            //console && console.log(classement);
-            console && console.log("messages");
-            console && console.log(messages);
-            browser.tabs.query({active: true, currentWindow: true}, function(tabs) {
-                msg = {
-                    show_popup    : true, // @TODO: put in config
-                    entity        : entity,
-                    nom           : entity.nom,
-                    possedex_link : 'http://'+DOMAIN+'#'+entity.nom,
-                    proprietaires : entity.proprietaires,
-                    color : "#00a86b",
-                    //color       : colors[entity.possedex.classement],
-                    //message     : messages[entity.possedex.classement],
-                    // bandeau_msg : bandeau_msgs[entity.possedex.classement],
-                    // icone       : icones[entity.possedex.classement],
-                    persist  : Possedex.data.persist,
-                    styles       : Possedex.styles
-                };
-                console && console.log("envoyer le message");
-                console && console.log(msg);
+        browser.tabs.query({active: true, currentWindow: true}, function(tabs) {
+            msg = {
+                show_popup    : true, // @TODO: put in config
+                entity        : entity,
+                nom           : entity.nom,
+                possedex_link : 'http://'+DOMAIN+'#'+entity.nom,
+                // proprietaires : entity.proprietaires,
+                color : "#00a86b",
+                // color       : colors[entity.possedex.classement],
+                // message     : messages[entity.possedex.classement],
+                // bandeau_msg : bandeau_msgs[entity.possedex.classement],
+                // icone       : icones[entity.possedex.classement],
+                persist        : Possedex.data.persist,
+                styles         : Possedex.styles
+            };
+            console && console.log("envoyer le message");
+            console && console.log(msg);
 
-                // sendMessage to the content.js listener
-                browser.tabs.sendMessage(tabs[0].id, msg, function(response) { // note
-                    //console && console.log("message envoyé");
-                    //console && console.log(response);
-                });
+            // sendMessage to the content.js listener
+            browser.tabs.sendMessage(tabs[0].id, msg, function(response) { // note
+                //console && console.log("message envoyé");
+                //console && console.log(response);
             });
-        }
+        });
     },
 
     isSpecialUrl: function(url) {
@@ -756,12 +753,13 @@ function checkSite(do_display){
 }
 
 
+// TODO: let the user choose to enable listeners
 
 // Se déclenche lorsque l'onglet actif change.
-browser.tabs.onActivated.addListener(function (activeInfo) {
-    dbg(1, "listener onActivated");
-    checkSite(false);
-});
+// browser.tabs.onActivated.addListener(function (activeInfo) {
+//     dbg(1, "listener onActivated");
+//     checkSite(false);
+// });
 
 
 // C'est déclenché lorsqu'un onglet est mis à jour.
@@ -778,10 +776,10 @@ browser.browserAction.onClicked.addListener(function (tab) {
 
 
 // déclenché quand un onglet est créé
-browser.tabs.onCreated.addListener(function (tab) {
-    dbg(1, "onCreated");
-    checkSite(true);
-});
+// browser.tabs.onCreated.addListener(function (tab) {
+//     dbg(1, "onCreated");
+//     checkSite(true);
+// });
 
 // déclenché quand la fenêtre actuelle change
 // browser.windows.onFocusChanged.addListener(function (windowId) {

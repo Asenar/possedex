@@ -61,17 +61,17 @@ var browser = browser || chrome;
 var max_notes = 6;  // (de 0 à 5 = 6 notes)
 
 var options_infobulles = ['inconnu', 'capital', 'etat', 'independant' ];
-var checkbox_options = ['persistant', 'inconnu', 'capital', 'etat', 'independant' ];
-var options_others     = ['persistant' ];
+var checkbox_options = ['persist', 'inconnu', 'capital', 'etat', 'independant' ];
+var options_others     = ['persist' ];
 
 function optionStore(e){
     var infobulles;
     var classement = this.id.replace("check-", "");
     var checked = this.checked;
 
-    if (classement == 'persistant') {
+    if (classement == 'persist') {
         browser.storage.local.set({
-            'persistant': checked
+            'persist': checked
         });
     } else {
         browser.storage.local.get('infobulles', function(results){
@@ -232,7 +232,7 @@ function main() {
     // }}} set the cog button
 
     // {{{ get config info to display in view
-    browser.storage.local.get(['infobulles', 'persistant'], function(results){
+    browser.storage.local.get(['infobulles', 'persist'], function(results){
         var infobulles = results.infobulles;
         checkbox_options.forEach(function(classement){
             var thisCheckbox = document.getElementById('check-' + classement);
@@ -245,11 +245,11 @@ function main() {
                 }
             }
         });
-        var persistant = document.getElementById('check-persistant');
-        if(results.persistant == true){
-            persistant.checked = true;
+        var persist = document.getElementById('check-persist');
+        if(results.persist == true){
+            persist.checked = true;
         } else {
-            persistant.checked = false;
+            persist.checked = false;
         }
     });
 

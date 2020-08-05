@@ -301,13 +301,13 @@ const removeAfter = 10000; // En milliseconde
             // Bind des event au clique
             close.addEventListener("click", closeInfoBulle);
 
-            if (!request.persistant) {
+            if (!request.persist) {
                 // note : theses log are displayed in the classic console
                 infobulle.addEventListener("mouseenter", clearRemoveTimeout);
                 infobulle.addEventListener("mouseleave", removeAterTime);
                 removeAterTime();
             } else {
-                //console && console.log("persistant is enabled");
+                //console && console.log("persist is enabled");
             }
 
         } else {
