@@ -4,12 +4,13 @@
   "version": "{VERSION}",
   "description": "Avec le Possedex, apprenez en un clin d'oeil qui se trouve derrière le média que vous êtes en train de lire !",
   "applications": {
-      "gecko": {
-          "id": "possedex@possedex.info"
-      }
+    "gecko": {
+      "id": "possedex@possedex.info"
+    }
   },
   "background": {
-    "scripts": ["background.js", "content.js", "install.js"],
+    "scripts": ["background.js", "possedex.js", "content.js", "install.js"],
+    "persistent": false
   },
   "homepage_url": "http://possedex.info/",
   "icons": {
@@ -24,7 +25,7 @@
     "default_title" : "Possedex",
     "default_popup": "popup.html"
   },
-    "content_scripts": [
+  "content_scripts": [
     {
       "matches": ["http://*","https://*"],
       "js": ["content.js"]
@@ -38,12 +39,12 @@
     "webRequest",
 
     "http://possedex.info/mdiplo.json"
-  ],
+    ],
     "web_accessible_resources": [
       "css/content.css",
-    "fonts/*",
-        "*.ttf",
-        "*.gif",
-        "img/prop/*"
-  ]
+      "fonts/*",
+      "*.ttf",
+      "*.gif",
+      "img/prop/*"
+    ]
 }
