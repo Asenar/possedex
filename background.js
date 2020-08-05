@@ -529,7 +529,7 @@ var Possedex = {
         }
     },
 
-    debunkSite: function (url, tab_id, display){
+    debunkSite: function (url, tab, display){
 
         dbg(3, "debunkSite() avec url=", url);
 
@@ -602,7 +602,7 @@ var Possedex = {
             // display results
             if (display) {
                 console && console.log("oui pour sendToOutput");
-                Possedex.sendToOutput(Possedex.entity);
+                Possedex.sendToOutput(Possedex.entity, tab);
             } else {
                 console && console.log("NON pour sendToOutput");
             }
@@ -652,37 +652,47 @@ var Possedex = {
         return sources;
     },
 
-    sendToOutput : function(entity) {
+    sendToOutput : function(entity, tab) {
         // // change l'icone bouton du navigateur
         //browser.browserAction.setIcon({
         //    path: "img/icones/icon-" + classement + ".png", // note
         //    tabId: tabId
         //});
 
-        browser.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            msg = {
-                show_popup    : true, // @TODO: put in config
-                entity        : entity,
-                nom           : entity.nom,
-                possedex_link : 'http://'+DOMAIN+'#'+entity.nom,
-                // proprietaires : entity.proprietaires,
-                color : "#00a86b",
-                // color       : colors[entity.possedex.classement],
-                // message     : messages[entity.possedex.classement],
-                // bandeau_msg : bandeau_msgs[entity.possedex.classement],
-                // icone       : icones[entity.possedex.classement],
-                persist        : Possedex.data.persist,
-                styles         : Possedex.styles
-            };
-            console && console.log("envoyer le message");
-            console && console.log(msg);
+        console && console.log("if envoyer le message");
+        if(true || display == true){  // note
+            console && console.log("debut envoyer le message");
+            console && console.log("classement");
+            //console && console.log(classement);
+            console && console.log("messages");
+            console && console.log(messages);
 
-            // sendMessage to the content.js listener
-            browser.tabs.sendMessage(tabs[0].id, msg, function(response) { // note
-                //console && console.log("message envoyé");
-                //console && console.log(response);
-            });
-        });
+                msg = {
+                    show_popup    : true, // @TODO: put in config
+                    entity        : entity,
+                    nom           : entity.nom,
+                    possedex_link : 'http://'+DOMAIN+'#'+entity.nom,
+                    proprietaires : entity.proprietaires,
+                    color : "#00a86b",
+                    //color       : colors[entity.possedex.classement],
+                    //message     : messages[entity.possedex.classement],
+                    // bandeau_msg : bandeau_msgs[entity.possedex.classement],
+                    // icone       : icones[entity.possedex.classement],
+                    persist  : Possedex.data.persist,
+                    styles       : Possedex.styles
+                };
+                console && console.log("envoyer le message");
+                console && console.log(msg);
+
+                // sendMessage to the content.js listener
+                console && console.log("sending message to tab "+tab.id );
+                console && console.log(tab);
+                browser.tabs.sendMessage(tab.id, msg);
+                // function(response) { // note
+                //     //console && console.log("message envoyé");
+                //     //console && console.log(response);
+                // });
+        }
     },
 
     isSpecialUrl: function(url) {
@@ -746,7 +756,7 @@ function checkSite(do_display){
             return false;
         }
 
-        Possedex.debunkSite(active_url, tab.id, do_display);
+        Possedex.debunkSite(active_url, tab, do_display);
         return;
 
     });
