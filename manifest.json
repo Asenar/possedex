@@ -9,7 +9,8 @@
       }
   },
   "background": {
-    "scripts": ["background.js", "content.js", "install.js"]
+    "scripts": ["background.js", "content.js", "install.js"],
+    "persistent": false
   },
   "homepage_url": "http://possedex.info/",
   "icons": {
@@ -26,7 +27,7 @@
   },
     "content_scripts": [
     {
-      "matches": ["http://*/*","https://*/*"],
+      "matches": ["http://*","https://*"],
       "js": ["content.js"]
     }
   ],
