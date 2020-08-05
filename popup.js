@@ -85,9 +85,6 @@ function optionStore(e){
 }
 
 function refreshDatabase(e){
-    browser.storage.local.set({
-        'last_update': ((new Date().getTime()) - 24*60*60*1000)
-    });
     browser.extension.getBackgroundPage().Possedex.reloadAndStoreDB();
     // @FIXME popup scroll
     return false;
@@ -122,7 +119,12 @@ function main() {
     console.log("background (possedex)");
     console.log(Possedex);
 
+    document.querySelector("#verif-insoumis").style.display = "block";
+    document.querySelector("#possedex-window").classList.remove('active');
+    document.querySelector("#verif-insoumis").classList.add("active");
+    document.querySelector("#possedex-window").style.display = "none";
     if(entity !== null) {
+        console.log(entity);
         // TODO afficher les infos manquantes avec popup.js et popup.html
         document.querySelector(".content #site-name")
             .innerText = 'site name résultat est '
@@ -184,8 +186,8 @@ function main() {
         //document.querySelector("#conflicts span.content").innerText = background.conflits;
         //document.querySelector("#subsidies span.content").innerText = background.subventions;
 
-        var source_wrapper = document.querySelector("#sources");
-        var target_sources = document.querySelector("#sources .content");
+        const source_wrapper = document.querySelector("#sources");
+        const target_sources = document.querySelector("#sources .content");
         target_sources.innerText = "";
 
         if (entity.possedex.sources.length === 0) {
@@ -193,10 +195,9 @@ function main() {
         }
         else {
             source_wrapper.style.display = "block";
-            for(let i in entity.possedex.sources) {
-                let obj = entity.possedex.sources[i];
-                createLink(target_sources, obj.url, obj.title);
-            }
+            entity.sources.forEach((el, i) => {
+                createLink(target_sources, el.url, el.title);
+            })
         }
 
         // background.sources.forEach(function(obj, i){
@@ -211,19 +212,13 @@ function main() {
         //var site_url = entity.site_url;
         //document.querySelector("#more-info").href = "http://www.possedex.info/#"+site_url;
     }
-    else {
-        document.querySelector("#verif-insoumis").style.display = "block";
-        document.querySelector("#possedex-window").classList.remove('active');
-        document.querySelector("#verif-insoumis").classList.add("active");
-        document.querySelector("#possedex-window").style.display = "none";
-
-    }
 
     // {{{ set the cog button
     var params = document.querySelector("#params");
     params.addEventListener("click", function(){
+        console && console.log(2, "click on #params");
         var parameters = document.querySelector("#parameters");
-        if(params.classList.contains("active-p")){
+        if(params.classList.contains("active-p")) {
             params.classList.remove("active-p");
             parameters.style.display = "none";
             document.querySelector(".active").style.display = "block";
@@ -269,12 +264,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         element.addEventListener('click', optionStore);
     });
-    document.querySelector('#do-refresh-database').addEventListener('click', refreshDatabase);
+    document.querySelector('#do-refresh-database').addEventListener('click', function(e) {
+        refreshDatabase();
+    });
 });
 
 function getObjectKeys(obj) {
-    var keys = [];
-    for(var key in obj){
+    const keys = [];
+    for(let key in obj){
         keys.push(key);
     }
     return keys;

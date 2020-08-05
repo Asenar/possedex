@@ -71,7 +71,7 @@ const removeAfter = 10000; // En milliseconde
     const heights = [213, 180, 212, 203, 213];
 
     // Helpers function
-    function closeInfoBulle(){
+    function closeInfoBulle() {
         clearTimeout(timers.removeTimeout);
         infobulle.style.opacity = 0;
         infobulle.style.transform = 'translate(0,-100%)';
@@ -161,6 +161,7 @@ const removeAfter = 10000; // En milliseconde
     }
 
     browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+        console && console.log("onMessage detected")
         // Supprimer infobulle si existant
         clearRemoveTimeout();
         // removeElement(infobulle);

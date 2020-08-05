@@ -182,7 +182,6 @@ var clean_url = "";
 
 function onInstall(tabId) {
     dbg(1, "Le Possedex est installé");
-    var last_update = new Date();
 
     browser.storage.local.set({
             'infobulles': {
@@ -191,7 +190,7 @@ function onInstall(tabId) {
                 'etat'        : true,
                 'independant' : true
             },
-            'persistant'  : false,
+            'persist'  : false,
 
             "installed" : CURRENT_VERSION,
             'last_update': 0
@@ -211,8 +210,8 @@ function onInstall(tabId) {
 //console && console.log(currentTab);
 
 browser.storage.local.get(['installed'], function(data){
-    var install = data.installed;
-    if (install != CURRENT_VERSION) {
+    const install = data.installed;
+    if (install !== CURRENT_VERSION) {
         onInstall();
     }
 });
@@ -402,6 +401,7 @@ var Possedex = {
             base_url+"?"+(new Date()).getTime(),
             function(data) {
                 const new_update = (new Date).getTime();
+                console && console.info("This must be a number : ", new_update);
 
                 console && console.warn("LOAD");
                 console && console.log(data);
@@ -422,10 +422,10 @@ var Possedex = {
         )
     },
 
-    loadExtensionInfo: function(){
+    loadDataFromExtension: function(){
 
         if (2 <= _debug) {
-            console && console.info('start loadExtensionInfo()');
+            console && console.info('start DataFromExtension()');
             //console && console.info('NO DEBUG');
         }
         browser.storage.local.get('last_update', function(data){
@@ -532,18 +532,24 @@ var Possedex = {
     debunkSite: function (url, tab_id, display){
 
         dbg(3, "debunkSite() avec url=", url);
-        refreshDbIfOutdated();
 
         const infosToGet = [
             'urls',
             "objets",
             "infobulles",
-            "persistant",
+            "persist",
             "last_update"
         ];
         browser.storage.local.get(infosToGet, function(data) {
             dbg(3, "debunkSite : var results", data);
-            const {urls, objets, infobulles, persistant, last_update} = data;
+            const {urls, objets, infobulles, persist, last_update} = data;
+
+            Possedex.persist = persist;
+            Possedex.last_update = last_update;
+            if (!urls) {
+                refreshDbIfOutdated();
+                return;
+            }
 
             dbg(3, "debunkSite : url=", url);
             dbg(3, "debunkSite : objets=", objets);
@@ -667,7 +673,7 @@ var Possedex = {
                     //message     : messages[entity.possedex.classement],
                     // bandeau_msg : bandeau_msgs[entity.possedex.classement],
                     // icone       : icones[entity.possedex.classement],
-                    persistant  : Possedex.data.persistant,
+                    persist  : Possedex.data.persist,
                     styles       : Possedex.styles
                 };
                 console && console.log("envoyer le message");
@@ -691,7 +697,7 @@ var Possedex = {
         }
 
     },
-    handleSpecialUrl: function(url) {
+    handleSocialNetworkUrl: function(url) {
         // @TODO: move youtube part in getEntityIdFromNom
         // @TODO: move facebook/twitter part in getEntityIdFromNom
         if (active_url.indexOf("youtube.com") > -1) {
@@ -708,7 +714,6 @@ var Possedex = {
 
     rien : function() {
     }
-
 
 }
 
@@ -740,78 +745,13 @@ function checkSite(do_display){
 
         if (Possedex.isSpecialUrl(active_url)) {
             checkSite_in_progress = false;
-            Possedex.handleSpecialUrl(active_url);
+            Possedex.handleSocialNetworkUrl(active_url);
             return false;
         }
 
         Possedex.debunkSite(active_url, tab.id, do_display);
         return;
 
-        // OTHER URLS
-        const matches = []
-
-        matches.push(urls[active_url]);
-        dbg(3, "find url : ", Possedex.data.urls[active_url]);
-        dbg(3, "all urls : ", Possedex.data.urls);
-
-        if (4 <= _debug) {
-            console && console.group("for oneUrlInDb in urls");
-        }
-
-        for (let oneUrlInDb in urls) {
-            if (!urls.hasOwnProperty(oneUrlInDb)) {
-                console && console.log("oneUrlInDb does not exists in urls");
-                continue;
-            }
-            var index = active_url.indexOf(oneUrlInDb);
-            console && console.log("index", index);
-            // si l'url est un sous domaine ou avec un chemin
-            if (index != -1) {
-                if (4 <= _debug) {
-                    console && console.info("url FOUND !", oneUrlInDb, index);
-                }
-                if ((
-                        active_url.indexOf('http://www.' + oneUrlInDb) == 0
-                        || active_url.indexOf('https://www.' + oneUrlInDb) == 0
-                        || active_url.indexOf('http://' + oneUrlInDb) == 0
-                        || active_url.indexOf('https://' + oneUrlInDb) == 0
-                    )
-                    && index != 0
-                    && (active_url[index - 1] == "/" || active_url[index - 1] == ".")
-                    && oneUrlInDb != "facebook.com"
-                    && oneUrlInDb != "twitter.com") {
-                    // current active_url contains the current url from
-                    // the loop (oneUrlInDb)
-                    matches.push(oneUrlInDb);
-                    if (_debug > 4) {
-                        console && console.warn("URL MATCHES !!!!");
-                    }
-                }
-            }
-        }
-
-        if (4 <= _debug) {
-            console && console.groupEnd();
-        }
-        // {{{ take best accurate url (the longuest)
-        // var tampon = "";
-        // dbg(3, 'matches', matches);
-        // for (let url_i = 0; url_i < matches.length; url_i++) {
-        //     if (matches[url_i].length > tampon.length) {
-        //         tampon = matches[url_i];
-        //         if (4 <= _debug) {
-        //             dbg(4, "tampon update to use longer url :", tampon);
-        //         }
-        //     }
-        // }
-        // clean_url = tampon; // this contains the longest url match
-        // //}}}
-        // dbg(4, "call debunkSite");
-        // dbg(4, {"clean_url": clean_url});
-        // dbg(4, {"tab id": tab.id});
-        // dbg(4, {"do display": do_display});
-        Possedex.debunkSite(clean_url, tab.id, do_display);
-        checkSite_in_progress = false;
     });
 }
 
@@ -858,19 +798,19 @@ browser.tabs.onCreated.addListener(function (tab) {
 
 
 refreshDbIfOutdated = function() {
-    browser.storage.local.get('last_update', function(last_update){
-        const today = new Date();
-        // last_update = data.last_update;
-        if(always_refresh || ((new Date().getTime() - last_update)/1000/60/60 >= 24)) {
-            Possedex.reloadAndStoreDB();
-            if (1 <= _debug) {
-                console && console.log("refresh every hour or refresh forced");
-            }
-        } else {
-            if (2 <= _debug) {
-                human_date = new Date(last_update).toString();
-                console && console.log("(not refresh) use data found in cache (from "+human_date+")");
-            }
-        }
-    })
+    const today = new Date();
+    // last_update = last_update.last_update;
+    const human_date = new Date().setTime(Possedex.last_update);
+    console && console.log(Possedex.last_update);
+    console && console.log(human_date);
+    // last_update = data.last_update;
+    if((new Date().getTime() - Possedex.last_update)/1000/60/60 >= 24) {
+        console && console.log("refresh in progress");
+        Possedex.reloadAndStoreDB();
+        dbg(1, "refresh every hour or refresh forced");
+    } else {
+        dbg(2, "(not refresh) use data found in cache (from "
+            + (new Date(Possedex.last_update).toString())
+            + ")");
+    }
 }
