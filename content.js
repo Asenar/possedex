@@ -63,7 +63,6 @@ const removeAfter = 10000; // En milliseconde
 (function (){
     "use strict";
 
-    var infobulle = {}
     const timers = {
         removeTimeout : null
     }
@@ -72,6 +71,7 @@ const removeAfter = 10000; // En milliseconde
 
     // Helpers function
     function closeInfoBulle() {
+        let infobulle = document.getElementById("possedex-infobulle");
         clearTimeout(timers.removeTimeout);
         infobulle.style.opacity = 0;
         infobulle.style.transform = 'translate(0,-100%)';
@@ -166,19 +166,20 @@ const removeAfter = 10000; // En milliseconde
         clearRemoveTimeout();
         // removeElement(infobulle);
 
-        if (request.show_popup){ // debunker
-            // Ajout du contenu
+        if (request.show_popup){
 
-            // fix zindex for all bodyChilds
             fixZIndexCurrentPage();
+
             const apply_style = request.styles;
             // FIXME: importer une seule fois
             importCSS();
-            
+
             const body = document.querySelector("body");
 
             // Structure du popup
-            infobulle = createChild(body, "div","possedex-infobulle");
+            const infobulle = createChild(body, "div","possedex-infobulle");
+            infobulle.id = "possedex-infobulle";
+
             const close = createChild(infobulle, "div","possedex-close");
             const content = createChild(infobulle, "div","possedex-content");
             const proprietaires = createChild(content, "div","possedex-prop");
