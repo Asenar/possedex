@@ -62,7 +62,7 @@ var browser = browser || chrome;
 var checkSite_in_progress = false;
 
 const _debug = 1; // 0=quiet, 1=verbose, 2=more verbose, 3= very very verbose, 4=even more. 5 very very verbose
-var _debug_show_level = true;
+const _debug_show_level = true;
 if (_debug) {
     dbg(1, "DEBUG LEVEL", _debug);
 }
