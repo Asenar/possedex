@@ -85,7 +85,7 @@ function optionStore(e){
 }
 
 function refreshDatabase(e){
-    browser.extension.getBackgroundPage().Possedex.reloadAndStoreDB();
+    browser.extension.getBackgroundPage().reloadAndStoreDB();
     // @FIXME popup scroll
     return false;
 }

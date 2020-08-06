@@ -9,7 +9,7 @@
       }
   },
   "background": {
-    "scripts": ["background.js", "possedex.js", "content.js", "install.js"],
+    "scripts": ["background.js", "content.js", "install.js"],
     "persistent": false
   },
   "homepage_url": "https://possedex.info/",
