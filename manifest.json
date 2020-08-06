@@ -12,7 +12,7 @@
     "scripts": ["background.js", "possedex.js", "content.js", "install.js"],
     "persistent": false
   },
-  "homepage_url": "http://possedex.info/",
+  "homepage_url": "https://possedex.info/",
   "icons": {
     "16": "icon-16.png",
     "32": "icon-32.png",
@@ -23,7 +23,7 @@
   {
     "default_icon" : "icon-64.png",
     "default_title" : "Possedex",
-    "default_popup": "popup.html"
+    "default_popup": "popup/popup.html"
   },
     "content_scripts": [
     {
@@ -37,7 +37,7 @@
     "notifications",
     "activeTab",
 
-    "http://possedex.info/mdiplo.json"
+    "https://possedex.info/mdiplo.json"
   ],
     "web_accessible_resources": [
       "css/content.css",
