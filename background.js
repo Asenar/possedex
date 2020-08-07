@@ -56,13 +56,14 @@
                                                              `/`
 
 */
+"use strict";
 
 
 var browser = browser || chrome;
 
 var checkSite_in_progress = false;
 
-const _debug = 1; // 0=quiet, 1=verbose, 2=more verbose, 3= very very verbose, 4=even more. 5 very very verbose
+const _debug = 0; // 0=quiet, 1=verbose, 2=more verbose, 3= very very verbose, 4=even more. 5 very very verbose
 const _debug_show_level = true;
 if (_debug) {
     dbg(1, "DEBUG LEVEL", _debug);
@@ -100,10 +101,7 @@ function reloadAndStoreDB() {
         base_url+"?"+(new Date()).getTime(),
         function(data) {
             const new_update = (new Date).getTime();
-            console && console.info("This must be a number : ", new_update);
 
-            console && console.warn("LOAD");
-            console && console.log(data);
             browser.storage.local.set({'urls': data['urls']}, function() {
                 console && console.info("urls set to ...", data['urls']);
             });
@@ -186,7 +184,7 @@ rien        : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr
 // let possedex_colors = [ "#A2A9AE", "#129AF0", "#D50303", "#F5A725", "#468847" ];
 // let possedex_descs = [ "inclassable", "parodique", "pas fiable du tout", "peu fiable", "fiable" ];
 
-const base_url = "http://"+DOMAIN+"/mdiplo.json";
+const base_url = "https://"+DOMAIN+"/mdiplo.json";
 
 var CURRENT_VERSION = '0.1.0';
 var always_refresh = false;
@@ -243,8 +241,6 @@ function onInstall(tabId) {
     });
 }
 //currentTab = browser.tabs.getCurrent();
-//console && console.log("currentTab");
-//console && console.log(currentTab);
 
 browser.storage.local.get(['installed'], function(data){
     const install = data.installed;
@@ -268,7 +264,7 @@ function checkSite(do_display){
     browser.tabs.query({currentWindow: true, active: true}, function(tabs) {
 
         console.info('in checkSite, browser.tabs.query');
-        tab = tabs[0];
+        const tab = tabs[0];
         dbg(4, "tab is ", tab);
         if (!tabs.length) {
             dbg(1, "tabs.length is empty")
@@ -276,24 +272,19 @@ function checkSite(do_display){
             return;
         }
 
-        const active_url = Possedex.domainFromUrl(tab.url);
-        dbg(4, "active url", active_url);
 
-        if (Possedex.isSpecialUrl(active_url)) {
-            checkSite_in_progress = false;
-            Possedex.handleSocialNetworkUrl(active_url);
-            return false;
-        }
+        // if (Possedex.isSpecialUrl(active_url)) {
+        //     checkSite_in_progress = false;
+        //     Possedex.handleSocialNetworkUrl(active_url);
+        //     return false;
+        // }
 
-        usePossedexFromExtension(active_url, tab, do_display);
-        return;
+        return usePossedexFromExtension(tab, do_display);
 
     });
 }
 
-function usePossedexFromExtension(active_url, tab, do_display) {
-
-    dbg(3, "debunkSite() avec url=", url);
+function usePossedexFromExtension(tab, do_display) {
 
     const infosToGet = [
         'urls',
@@ -309,18 +300,56 @@ function usePossedexFromExtension(active_url, tab, do_display) {
         Possedex.persist = persist;
         Possedex.last_update = last_update;
         if (!urls) {
-            refreshDbIfOutdated();
-            return;
+            return refreshDbIfOutdated();
         }
 
-        dbg(3, "debunkSite : url=", url);
+        dbg(3, "debunkSite : url=", tab.url);
         dbg(3, "debunkSite : objets=", objets);
         dbg(3, "debunkSite : urls=", urls);
         Possedex.data = {
             objets:objets,
             urls: urls
         }
-        Possedex.debunkSite(url);
+        Possedex.debunkSite(tab.url, function(entity){
+            dbg(1, "start callback of debunkSite");
+            if (!entity) {
+                if (_debug > 1) {
+                    console && console.warn("no entity");
+                }
+                return null;
+            }
+            //browser.browserAction.setIcon({
+            //    path: "img/icones/icon-" + classement + ".png", // note
+            //    tabId: tabId
+            //});
+
+            const msg = {
+                show_popup    : true, // @TODO: put in config
+                entity        : entity,
+                nom           : entity.nom,
+                possedex_link : 'https://'+DOMAIN+'#'+entity.nom,
+                proprietaires : entity.proprietaires,
+                color : "#00a86b",
+                //color       : colors[entity.possedex.classement],
+                //message     : messages[entity.possedex.classement],
+                // bandeau_msg : bandeau_msgs[entity.possedex.classement],
+                // icone       : icones[entity.possedex.classement],
+                persist  : Possedex.data.persist,
+                styles       : Possedex.styles
+            };
+            dbg(2, "sendMessage", tab.id);
+            dbg(2, "sendMessage", msg);
+            // sendMessage to the content.js listener
+            browser.tabs.sendMessage(tab.id, msg)
+            .then(response => {
+                if (_debug > 0) {
+                    console.log("Message from background to content.js is really sent : ", response);
+                }
+            }).catch(function(err) {
+                console && console.error(err);
+            })
+            ;
+        });
     })
 }
 
@@ -366,14 +395,14 @@ browser.browserAction.onClicked.addListener(function (tab) {
 
 
 
-refreshDbIfOutdated = function() {
+function refreshDbIfOutdated (force = false) {
     const today = new Date();
     // last_update = last_update.last_update;
     const human_date = new Date().setTime(Possedex.last_update);
     console && console.log(Possedex.last_update);
     console && console.log(human_date);
     // last_update = data.last_update;
-    if((new Date().getTime() - Possedex.last_update)/1000/60/60 >= 24) {
+    if (force || (new Date().getTime() - Possedex.last_update)/1000/60/60 >= 24) {
         console && console.log("refresh in progress");
         reloadAndStoreDB();
         dbg(1, "refresh every hour or refresh forced");
@@ -382,4 +411,5 @@ refreshDbIfOutdated = function() {
             + (new Date(Possedex.last_update).toString())
             + ")");
     }
+    return {res: true};
 }

@@ -57,6 +57,7 @@
                                                              `/`
 
 */
+    "use strict";
 var browser = browser || chrome;
 
 const removeAfter = 10000; // En milliseconde
@@ -131,12 +132,15 @@ const removeAfter = 10000; // En milliseconde
 
     //import de la fueille de style css
     function importCSS() {
-        const linkTag = document.createElement ("link");
-        linkTag.href = getBrowser().extension.getURL("css/content.css");
+        if (!document.getElementById("possedex-css")) {
+            const linkTag = document.createElement ("link");
+            linkTag.href = getBrowser().extension.getURL("css/content.css");
 
-        linkTag.rel = "stylesheet";
-        document.getElementsByTagName ("head")[0]
-            .appendChild (linkTag);
+            linkTag.rel = "stylesheet";
+            linkTag.id = "possedex-css";
+            document.getElementsByTagName ("head")[0]
+                .appendChild (linkTag);
+        }
     }
 
     //pour pouvoir détecter le type de navigateur
@@ -148,7 +152,7 @@ const removeAfter = 10000; // En milliseconde
               return chrome;
             }
         } else {
-            console.log("Le navigateur n'est pas compatible avec l'extension possedex");
+            console.warn("Le navigateur n'est pas compatible avec l'extension possedex");
         }
     }
 
@@ -160,8 +164,7 @@ const removeAfter = 10000; // En milliseconde
         });
     }
 
-    browser.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-        console && console.log("onMessage detected")
+    browser.runtime.onMessage.addListener(request => {
         // Supprimer infobulle si existant
         clearRemoveTimeout();
         // removeElement(infobulle);
@@ -186,7 +189,7 @@ const removeAfter = 10000; // En milliseconde
 
             // Section propriétaire
             const proprietaires_h = createChild(proprietaires, "span" ,"possedex-proph");
-            appendText(proprietaires_h, request.nom+" appartient à");
+            appendText(proprietaires_h, request.entity.nom+" appartient à");
 
             for (let i in request.proprietaires) {
 
@@ -275,7 +278,7 @@ const removeAfter = 10000; // En milliseconde
 
                 appendText(proprio_interet, medias_phrase);
 
-                console.log(request);
+                // console.log(request);
 
                 /*
                 console.log(request.proprietaires[i].media.length);
@@ -306,8 +309,8 @@ const removeAfter = 10000; // En milliseconde
                 infobulle.addEventListener("mouseenter", clearRemoveTimeout);
                 infobulle.addEventListener("mouseleave", removeAterTime);
                 removeAterTime();
-            } else {
-                //console && console.log("persist is enabled");
+            //} else {
+            //    console && console.log("persist is enabled");
             }
 
         } else {
@@ -316,6 +319,7 @@ const removeAfter = 10000; // En milliseconde
                //console.log("URL CHANNEL ---> " + document.querySelector(".yt-user-info"));
             }
         }
+        return Promise.resolve({response:"hi from content script"});
       });
 
     /*browser.runtime.onMessage.addListener(function (msg, sender, sendResponse) {

@@ -1,8 +1,63 @@
+/*          POSSEDEX
+            VERSION 1 / MARS 2017
+            VERSION 2 / JANVIER 2018
+            VERSION 3 / AOUT 2018
+            REMERCIEMENT A L'EQUIPE LES DECODEURS DU MONDE
+            INFINIMENT MERCI AU MONDE DIPLOMATIQUE QUI A PUBLIÉ SA BASE
+                             .y.
+                            -dMm.
+                           .mMMMd.
+                          .dMMMMMd.     .:+oyyso-
+                         `hMMMMMMMd` -odNMMMMMMMNy`             `..
+                         sMMMm:dMMMddNMMMMmyoomMMMh    `.-/+oydmmN:
+                        :NMMN/ .mMMMMMNd+-`   -NMMMyydmNNNMMMMMMMd.
+                        hMMMy   -mMMMN:        sMMMMMMMMNNmhhNMMMo
+                       -mMMM-    -mMMMy`       -NMMMy+/-.`` /NMMN.
+                       /NMMM`     -mMMMy`      `hMMM+       sMMMh
+                       -mMMMo`     :mMMMs`      sMMMd      .NMMN/
+                        +NMMNy`     :NMMNs      /MMMm`     +MMMd.
+                         :dMMMd:     :NMMMo`    `NMMN-    `dMMMo
+                          .yMMMN+     :NMMNo     NMMN/    /NMMM.
+                           `oNMMNy.    /NMMN+    dMMMo    yMMMh
+                             :mMMMd-    /NMMN+   yMMMs   `NMMN/
+                         `-://ohhhhy+////ymNMN/.-shhds:--+mmmd.
+                       `/osoo+++++++++++oosshdsssoooooooooosss+/-`
+                      `+so/:::::::::::::::/osss+:::::::::::://+os+-`
+                      -ss/:----------------/ss+:--------------::+ss+-.```
+                      .ss+:::::::--::::::::+sso::---------------::+osoooo-
+                      `+sso+++///::::///+++oosso+//:::::::--------:::/+ss-
+                     `/ss+/::::::::::::::::::+ssssoooooo+:------------/ss-
+                     .os+:-------------------:oso-....os+-------------/ss-
+                     `+so::----------:::::://+ss+`    +so:------------/ss-
+                      .+so+////////:::::////+++os+.   -ss/------------/ss-
+                       `-oso//:::::------------:os+   `/so/:----------/ss-
+                        `oso:-----------------::oso    `+so/:---------/ss-
+                         :ss+:::::::::::::::://+oss/.  ``/so+:--------/ss-
+                          -+osoooooo++///::::::::/+so- -.`:oso/::-----/ss-
+                            .-:::oso:-------------:os+` o+ `:oso+/::::/ss-
+                                 /so/:------------:os+` /Ms. `-+ysssoooss-
+                                 `+so+/:::::::::/+oso.  +MMd-  .hNmmh----`
+                                  `:+oooossssooooo+:`   yMMMy`  -MMMN/
+                                     `..:dmmm/...`      :NMMM:   sMMMm`
+                                        :MMMm.           yMMMh   .dMMMs
+                                        yMMMy       ``.:+yMMMN:   :NMMN:
+                                       `mMMM/  ``-+shmMMMMMMNNy    sMMMm`
+                                       /NMMN-:ohmMMMMNNmdyo+/--    .mMMMo
+                                       sMMMMmMMMMNmyo/.`   `.:/+ossodMMMN:
+                                      .mMMMMMNmy+.`    `-+ymNMMMMMMMMMMMMd`
+                                      :MMMMNs:`  ``./oymNMMMMNdhyssyhmMMMMo
+                                      yMMMNyoooyhdNNMMMMNMMMMo`      `dMMMd`
+                                      -dNMMMMMMMMMNNNdy+:oMMMN:    `:hMMMN:
+                                       `:+syyyyso/:.`     yMMMm` `/dMMMMd:
+                                                          .dMMMhomMMMNh/
+                                                           -NMMMMMMNy-
+                                                            +NMMMms.
+                                                             sMmo`
+                                                             `/`
 
+*/
 
 export var Possedex = {
-    notule : null,
-    slug : null,
 
     current_entity : null,
 
@@ -158,59 +213,39 @@ export var Possedex = {
         }
     },
 
-    loadJSON : function(path, success, error) {
-	    if (window.fetch) {
-        fetch(path)
-            .then((res) => {
-                if (res.ok) {
-                    res.json()
-                } else {
-                    error();
-                }
-            })
-            .then((data) => {
-                self.data = data
-                // console.log('data:', data)
-                successCallback(data);
-            })
-        } else {
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    if (success) {
-                        if (4 <= _debug) {
-                            console && console.info("raw json");
-                            //console && console.log(xhr.responseText);
-                        }
-                        success(JSON.parse(xhr.responseText));
+    loadJSON : function(path, successCallback) {
+        if (window.fetch) {
+            fetch(path)
+                .then((res) => {
+                    if (res.ok) {
+                        return res.json();
+                    } else {
+                        error();
                     }
-                } else {
-                    if (error)
-                        error(xhr);
+                })
+                .then(data => {
+                    self.data = data
+                    // console.log('data:', data)
+                    successCallback(data);
+                })
+        } else {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        if (success) {
+                            success(JSON.parse(xhr.responseText));
+                        }
+                    } else {
+                        if (error)
+                            error(xhr);
+                    }
                 }
-            }
-        };
-        xhr.open("GET", path, true);
-        xhr.send();
+            };
+            xhr.open("GET", path, true);
+            xhr.send();
         }
     },
-
-
-    //loadDataFromExtension: function(){
-
-    //    if (2 <= _debug) {
-    //        console && console.info('start DataFromExtension()');
-    //        //console && console.info('NO DEBUG');
-    //    }
-    //    browser.storage.local.get('last_update', function(data){
-    //        var new_update = new Date();
-    //        if (2 <= _debug) {
-    //            console && console.log("found last update : ", data, "base url=", base_url+"?"+new_update.getTime());
-    //        }
-    //        Possedex.reloadAndStoreDB();
-    //    });
-    //},
 
     removeAfterLastSlash: function(url){
         if(url.lastIndexOf('/') !== -1) {
@@ -221,20 +256,21 @@ export var Possedex = {
         }
     },
 
-    domainFromUrl: function(url) { // remove the last slash at the end of the string
-        url = Possedex.url_cleaner(url);
-        if(url.indexOf('/') === false) {
-            return url.toLowerCase();
+    cleanStringForSearch: function(str) { // remove the last slash at the end of the string
+        str = Possedex.url_cleaner(str);
+        str = str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        if(str.indexOf('/') === -1) {
+            return str.toLowerCase();
         } else {
-            return url.substring(0, url.indexOf('/')).toLowerCase();
+            return str.substring(0, str.indexOf('/')).toLowerCase();
         }
     },
 
     url_cleaner : function(url){
         return url
             .replace("http://", "")
-            .replace('www.', "")
             .replace("https://", "")
+            .replace('www.', "")
             .replace("\n", "");
     },
 
@@ -265,13 +301,11 @@ export var Possedex = {
     },
 
     getAllChildrenForEntity: function(entity, medias = []) {
-        // console && console.log("start getAllChildrenForEntity");
         for(let item_index in entity.possessions) {
             let item = entity.possessions[item_index];
-            //console && console.info("une possession de "+entity.nom+ " : " + item.nom);
             let childId = Possedex.getEntityIdFromNom(item.nom);
             let childEntity = Possedex.data.objets[childId]
-            if (childEntity.type != 3) {
+            if (childEntity.type !== 3) {
                 medias = Possedex.getAllChildrenForEntity(childEntity, medias);
             } else {
                 medias.push(childEntity);
@@ -280,22 +314,23 @@ export var Possedex = {
         return medias;
     },
 
+    /** Boucle récursive pour récupérer le propriétaire de l'entité, puis
+     * son propriétaire à elle, … jusqu'au bout
+     *
+     **/
     getAllParentsForEntity: function(entity, proprios = []) {
-        console && console.log("start getAllParentsForEntity");
-        for(let item_index in entity.est_possede) {
+        for (let item_index in entity.est_possede) {
             if (3 <= _debug) {
                 console && console.group("Une boucle de est_possede de " + entity.nom);
             }
             let item = entity.est_possede[item_index];
             let parentId = Possedex.getEntityIdFromNom(item.nom);
             let parentEntity = Possedex.data.objets[parentId]
-            //console && console.log("Dealing with item.nom = "+item.nom);
-            //console && console.log(parentEntity);
             if (parentEntity.type != 1) {
                 if (3 <= _debug) {
                     console && console.log("A creuser pour " + parentEntity.nom);
                 }
-                let a_creuser = Possedex.getAllParentsForEntity(parentEntity, proprios);
+                Possedex.getAllParentsForEntity(parentEntity, proprios);
 
             } else {
                 if (3 <= _debug) {
@@ -309,43 +344,40 @@ export var Possedex = {
             }
         }
         if (3 <= _debug) {
-            console && console.info("(fin de getAllParents");
+            console && console.info("(fin de getAllParents)");
             console && console.info(proprios);
         }
         return proprios;
     },
 
     getEntityIdFromNom: function(str) {
+        str = Possedex.cleanStringForSearch(str);
+        if ("" === str) {
+            if (_debug) {
+                console && console.warn("getEntityIdFromNom(empty string)");
+            }
+            return false;
+        }
+
         // 1st look, check url, exact match
         if (Possedex.data.urls.hasOwnProperty(str)) {
             return Possedex.data.urls[str];
         } else {
 
-            // {{{ from website
-            try {
-                // @TODO: check this works on Edge
-                var strClean = str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-            } catch (e) {
-                    console && console.error("TODO: code alternative to str.normalize('NFD')");
-                    console && console.error(e);
-                strClean = str;
-            }
-            var regex = new RegExp("^"+strClean, 'i');
-            // }}} from website
-
             // 2nd look, check regex after removing accents
-            for(let idEntity in Possedex.data.objets) {
-                //console && console.log("check id="+id);
-                if (Possedex.data.objets[idEntity].slug == strClean) {
+            for (let idEntity in Possedex.data.objets) {
+                if (Possedex.data.objets[idEntity].slug === str) {
                     return idEntity;
                 }
             }
 
+            var regex = new RegExp("^"+str, 'i');
             // 3rd look, check partial match
             for(let idEntity in Possedex.data.objets) {
 
-                if (regex.test(Possedex.data.objets[idEntity].slug))
+                if (regex.test(Possedex.data.objets[idEntity].slug)) {
                     return idEntity;
+                }
             }
 
             return false;
@@ -362,11 +394,8 @@ export var Possedex = {
         }
     },
 
-    debunkSite: function (url, tab, display){
+    debunkSite: function(url, $next){
 
-        if (3 <= _debug) {
-            console && console.group('START debunk site '+url);
-        }
 
         // infosToGet in extension
         if (3 <= _debug) {
@@ -374,91 +403,76 @@ export var Possedex = {
             console && console.log("results");
         }
 
-        url = Possedex.domainFromUrl(url);
-        url = Possedex.url_cleaner(url);
-        url = url.toLowerCase(); // when url contains names
+        if (url === "") {
+            if (_debug) {
+                console && console.warn("url is empty : nothing to search");
+            }
+            return $next(null);
+        }
 
         const entity_id = Possedex.getEntityIdFromNom(url)
-        dbg(3, "get entity id from nom ", url);
 
         if (false === entity_id) {
-            dbg(2, "site non trouvé avec l'url suivante :" + url);
-                return;
-            }
+            $next(null);
+            return;
+        }
 
-            dbg(2, "Site id pour " + url + ", entity_id = " + entity_id);
 
-            Possedex.current_entity = Possedex.data.objets[entity_id];
-            dbg(2,  Possedex.current_entity);
+        Possedex.current_entity = Possedex.data.objets[entity_id];
 
-            //Possedex.classement = entity.possedex.classement;   // classement possedex
-            console && console.log(Possedex.current_entity.possedex);
-            Possedex.notule = Possedex.current_entity.possedex.desc;                   // description originale
-            Possedex.slug = Possedex.current_entity.possedex.slug;                   // nom normalisé
+        if (Possedex.current_entity.hasOwnProperty('est_possede')) {
+            Possedex.current_entity.proprietaires = [];
+            Possedex.getAllParentsForEntity(Possedex.current_entity, Possedex.current_entity.proprietaires);
 
-            //owner_msg      = owner_msgs[classement];               // message "ce media est la propriété ..."
-
-            if (Possedex.entity.hasOwnProperty('est_possede')) {
-                Possedex.entity.proprietaires = Possedex.getAllParentsForEntity(Possedex.entity);
-
-                for(j in Possedex.entity.proprietaires){
-                    /*
-                entity.proprietaires[j].medias = Possedex.getAllChildrenForEntity(entityP);
+            for(let j in Possedex.current_entity.proprietaires){
+                /*
+                current_entity.proprietaires[j].medias = Possedex.getAllChildrenForEntity(entityP);
                 */
-                    var entityP_id = Possedex.getEntityIdFromNom(Possedex.entity.proprietaires[j].nom);
-                    var entityP = Possedex.data.objets[entityP_id];
-                    var medias_entity = Possedex.getAllChildrenForEntity(entityP);
-                    Possedex.entity.proprietaires[j].medias = medias_entity.map(a => a.nom);
-                }
+                var entityP_id = Possedex.getEntityIdFromNom(Possedex.current_entity.proprietaires[j].nom);
+                var entityP = Possedex.data.objets[entityP_id];
+                var medias_entity = Possedex.getAllChildrenForEntity(entityP);
+                Possedex.current_entity.proprietaires[j].medias = medias_entity.map(a => a.nom);
             }
-
-            //subventions = Possedex.entity.possedex.subventions;            // Montant des subventions d'état
-            //publicite = Possedex.entity.possedex.pub;                    // Pub ?
-
-            Possedex.entity.sources = Possedex.getHTMLForSources(Possedex.entity);
-            //updated_human  = entity.possedex.updated.toLocaleString('fr');
-
-            // display results
-            if (display) {
-                console && console.log("oui pour sendToOutput");
-                Possedex.sendToOutput(Possedex.entity, tab);
-            } else {
-                console && console.log("NON pour sendToOutput");
-            }
+        }
 
 
-        });
+        Possedex.formatSources(Possedex.current_entity);
+        // updated_human  = current_entity.possedex.updated.toLocaleString('fr');
 
+        $next(Possedex.current_entity);
     },
 
-    getHTMLForSources : function(entity) {
+    /**
+     * create entity.sources = [{url, title}] from entity.possedex.sources
+     */
+    formatSources : function(entity) {
 
-        const sources = [];
+        entity.sources = [];
 
         // Récupération des sources (du googledoc)
-        var raw_sources = Possedex.entity.possedex.sources;                // Nos sources (urls séparés par virgule et/ou espace)
+        var raw_sources = entity.possedex.sources;                // Nos sources (urls séparés par virgule et/ou espace)
 
         if (3 <= _debug) {
             console && console.info("sources avant markdown", raw_sources);
         }
         // Markdown style
         var regex = new RegExp(/\[([^\]]*?)\]\(([^\)]*?)\)[, ]{0,2}/gm);
-        match = regex.exec(raw_sources);
+        var match = regex.exec(raw_sources);
         while (match != null) {
-            title = match[1];
-            url = match[2];
-            sources.push({"url": url, "title": title});
+            var title = match[1];
+            var url = match[2];
+            entity.sources.push({"url": match[2], "title": match[1]});
             match = regex.exec(raw_sources);
         }
 
         if (3 <= _debug) {
-            console && console.log("sources apres markdown", sources);
+            console && console.log("sources apres markdown", entity.sources);
         }
 
         // URL toute seule
         match = Possedex.regex_url_seule.exec(raw_sources);
         while (match != null) {
-            sources.push({
+            entity.sources.push({
                 "url": match[1],
                 "title": match[2]
             });
@@ -466,80 +480,46 @@ export var Possedex = {
         }
 
         if (3 <= _debug) {
-            console && console.log("sources apres urls simples", sources);
+            console && console.log("sources apres urls simples", entity.sources);
         }
-        return sources;
+        return entity.sources;
     },
 
-    sendToOutput : function(entity, tab) {
-        // // change l'icone bouton du navigateur
-        //browser.browserAction.setIcon({
-        //    path: "img/icones/icon-" + classement + ".png", // note
-        //    tabId: tabId
-        //});
 
-        console && console.log("if envoyer le message");
-        if(true || display == true){  // note
-            console && console.log("debut envoyer le message");
-            console && console.log("classement");
-            //console && console.log(classement);
-            console && console.log("messages");
-            console && console.log(messages);
+    // isSpecialUrl: function(url) {
+    //     if (active_url.indexOf("chrome-extension://") == 0) {
+    //         return true;
+    //     }
+    //     if (active_url.indexOf("youtube.com") > -1) {
+    //         return true;
+    //     }
+    // },
 
-                msg = {
-                    show_popup    : true, // @TODO: put in config
-                    entity        : entity,
-                    nom           : entity.nom,
-                    possedex_link : 'http://'+DOMAIN+'#'+entity.nom,
-                    proprietaires : entity.proprietaires,
-                    color : "#00a86b",
-                    //color       : colors[entity.possedex.classement],
-                    //message     : messages[entity.possedex.classement],
-                    // bandeau_msg : bandeau_msgs[entity.possedex.classement],
-                    // icone       : icones[entity.possedex.classement],
-                    persist  : Possedex.data.persist,
-                    styles       : Possedex.styles
-                };
-                console && console.log("envoyer le message");
-                console && console.log(msg);
+    // handleSocialNetworkUrl: function(url) {
+    //     // @TODO: move youtube part in getEntityIdFromNom
+    //     // @TODO: move facebook/twitter part in getEntityIdFromNom
+    //     if (active_url.indexOf("youtube.com") > -1) {
+    //         if (active_url.indexOf("channel") !== -1) {
+    //             Possedex.debunkSite(youtubeChannel(url), function(entity){
+    //                 if (do_display) {
+    //                     Possedex.sendToOutput(Possedex.entity, tab);
+    //                 }
+    //             });
+    //         }
+    //     }
+    //     // TODO: like youtubeChannel
+    //     else if (active_url === 'facebook.com' || active_url === 'twitter.com') {
+    //         Possedex.debunkSite(url, function(entity){
+    //             if (do_display) {
+    //                 Possedex.sendToOutput(Possedex.entity, tab);
+    //             }
+    //         });
+    //     }
 
-                // sendMessage to the content.js listener
-                console && console.log("sending message to tab "+tab.id );
-                console && console.log(tab);
-                browser.tabs.sendMessage(tab.id, msg);
-                // function(response) { // note
-                //     //console && console.log("message envoyé");
-                //     //console && console.log(response);
-                // });
-        }
-    },
+    // },
 
-    isSpecialUrl: function(url) {
-        if (active_url.indexOf("chrome-extension://") == 0) {
-            return true;
-        }
-        if (active_url.indexOf("youtube.com") > -1) {
-            return true;
-        }
-
-    },
-    handleSocialNetworkUrl: function(url) {
-        // @TODO: move youtube part in getEntityIdFromNom
-        // @TODO: move facebook/twitter part in getEntityIdFromNom
-        if (active_url.indexOf("youtube.com") > -1) {
-            if (active_url.indexOf("channel") !== -1) {
-                Possedex.debunkSite(youtubeChannel(url), tab.id, do_display);
-            }
-        }
-        // TODO: like youtubeChannel
-        else if (active_url === 'facebook.com' || active_url === 'twitter.com') {
-            Possedex.debunkSite(url, tab.id, do_display);
-        }
-
-    },
-
+    // RIEN
     rien : function() {
     }
-
 }
 

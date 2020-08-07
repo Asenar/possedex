@@ -115,7 +115,7 @@ function main() {
     // var background = browser.extension.getBackgroundPage();
     const background = browser.extension.getBackgroundPage();
     const Possedex = background.Possedex;
-    const entity = background.Possedex.entity;
+    const entity = background.Possedex.current_entity;
     console.log("background (possedex)");
     console.log(Possedex);
 
