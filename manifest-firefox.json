@@ -38,7 +38,7 @@
     "activeTab",
     "webRequest",
 
-    "https://possedex.info/mdiplo.json"
+    "https://possedex.info/db.json"
     ],
     "web_accessible_resources": [
       "css/content.css",
