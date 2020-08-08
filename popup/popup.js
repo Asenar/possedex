@@ -126,9 +126,7 @@ function main() {
     if(entity !== null) {
         console.log(entity);
         // TODO afficher les infos manquantes avec popup.js et popup.html
-        document.querySelector(".content #site-name")
-            .innerText = 'site name résultat est '
-            + entity.nom;
+        document.querySelector(".content #site-name").innerText = entity.nom;
         // document.querySelector("#notule").innerText = entity.notule;
         // document.querySelector("#last-update").style["color"] = entity.color;
         // document.querySelector("#last-update").style["color"] = entity.color;

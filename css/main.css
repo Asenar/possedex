@@ -254,31 +254,31 @@ footer {
     text-align : center;
 }
 
-.table-popup-insoumis {
+.possedex-table-popup{
     /*border-collapse: collapse;*/
     /* border : 1px solid black;*/
     margin : auto;
     width  : auto;
 }
-.table-popup-insoumis td,
-.table-popup-insoumis th{
+.possedex-table-popup td,
+.possedex-table-popup th{
     background-color : #eee;
     padding          : 6px 3px;
     vertical-align   : middle;
     /*border : 1px solid black;*/
 }
 
-.table-popup-insoumis th {
+.possedex-table-popup th {
     text-align : right;
     padding    : 7px;
 }
-.table-popup-insoumis td {
+.possedex-table-popup td {
     text-align : left;
 }
-.table-popup-insoumis #les-decodeurs {
+.possedex-table-popup #les-decodeurs {
     text-align : center;
 }
-.table-popup-insoumis #les-decodeurs #description {
+.possedex-table-popup #les-decodeurs #description {
     display : block;
     font-weight : bold;
     font-size : 14px;

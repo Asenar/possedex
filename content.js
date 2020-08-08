@@ -319,6 +319,9 @@ const removeAfter = 10000; // En milliseconde
                //console.log("URL CHANNEL ---> " + document.querySelector(".yt-user-info"));
             }
         }
+        // browser.extension.getBackgroundPage().infobulle = infobulle;
+        // return Promise.resolve({response:{hi:"hi from content script", infobulle: infobulle.cloneNode(true)}});
+        // FIXME : error
         return Promise.resolve({response:"hi from content script"});
       });
 
