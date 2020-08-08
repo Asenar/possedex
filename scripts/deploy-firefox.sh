@@ -220,7 +220,7 @@ if [[ $? -ne 0 ]]; then
     exit 128
 fi
 
-node -c popup.js
+node -c popup/popup.js
 if [[ $? -ne 0 ]]; then
     eerror "syntax error popup.js"
     exit 128
