@@ -259,6 +259,7 @@ export var Possedex = {
     cleanStringForSearch: function(str) { // remove the last slash at the end of the string
         str = Possedex.url_cleaner(str);
         str = str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        str = str.replace(/\W+/g, '-');
         if(str.indexOf('/') === -1) {
             return str.toLowerCase();
         } else {
@@ -304,8 +305,12 @@ export var Possedex = {
         for(let item_index in entity.possessions) {
             let item = entity.possessions[item_index];
             let childId = Possedex.getEntityIdFromNom(item.nom);
+            if (!childId) {
+                // console && console.error("no child found for item=", item);
+                continue;
+            }
             let childEntity = Possedex.data.objets[childId]
-            if (childEntity.type !== 3) {
+            if (childEntity && childEntity.type !== 3) {
                 medias = Possedex.getAllChildrenForEntity(childEntity, medias);
             } else {
                 medias.push(childEntity);
@@ -319,33 +324,23 @@ export var Possedex = {
      *
      **/
     getAllParentsForEntity: function(entity, proprios = []) {
+        if (3 <= _debug) {
+            console && console.group("getAllParentsForEntity " + entity.nom);
+        }
         for (let item_index in entity.est_possede) {
-            if (3 <= _debug) {
-                console && console.group("Une boucle de est_possede de " + entity.nom);
-            }
             let item = entity.est_possede[item_index];
             let parentId = Possedex.getEntityIdFromNom(item.nom);
             let parentEntity = Possedex.data.objets[parentId]
             if (parentEntity.type != 1) {
-                if (3 <= _debug) {
-                    console && console.log("A creuser pour " + parentEntity.nom);
-                }
                 Possedex.getAllParentsForEntity(parentEntity, proprios);
 
             } else {
-                if (3 <= _debug) {
-                    console && console.info("Tiens, cette entité est une personne physique");
-                    console && console.log(parentEntity);
-                }
                 proprios.push(parentEntity);
-            }
-            if (3 <= _debug) {
-                console && console.groupEnd();
             }
         }
         if (3 <= _debug) {
-            console && console.info("(fin de getAllParents)");
-            console && console.info(proprios);
+            console && console.log(proprios);
+            console && console.groupEnd();
         }
         return proprios;
     },
@@ -359,6 +354,7 @@ export var Possedex = {
             return false;
         }
 
+        // TODO: build data.slug[str]
         // 1st look, check url, exact match
         if (Possedex.data.urls.hasOwnProperty(str)) {
             return Possedex.data.urls[str];
@@ -372,9 +368,17 @@ export var Possedex = {
             }
 
             var regex = new RegExp("^"+str, 'i');
-            // 3rd look, check partial match
+            // 3rd look, check partial match starting with
             for(let idEntity in Possedex.data.objets) {
+                if (regex.test(Possedex.data.objets[idEntity].slug)) {
+                    return idEntity;
+                }
+            }
 
+            // 4th look, check partial match «begin of word»
+            regex = new RegExp("\\b"+str, 'i');
+            // 3rd look, check partial match starting with
+            for (let idEntity in Possedex.data.objets) {
                 if (regex.test(Possedex.data.objets[idEntity].slug)) {
                     return idEntity;
                 }
@@ -399,8 +403,7 @@ export var Possedex = {
 
         // infosToGet in extension
         if (3 <= _debug) {
-            console && console.info("debunkSite : var results");
-            console && console.log("results");
+            console && console.log("startDebunkSite");
         }
 
         if (url === "") {
