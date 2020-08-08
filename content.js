@@ -315,7 +315,7 @@ const removeAfter = 10000; // En milliseconde
 
         } else {
             if (request.text === "report_back") {
-               sendResponse({farewell: document.querySelector(".yt-user-info").getElementsByTagName("a")[0].href});
+               // sendResponse({farewell: document.querySelector(".yt-user-info").getElementsByTagName("a")[0].href});
                //console.log("URL CHANNEL ---> " + document.querySelector(".yt-user-info"));
             }
         }

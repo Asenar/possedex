@@ -184,7 +184,7 @@ rien        : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr
 // let possedex_colors = [ "#A2A9AE", "#129AF0", "#D50303", "#F5A725", "#468847" ];
 // let possedex_descs = [ "inclassable", "parodique", "pas fiable du tout", "peu fiable", "fiable" ];
 
-const base_url = "https://"+DOMAIN+"/mdiplo.json";
+const base_url = "https://"+DOMAIN+"/db.json";
 
 var CURRENT_VERSION = '0.1.0';
 var always_refresh = false;
@@ -263,7 +263,7 @@ function checkSite(do_display){
 
     browser.tabs.query({currentWindow: true, active: true}, function(tabs) {
 
-        console.info('in checkSite, browser.tabs.query');
+        // console.info('in checkSite, browser.tabs.query');
         const tab = tabs[0];
         dbg(4, "tab is ", tab);
         if (!tabs.length) {
@@ -340,13 +340,20 @@ function usePossedexFromExtension(tab, do_display) {
             dbg(2, "sendMessage", tab.id);
             dbg(2, "sendMessage", msg);
             // sendMessage to the content.js listener
+            // @FIXME  NOT RUNTIME: https://developer.mozilla.org/fr/docs/Mozilla/Add-ons/WebExtensions/API/runtime/sendMessage
+            //                https://stackoverflow.com/questions/42147966/browser-tabs-sendmessage-error-receiving-end-does-not-exist
+            //                https://stackoverflow.com/questions/48966814/receiving-end-does-not-exist-when-passing-message-to-injected-content-script
+            //                https://developer.mozilla.org/fr/docs/Mozilla/Add-ons/WebExtensions/API/tabs/sendMessage
+            //
             browser.tabs.sendMessage(tab.id, msg)
             .then(response => {
                 if (_debug > 0) {
                     console.log("Message from background to content.js is really sent : ", response);
                 }
             }).catch(function(err) {
-                console && console.error(err);
+                if (_debug > 0) {
+                    console && console.error(err);
+                }
             })
             ;
         });

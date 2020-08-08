@@ -260,19 +260,20 @@ export var Possedex = {
         str = Possedex.url_cleaner(str);
         str = str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         str = str.replace(/\W+/g, '-');
-        if(str.indexOf('/') === -1) {
-            return str.toLowerCase();
-        } else {
-            return str.substring(0, str.indexOf('/')).toLowerCase();
-        }
+        return str.toLowerCase();
     },
 
     url_cleaner : function(url){
-        return url
+        url = url
             .replace("http://", "")
             .replace("https://", "")
             .replace('www.', "")
             .replace("\n", "");
+        if(url.indexOf('/') === -1) {
+            return url.toLowerCase();
+        } else {
+            return url.substring(0, url.indexOf('/')).toLowerCase();
+        }
     },
 
     extractUrlsFromRaw : function(raw_sources) {
@@ -346,7 +347,6 @@ export var Possedex = {
     },
 
     getEntityIdFromNom: function(str) {
-        str = Possedex.cleanStringForSearch(str);
         if ("" === str) {
             if (_debug) {
                 console && console.warn("getEntityIdFromNom(empty string)");
@@ -354,20 +354,28 @@ export var Possedex = {
             return false;
         }
 
+        str = Possedex.url_cleaner(str);
         // TODO: build data.slug[str]
         // 1st look, check url, exact match
         if (Possedex.data.urls.hasOwnProperty(str)) {
             return Possedex.data.urls[str];
         } else {
+            const cleanStr = Possedex.cleanStringForSearch(str);
+            if ("" === cleanStr) {
+                if (_debug) {
+                    console && console.warn("getEntityIdFromNom(empty string)");
+                }
+                return false;
+            }
 
             // 2nd look, check regex after removing accents
             for (let idEntity in Possedex.data.objets) {
-                if (Possedex.data.objets[idEntity].slug === str) {
+                if (Possedex.data.objets[idEntity].slug === cleanStr) {
                     return idEntity;
                 }
             }
 
-            var regex = new RegExp("^"+str, 'i');
+            var regex = new RegExp("^"+cleanStr, 'i');
             // 3rd look, check partial match starting with
             for(let idEntity in Possedex.data.objets) {
                 if (regex.test(Possedex.data.objets[idEntity].slug)) {
@@ -376,7 +384,7 @@ export var Possedex = {
             }
 
             // 4th look, check partial match «begin of word»
-            regex = new RegExp("\\b"+str, 'i');
+            regex = new RegExp("\\b"+cleanStr, 'i');
             // 3rd look, check partial match starting with
             for (let idEntity in Possedex.data.objets) {
                 if (regex.test(Possedex.data.objets[idEntity].slug)) {
