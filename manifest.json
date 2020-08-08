@@ -1,13 +1,8 @@
 {
   "manifest_version": 2,
   "name": "Possedex",
-  "version": "{VERSION}",
+  "version": "0.1.0",
   "description": "Avec le Possedex, apprenez en un clin d'oeil qui se trouve derrière le média que vous êtes en train de lire !",
-  "applications": {
-    "gecko": {
-      "id": "possedex@possedex.info"
-    }
-  },
   "background": {
     "scripts": ["background.js", "content.js", "install.js"],
     "persistent": false
@@ -32,11 +27,11 @@
     }
   ],
   "permissions" : [
+    "declarativeContent",
     "tabs",
     "storage",
     "notifications",
     "activeTab",
-    "webRequest",
 
     "https://possedex.info/db.json"
     ],
