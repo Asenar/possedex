@@ -61,17 +61,17 @@ var browser = browser || chrome;
 var max_notes = 6;  // (de 0 à 5 = 6 notes)
 
 var options_infobulles = ['inconnu', 'capital', 'etat', 'independant' ];
-var checkbox_options = ['persist' ];
-var options_others     = ['persist' ];
+var checkbox_options = ['persistant', 'inconnu', 'capital', 'etat', 'independant' ];
+var options_others     = ['persistant' ];
 
 function optionStore(e){
     var infobulles;
     var classement = this.id.replace("check-", "");
     var checked = this.checked;
 
-    if (classement == 'persist') {
+    if (classement == 'persistant') {
         browser.storage.local.set({
-            'persist': checked
+            'persistant': checked
         });
     } else {
         browser.storage.local.get('infobulles', function(results){
@@ -85,7 +85,10 @@ function optionStore(e){
 }
 
 function refreshDatabase(e){
-    browser.extension.getBackgroundPage().reloadAndStoreDB();
+    browser.storage.local.set({
+        'last_update': ((new Date().getTime()) - 24*60*60*1000)
+    });
+    // @FIXME popup scroll
     return false;
 }
 
@@ -111,70 +114,61 @@ function createLink(toDOM,url,title) {
 
 function main() {
     // retrieve all datas from background.js
-    // var background = browser.extension.getBackgroundPage();
-    const background = browser.extension.getBackgroundPage();
-    const Possedex = background.Possedex;
-    const entity = background.Possedex.current_entity;
+    var background = browser.extension.getBackgroundPage();
 
-    // document.querySelector("#verif-insoumis").style.display = "block";
-    document.querySelector("#possedex-window").classList.remove('active');
-    // document.querySelector("#verif-insoumis").classList.add("active");
-    document.querySelector("#possedex-window").style.display = "none";
-    if(entity !== null) {
+    if(background.has_info == true) {
         // TODO afficher les infos manquantes avec popup.js et popup.html
-        document.querySelector(".content #site-name").innerText = entity.nom;
-        // document.querySelector("#notule").innerText = entity.notule;
-        //document.querySelector("#last-update").style["color"] = entity.color;
-        //document.querySelector("#last-update").style["color"] = entity.color;
-        document.querySelector("#desc").innerText = entity.possedex.desc;
-        document.querySelector("#link-detail").href = "https://www.possedex.info/#"+entity.nom;
-        const updated = new Date();
-        updated.setTime(Date.parse(entity.possedex.updated));
-        document.querySelector("#last-update-date").innerText = updated.toLocaleDateString('fr')
+        document.querySelector(".content #site-name").innerText = background.site_actif;
+        document.querySelector("#notule").innerText = background.notule;
+        document.querySelector("#last-update").style["color"] = background.color;
+        document.querySelector("#last-update").style["color"] = background.color;
+        document.querySelector("#last-update-date").innerText = background.updated_human;
 
-        const proprietairesContainer = document.querySelector("#proprietaires span.content");
-        proprietairesContainer.innerText = '';
 
-        for (let i in entity.proprietaires) {
-            createLink(proprietairesContainer,
-                "https://possedex.info/#"+entity.proprietaires[i].nom,
-                entity.proprietaires[i].nom
-            )
-            proprietairesContainer.innerHTML += ", ";
-        }
-        proprietairesContainer.innerHTML = proprietairesContainer.innerHTML
-            .substring(0, proprietairesContainer.innerHTML.lastIndexOf(', ')
-        );
-
-        //for(var i in entity.est_possede) {
-        //    if (!entity.est_possede[i]) {
-        //        //document.querySelector("#proprietaire"+i).style = "display:none";
-        //    } else {
-        //        document.querySelector("#proprietaire"+i).style = "";
-        //        document.querySelector("#proprietaire"+i+" .nom").innerText
-        //            = entity.est_possede[i].nom + "("+entity.est_possede[i].value+")"
-        //    }
-        //    if (!background.fortunes[i]) {
-        //        document.querySelector("#proprietaire"+i+" td.detail").style = "display:none";
-        //    } else {
-        //        if (background.fortunes[i].length) {
-        //            document.querySelector("#proprietaire"+i+" td.detail .d1").innerText = background.fortunes[i]
-        //        } else {
-        //            document.querySelector("#proprietaire"+i+" td.detail .d1").style = "display:none";
-        //        }
-        //        if (background.marques[i].length) {
-        //            document.querySelector("#proprietaire"+i+" td.detail .d2").innerText = "[marque] "  + background.marques[i]
-        //        } else {
-        //            document.querySelector("#proprietaire"+i+" td.detail .d2").style = "display:none";
-        //        }
-        //        if (background.influences[i].length) {
-        //            document.querySelector("#proprietaire"+i+" td.detail .d3").innerText = "[secteur] " + background.influences[i]
-        //        } else {
-        //            document.querySelector("#proprietaire"+i+" td.detail .d3").style = "display:none";
-        //        }
-        //        document.querySelector("#proprietaire"+i+" td.detail").style = "";
-        //    }
+        //if(background.decodex_note) {
+        //    document.querySelector("#les-decodeurs #comment").innerText = "Les Décodeurs du Monde jugent eux ce site comme ";
+        //    document.querySelector("#les-decodeurs #description").style["color"] = background.possedex_color;
+        //    document.querySelector("#les-decodeurs #description").style["font-weight"] = "bold";
+        //    document.querySelector("#les-decodeurs #description").innerText = background.possedex_desc;
         //}
+        //else {
+        //    document.querySelector("#les-decodeurs").innerText = "Les Décodeurs du Monde n'ont pas noté ce site. Ils le considèrent (peut être) comme fiable ou ne le connaissent pas.";
+        //}
+
+        document.querySelector("#owner-msg").innerText = background.owner_msg;
+        //document.querySelector("#proprietaires span.content").innerText = background.proprietaires.join(",");
+
+        for(var i in background.proprietaires) {
+            if (!background.proprietaires[i]) {
+                document.querySelector("#proprietaire"+i).style = "display:none";
+            } else {
+                document.querySelector("#proprietaire"+i).style = "";
+                document.querySelector("#proprietaire"+i+" .nom").innerText = background.proprietaires[i]
+            }
+
+            if (!background.fortunes[i]) {
+                document.querySelector("#proprietaire"+i+" td.detail").style = "display:none";
+            } else {
+                if (background.fortunes[i].length) {
+                    document.querySelector("#proprietaire"+i+" td.detail .d1").innerText = background.fortunes[i]
+                } else {
+                    document.querySelector("#proprietaire"+i+" td.detail .d1").style = "display:none";
+                }
+                if (background.marques[i].length) {
+                    document.querySelector("#proprietaire"+i+" td.detail .d2").innerText = "[marque] "  + background.marques[i]
+                } else {
+                    document.querySelector("#proprietaire"+i+" td.detail .d2").style = "display:none";
+                }
+                if (background.influences[i].length) {
+                    document.querySelector("#proprietaire"+i+" td.detail .d3").innerText = "[secteur] " + background.influences[i]
+                } else {
+                    document.querySelector("#proprietaire"+i+" td.detail .d3").style = "display:none";
+                }
+
+                document.querySelector("#proprietaire"+i+" td.detail").style = "";
+            }
+
+        }
 
         //document.querySelector("#fortunes span.content").innerText = background.fortunes.join(",");
         //document.querySelector("#brands span.content").innerText = background.marques.join(",");
@@ -185,18 +179,19 @@ function main() {
         //document.querySelector("#conflicts span.content").innerText = background.conflits;
         //document.querySelector("#subsidies span.content").innerText = background.subventions;
 
-        const source_wrapper = document.querySelector("#sources");
-        const target_sources = document.querySelector("#sources .content");
+        var source_wrapper = document.querySelector("#sources");
+        var target_sources = document.querySelector("#sources .content");
         target_sources.innerText = "";
 
-        if (entity.possedex.sources.length === 0) {
+        if (background.sources.length == 0) {
             source_wrapper.style.display = "none";
         }
         else {
             source_wrapper.style.display = "block";
-            entity.sources.forEach((el, i) => {
-                createLink(target_sources, el.url, el.title);
-            })
+            for(var i in background.sources) {
+                var obj = background.sources[i];
+                createLink(target_sources, obj.url, obj.title);
+            }
         }
 
         // background.sources.forEach(function(obj, i){
@@ -204,18 +199,24 @@ function main() {
 
 
         document.querySelector("#possedex-window").style.display = "block";
-        // document.querySelector("#verif-insoumis").classList.remove("active");
+        document.querySelector("#verif-insoumis").classList.remove("active");
         document.querySelector("#possedex-window").classList.add('active');
-        document.querySelector("#more-info").href = "http://www.acrimed.org/+-"+entity.slug.replace(/ /,'-')+"-+";
-        //var site_url = entity.site_url;
-        //document.querySelector("#more-info").href = "http://www.possedex.info/#"+site_url;
+        var site_slug = background.site_actif.replace(/ /,'-');
+        document.querySelector("#more-info").href = "http://www.acrimed.org/+-"+site_slug+"-+";
+    }
+    else {
+        document.querySelector("#verif-insoumis").style.display = "block";
+        document.querySelector("#possedex-window").classList.remove('active');
+        document.querySelector("#verif-insoumis").classList.add("active");
+        document.querySelector("#possedex-window").style.display = "none";
+
     }
 
     // {{{ set the cog button
     var params = document.querySelector("#params");
     params.addEventListener("click", function(){
         var parameters = document.querySelector("#parameters");
-        if(params.classList.contains("active-p")) {
+        if(params.classList.contains("active-p")){
             params.classList.remove("active-p");
             parameters.style.display = "none";
             document.querySelector(".active").style.display = "block";
@@ -229,13 +230,24 @@ function main() {
     // }}} set the cog button
 
     // {{{ get config info to display in view
-    browser.storage.local.get(['persist'], function(results){
+    browser.storage.local.get(['infobulles', 'persistant'], function(results){
         var infobulles = results.infobulles;
-        var persist = document.getElementById('check-persist');
-        if(results.persist == true){
-            persist.checked = true;
+        checkbox_options.forEach(function(classement){
+            var thisCheckbox = document.getElementById('check-' + classement);
+            if (thisCheckbox) {
+                if(infobulles[classement] == true){
+                    thisCheckbox.checked = true;
+                }
+                else {
+                    thisCheckbox.checked = false;
+                }
+            }
+        });
+        var persistant = document.getElementById('check-persistant');
+        if(results.persistant == true){
+            persistant.checked = true;
         } else {
-            persist.checked = false;
+            persistant.checked = false;
         }
     });
 
@@ -250,14 +262,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         element.addEventListener('click', optionStore);
     });
-    document.querySelector('#do-refresh-database').addEventListener('click', function(e) {
-        refreshDatabase();
-    });
+    document.querySelector('#do-refresh-database').addEventListener('click', refreshDatabase);
 });
 
 function getObjectKeys(obj) {
-    const keys = [];
-    for(let key in obj){
+    var keys = [];
+    for(var key in obj){
         keys.push(key);
     }
     return keys;
