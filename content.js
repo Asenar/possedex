@@ -134,7 +134,7 @@ const removeAfter = 10000; // En milliseconde
     function importCSS() {
         if (!document.getElementById("possedex-css")) {
             const linkTag = document.createElement ("link");
-            linkTag.href = getBrowser().extension.getURL("css/content.css");
+            linkTag.href = getBrowser().runtime.getURL("css/content.css");
 
             linkTag.rel = "stylesheet";
             linkTag.id = "possedex-css";
@@ -197,8 +197,37 @@ const removeAfter = 10000; // En milliseconde
 
                 // Image
                 let proprietaire_img = new Image();
-                let img_link = "img/prop/"+ request.proprietaires[i].nom.replace(" ","") +".gif";
-                proprietaire_img.src = getBrowser().extension.getURL(img_link);
+                // FIXME: move this in possedex.js
+                const prop_images = [
+                    'ArnaudLagardere.gif',
+                    'BernardArnault.gif',
+                    'ClaudePerdriel.gif',
+                    'FrançoisPinault.gif',
+                    'FrançoiseBettencourt.gif',
+                    'MartinBouygues.gif',
+                    'MatthieuPigasse.gif',
+                    'PatrickDrahi.gif',
+                    'VincentBollore.gif',
+                    'XavierNiel.gif',
+                ]
+
+
+                let img_link = false;
+                let count = prop_images.length;
+                let filename = request.proprietaires[i].nom.replace(/\s+/, "") + ".gif";
+                for (let k=0; k<count; k++) {
+                    if (prop_images[k] === filename){
+                        img_link = "img/prop/" + filename;
+                    }
+                    if (img_link !== false) {
+                        break;
+                    }
+                }
+                if (img_link === false) {
+                    img_link = "img/prop/empty.gif"
+                }
+
+                proprietaire_img.src = getBrowser().runtime.getURL(img_link);
                 proprietaire_img.className = "possedex-propimg";
                 proprio_div.appendChild(proprietaire_img);
 
